@@ -1,0 +1,15 @@
+@charset "utl-8";
+
+h1 {
+    padding: 20px;
+    height: 150px;
+    width: 200;
+    height: 90;
+    margin: 0 auto;
+}
+
+
+
+.large-text p {
+    color:rgb(0, 41, 128);
+}
