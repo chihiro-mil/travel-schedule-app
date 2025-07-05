@@ -1,7 +1,7 @@
 @charset "utl-8";
 
 body {
-    background-color: #afeeee;
+    background-color: #e0ffff;
 }
 
 h1 {
@@ -28,14 +28,23 @@ h2{
 .img img{
     text-align: center;
 }
-
-.application-link a{
-    padding: 10px;
+.center-box{
+    text-align: center;
+}
+.application-link{
+    display: inline-block;
     border: 5px solid #1e90ff;
-    left: 50%;
-    transform: translateX(50%);
+    padding: 5px;
 }
 
-.link a{
+.nav-link{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+.nav-link a{
+    padding: 10px 20px;
+    text-description: none;
+    color: #1e90ff; 
 
 }

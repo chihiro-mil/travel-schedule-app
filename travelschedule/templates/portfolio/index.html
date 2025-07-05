@@ -22,22 +22,26 @@
     </div>
 
 <!-- ↓アプリ画面の画像載せる(srcには相対パスか絶対パスいれる) -->
-    <div class="img">
-        <img src="" alt="アプリ画像">
+    <div class="center-img">
+        <p class="img">
+            <img src="" alt="アプリ画像">
+        </p>
     </div>
 
 <!-- ↓アプリのログイン画面ＵＲＬ載せる -->
-    <p class="application-link">
-        <a href="">アプリへ</a>
-    </p>
-
+    <div class="center-box">
+        <p class="application-link">
+            <a href="">アプリへ</a>
+        </p>
+    </div>
 <!-- ↓それぞれのpdf載せる -->
-    <!--<p class="link">
-        <a href="">企画書</a>
-        <a href="">画面設計図</a>
-        <a href="">画面遷移図</a>
-        <a href="">ＥＲ図</a>
-    </p> -->
+    {% load static %}
 
+    <div class="nav-link">
+        <a href="{% static 'portfolio-pdf/ER図.drawio.pdf'%}" target="_blank">企画書</a>
+        <a href="{% static 'portfolio-pdf/画面設計図.pdf'%}" target="_blank">画面設計図</a>
+        <a href="{% static 'portfolio-pdf/画面遷移図.drawio.pdf'%}" target="_blank">画面遷移図</a>
+        <a href="{% static 'portfolio-pdf/企画書.pdf'%}" target="_blank">ＥＲ図</a>
+    </div>
 </body>
 </html>
