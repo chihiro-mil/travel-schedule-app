@@ -55,7 +55,7 @@ class RegisterForm(forms.ModelForm):
         return username
     
     def clean_password(self):
-        password = self.cleaned_password['password']
+        password = self.cleaned_data['password']
         if not re.match(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+$', password):
             raise ValidationError("パスワードは英字と数字を含めてください。")
         return password
