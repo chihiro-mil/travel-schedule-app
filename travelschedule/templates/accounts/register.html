@@ -4,10 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>account registration page</title>
+    <meta name="description" content="account registration text">
 </head>
 <body>
-    <h1>アカウント登録画面</h1>
+    <h1>アカウント登録</h1>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div>
+        {{ form.username.label_tag }}<br>
+        {{ form.username }}
+        {{ form.username.errors }}
+        </div>
 
+        <div>
+        {{ form.email.label_tag }}<br>
+        {{ form.email }}
+        {{ form.email.errors }}
+        </div>
+
+        <div>
+        {{ form.password.label_tag }}<br>
+        {{ form.password }}
+        {{ form.password.errors }}
+        </div>
+
+        <div>
+        {{ form.password_confirm.label_tag }}<br>
+        {{ form.password_confirm }}
+        {{ form.password_confirm.errors }}
+        </div>
+
+        <button type="submit">アカウント登録</button>
+    </form>
 
 
 </body>
