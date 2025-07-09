@@ -72,3 +72,4 @@ class RegisterForm(forms.ModelForm):
         
         if password and password_confirm and password != password_confirm:
             self.add_error('password_confirm', "パスワードが一致しません。")
+            self.add_error(None, "パスワードと確認用パスワードが一致していません。")

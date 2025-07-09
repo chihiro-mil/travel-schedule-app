@@ -11,8 +11,26 @@
 <body>
     <h1>アカウント登録</h1>
     <div class="container"
-        <form method="post" novalidate>
+        <form method="POST" novalidate>
             {% csrf_token %}
+
+            {% if form.password_confirm.errors %}
+                <ul class="error">
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>  
+            {% endif %}
+
+            {% if form.errors %}
+                <ul class="errorlist">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
         
         <div class="form-group">
             {{ form.username.label_tag }}<br>

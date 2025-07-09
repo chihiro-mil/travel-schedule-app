@@ -10,7 +10,7 @@ def register_view(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
-            return redirect('login')
+            return redirect('/accounts/login/') #()の中は仮
     else:
         form = RegisterForm()
     return render(request, 'accounts/register.html', {'form': form})
