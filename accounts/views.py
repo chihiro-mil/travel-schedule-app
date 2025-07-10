@@ -4,7 +4,7 @@ from .models import User
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
-
+from django.contrib.auth import logout
 
 def register_view(request):
     if request.method == 'POST':
@@ -14,11 +14,11 @@ def register_view(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             return redirect('/accounts/login/') #()の中は仮
-        else:
-            form = RegisterForm()
-        return render(request, 'accounts/register.html', {'form': form})
-
-
+    else:
+        form = RegisterForm()
+    return render(request, 'accounts/register.html', {'form': form})
+    
+    
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -32,3 +32,7 @@ def login_view(request):
 
 def edit_profile_view(request):
     return render(request, 'accounts/edit_profile.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('accounts:login')
