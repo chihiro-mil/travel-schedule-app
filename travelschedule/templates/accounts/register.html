@@ -32,41 +32,37 @@
                 </ul>
             {% endif %}
         
-        <div class="form-group">
-            {{ form.username.label_tag }}<br>
-            {{ form.username }}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="error">{{ form.username.errors.0 }}</div>
+                {% endif %}
+            </div>
 
-            {% for error in form.username.errors %}
-                <div class="error">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="error">{{ form.email.errors.0 }}</div>
+                {% endif %}
+            </div>
 
-        <div class="form-group">
-            {{ form.email.label_tag }}<br>
-            {{ form.email }}
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="error">{{ form.password.errors.0 }}</div>
+                {% endif %}
+            </div>
 
-            {% for error in form.email.errors %}
-                <div class="error">{{ error }}</div>
-            {% endfor %}
-        </div>
-
-        <div class="form-group">
-            {{ form.password.label_tag }}<br>
-            {{ form.password }}
-
-            {% for error in form.password.errors %}
-                <div class="error">{{ error }}</div>
-            {% endfor %}
-        </div>
-
-        <div class="form-group">
-            {{ form.password_confirm.label_tag }}<br>
-            {{ form.password_confirm }}
-
-            {% for error in form.password_confirm.errors %}
-                <div class="error">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <div class="form-group">
+                <label for="{{ form.password_confirm.id_for_label }}">{{ form.password_confirm.label }}</label>
+                {{ form.password_confirm }}
+                {% if form.password_confirm.errors %}
+                    <div class="error">{{ form.password_confirm.errors.0 }}</div>
+                {% endif %}
+            </div>
 
             <button type="submit">アカウント登録</button>
         </form>
