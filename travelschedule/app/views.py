@@ -6,6 +6,12 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 
+#portfolio
+def index_view(request):
+    return render(request, 'app/index.html')
+
+
+
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
