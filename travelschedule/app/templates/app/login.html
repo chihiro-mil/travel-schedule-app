@@ -1,14 +1,37 @@
 <!DOCTYPE html>
 <html lang="ja">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login page</title>
+    <link rel="stylesheet" href="{% static "app/css/style.css" %}">
+    <meta name="description" content="login text">
 </head>
-<body>
-    <h1>ログイン画面</h1>
+<body class="login-body">
+    <div class="login-container">
+        <h1 class="login-title">Travel schedule</h1>
+        <h2 class="login-subtitle">ログイン</h2>
+            <form method="post">
+                {% csrf_token %}
 
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">メールアドレス</label>
+                    <div class="form-input">{{ form.email }}</div>
+                    {{ form.email.errors }}
+                </div>
 
-    
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}">パスワード</label>
+                    <div class="form-input">{{ form.password }}</div>
+                    {{ form.password.errors }}
+                </div>
+
+            <button type="submit" class="login-button">ログイン</button>
+            </form>
+
+            <p class=register-link><a href="{% url 'app:register' %}">アカウント登録</a></p>
+
+    </div>
 </body>
 </html>

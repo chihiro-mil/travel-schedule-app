@@ -2,8 +2,10 @@ from django import forms
 from .models import User
 from django.core.exceptions import ValidationError
 import re
+from django.contrib.auth import authenticate
 
 
+#アカウント登録画面用
 class RegisterForm(forms.ModelForm):
     username = forms.CharField(
         max_length=20, 
@@ -73,3 +75,22 @@ class RegisterForm(forms.ModelForm):
         if password and password_confirm and password != password_confirm:
             self.add_error('password_confirm', "パスワードが一致しません。")
             self.add_error(None, "パスワードと確認用パスワードが一致していません。")
+            
+
+#ログイン画面用            
+class LoginForm(forms.Form):
+    email = forms.EmailField(label='メールアドレス')
+    password = forms.CharField(label='パスワード', widget=forms.PasswordInput)
+    
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        password = self.cleaned_data.get('password')
+        
+        if email and password:
+            self.user = authenticate(email=email, password=password)
+            if self.user is None:
+                return forms.ValidationError("メールアドレスまたはパスワードが正しくありません")
+        return self.cleaned_data
+    
+    def get_user(self):
+        return self.user

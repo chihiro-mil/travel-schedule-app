@@ -11,7 +11,7 @@
 <body class="register-body">
     <div class="container">
         <h1 clss="register-title">アカウント登録</h1>
-            <form method="POST" novalidate>
+            <form method="post" novalidate>
                 {% csrf_token %}
 
                 {% if form.password_confirm.errors %}

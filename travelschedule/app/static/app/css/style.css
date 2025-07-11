@@ -53,7 +53,7 @@
 }
 
 
-/*アカウント登録画面CSS*/
+/*アカウント登録画面*/
 
 .register-body {
     margin: 0;
@@ -77,7 +77,7 @@
 
 .form-group {
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     font-weight: bold;
 }
 
@@ -101,4 +101,46 @@
 
 .register-button:hover {
     background-color: #1e90ff;
+}
+
+/*ログイン画面*/
+
+.login-body {
+    margin: 0;
+    background-color: #e0ffff;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+}
+
+.login-title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.login-subtitle {
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.login-button {
+    background-color: #a9a9a9;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 10px 24px;
+}
+
+.register-link a {
+    color: #808080;
 }

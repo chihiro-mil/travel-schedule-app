@@ -1,6 +1,8 @@
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
+
+#アカウント管理アプリ
 class UserManager(BaseUserManager):
     def create_user(self, email, name, password=None, **extra_fields):
         if not email:
@@ -16,9 +18,7 @@ class UserManager(BaseUserManager):
         return self.create_user(email, name, password, **extra_fields)
 
 
-
-class User(AbstractUser):
-    username = None
+class User(AbstractUser, PermissionsMixin):
     name = models.CharField(max_length=20, unique=True)
     email = models.EmailField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
