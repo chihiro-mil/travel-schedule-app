@@ -13,10 +13,10 @@ def register_view(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
-            return redirect('/accounts/login/') #()の中は仮
+            return redirect('/app/login/') #()の中は仮
     else:
         form = RegisterForm()
-    return render(request, 'accounts/register.html', {'form': form})
+    return render(request, 'app/register.html', {'form': form})
     
     
 def login_view(request):
@@ -28,11 +28,11 @@ def login_view(request):
             return redirect('home')
     else:
         form = AuthenticationForm()
-    return render(request, 'accounts/login.html')
+    return render(request, 'app/login.html')
 
 def edit_profile_view(request):
-    return render(request, 'accounts/edit_profile.html')
+    return render(request, 'app/edit_profile.html')
 
 def logout_view(request):
     logout(request)
-    return redirect('accounts:login')
+    return redirect('app:login')
