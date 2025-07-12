@@ -8,6 +8,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
 #portfolio
 def index_view(request):
     return render(request, 'app/index.html')
@@ -45,3 +48,8 @@ def edit_profile_view(request):
 def logout_view(request):
     logout(request)
     return redirect('app:login')
+
+#ホーム画面（予定表一覧画面）
+@login_required
+def home_view(request):
+    return render(request, 'app/home.html')
