@@ -1,11 +1,21 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home page</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends 'app/base.html' %}
+
+{% block title %}Home page{% endblock %}
+
+{% block extra_head %}
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+{% endblock %}
+
+{% block content %}
+    <div class="home-header">
+        <div class="header-left">
+            <i class="fas fa-house"></i>
+            <span class="home-title">予定表一覧</span>
+        </div>
+        <button class="sort-button">並び替え<br>（更新順）</button>
+    </div>
+
+{% endblock %}

@@ -23,29 +23,31 @@
     font-weight: bold;
 }
 
-.small-text p{
+.small-text p {
     text-align: center;
     margin-top: 30px;
 }
 
-.img img{
+.img img {
     text-align: center;
 }
-.center-box{
+.center-box {
     text-align: center;
 }
-.application-link{
+.application-link {
     display: inline-block;
     border: 5px solid #1e90ff;
     padding: 5px;
 }
-
-.nav-link{
+.application-link a {
+    text-decoration: none;
+}
+.nav-link {
     display: flex;
     justify-content: center;
     gap: 15px;
 }
-.nav-link a{
+.nav-link a {
     padding: 10px 20px;
     text-decoration: none;
     color: #1e90ff; 
@@ -151,7 +153,7 @@
 
 .login-title {
     text-align: center;
-    font-size: 30px;
+    font-size: 20px;
     font-weight: bold;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -174,4 +176,82 @@
 
 .register-link a {
     color: #808080;
+}
+
+/*base画面*/
+
+.footer-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    font-size: 16px;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.footer-nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-nav li {
+    text-align: center;
+    font-size: 14px;
+}
+
+.footer-nav li i {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.footer-nav li a {
+    color: #000;
+    text-decoration: none;
+}
+
+.footer-nav .disabled-link {
+    color: #999;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/*home画面*/
+.home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ccc;
+    font-size: 18px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.home-title {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.sort-button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
 }

@@ -1,10 +1,14 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block  title %}app{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    {% block extra_head %}
+        <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    {% endblock %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -14,19 +18,33 @@
 
     <footer class="footer-nav">
         <ul>
-            <li><a href="{% url 'app:home' %}">ホーム</a></li>
+            <li><a href="{% url 'app:home' %}"><i class="fas fa-home"></i><br>ホーム</a></li>
             
             {% if request.path == '/app/home/' %}
-                <li><a href="{% url 'app:schedule_add' %}">予定表追加</a></li>
+                <li><a href="{% url 'app:schedule_add' %}"><i class="fas fa-circle-plus"></i><br>予定表追加</a></li>
             {% elif request.path == '/app/schedule/' %}
-                <li><a href="{% url 'app:plan_add' %}">予定追加</a></li>
+                <li><a href="{% url 'app:plan_add' %}"><i class="fas fa-circle-plus"></i><br>予定追加</a></li>
             {% else %}
                 <li><span class="disabled-link">予定追加</span></li>
             {% endif %}
 
-            <li><a href="{% url 'app:edit_profile' %}">マイページ設定</a></li>
-            <li><a href="{% url 'app:logout' %}">ログアウト</a></li>
+            <li><a href="{% url 'app:edit_profile' %}"><i class="fas fa-user-cog"></i><br>マイページ設定</a></li>
+            <li><a href="{% url 'app:logout' %}"><i class="fas fa-sign-out-alt"></i><br>ログアウト</a></li>
         </ul>
-    
+    <script>
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.footer-nav');
+            if (!nav) return;
+
+            if (window.scrollY> lastscrollY){
+                nav.style.transform ='translateY(0)';
+            }else {
+                nav.style.transform ='translateY(100)';
+            }
+            lastscrollY = window.scrollY;
+        });
+    </script>
 </body>
 </html>

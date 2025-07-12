@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterForm
 from .models import User
-from django.contrib.auth import login
+from django.contrib.auth import authenticate, login
 from .forms import LoginForm
 
 from django.contrib.auth.forms import AuthenticationForm
@@ -10,6 +10,10 @@ from django.contrib.auth import logout
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
 
 #portfolio
 def index_view(request):
@@ -34,9 +38,16 @@ def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('home')
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            
+            user = authenticate(request, email=email, password=password)
+            
+            if user is not None:
+                login(request, user)
+                return redirect('app:home')
+            else:
+                form.add_error(None, 'メールアドレスまたはパスワードが間違っています')
     else:
         form = LoginForm()
     return render(request, 'app/login.html', {'form': form})
@@ -45,6 +56,7 @@ def login_view(request):
 def edit_profile_view(request):
     return render(request, 'app/edit_profile.html')
 
+#ログアウト
 def logout_view(request):
     logout(request)
     return redirect('app:login')
