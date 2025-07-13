@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager, Permission
 from django.db import models
 
 
-#アカウント管理アプリ
+#ユーザーテーブル
 class UserManager(BaseUserManager):
     def create_user(self, email, name, password=None, **extra_fields):
         if not email:
@@ -33,7 +33,7 @@ class User(AbstractUser, PermissionsMixin):
         db_table = 'users'
         
         
-#予定表
+#予定表テーブル
 class Schedule(models.Model):
     title = models.CharField(max_length=50)
     trip_start_date = models.DateField()
@@ -44,3 +44,49 @@ class Schedule(models.Model):
     
     def __str__(self):
         return self.title
+    
+#予定テーブル
+class Plan(models.Model):
+    schedule = models.ForeignKey('Schedule', on_delete=models.CASCADE, related_name='plans')
+    CATEGORY_CHOICES = [
+        ('move', '移動')
+        ('sightseeing', '観光')
+        ('meal', '食事')
+        ('stay', '宿泊')
+    ]
+    action_category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES,
+        blank=True
+    )
+    name = models.CharField(max_length=24)
+    start_datetime = models.DateTimeField()
+    end_datetime = models.DateTimeField()
+    memo = models.TextField(blank=True, null=True)
+    departure_location = models.CharField(max_length=24, blank=True, null=True)
+    arrival_location = models.CharField(max_length=24, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.name} ({self.action_category})"
+    
+#リンクテーブル
+class Link(models.Model):
+    plan = models.ForeignKey('plan', on_delete=models.CASCADE, related_name='links')
+    url = models.URLField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.url
+    
+#写真テーブル
+class Picture(models.Model):
+    plan = models.ForeignKey('plan', on_delete=models.CASCADE, related_name='links')
+    image = models.ImageField(upload_to='plan_pictures/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.caption or "画像"
