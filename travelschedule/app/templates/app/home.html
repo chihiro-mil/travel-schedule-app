@@ -24,21 +24,32 @@
         <div class="modal-content">
             <span id="closeModalBtn" class="close">&times;</span>
             <h2>予定表追加</h2>
-            <form method="POST" action="{% url 'app:plan_add' %}">
+            <form method="POST" action="{% url 'app:home' %}">
                 {% csrf_token %}
                 <label>旅行タイトル</label><br>
-                <input type="text" name="title" required><br><br>
+                <input type="text" name="title" maxlength="50" required><br><br>
 
                 <label>旅行期間</label><br>
                 <div class="calendar-wrapper">
                     <i class="fas fa-calendar-alt calendar-icon"></i>
-                    <input type="text" id="dateRange" name="trip_period" placeholder="日付を選択" required>
-                </div>
-                <input type="hidden" name="trip_start_date">
-                <input type="hidden" name="trip_end_date">
+                    <input type="text" id="dateRange" name="trip_period" placeholder="日付を選択" readonly>
+                    <input type="hidden" name="trip_start_date">
+                    <input type="hidden" name="trip_end_date">
+                </div><br>
 
                 <button type="submit">保存</button>
             </form>
         </div>
+    </div>
+
+    <div>
+        {% for schedule in schedules %}
+            <a href="{% url 'app:schedule_detail' schedule.id %}" class="schedule-link">
+                <div class="schedule-box">
+                    <p><strong>{{ schedule.title }}</strong></p>
+                    <p>{{ schedule.trip_start_date }} ～ {{ schedule.trip_end_date }}</p>
+                </div>
+            </a>
+        {% endfor %}
     </div>
 {% endblock %}

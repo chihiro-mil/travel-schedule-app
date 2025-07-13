@@ -31,3 +31,16 @@ class User(AbstractUser, PermissionsMixin):
     
     class Meta:
         db_table = 'users'
+        
+        
+#予定表
+class Schedule(models.Model):
+    title = models.CharField(max_length=50)
+    trip_start_date = models.DateField()
+    trip_end_date = models.DateField()
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.title

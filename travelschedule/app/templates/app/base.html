@@ -11,7 +11,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/rangePlugin.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+    <script>
+        flatpickr.localize(flatpickr.l10ns.ja);
+    </script>
 </head>
 <body>
 
@@ -35,41 +39,13 @@
             <li><a href="{% url 'app:logout' %}"><i class="fas fa-sign-out-alt"></i><br>ログアウト</a></li>
         </ul>
     <script>
-        let lastScrollY = window.scrollY;
-
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('.footer-nav');
-            if (!nav) return;
-
-            if (window.scrollY> lastscrollY){
-                nav.style.transform ='translateY(0)';
-            }else {
-                nav.style.transform ='translateY(100)';
-            }
-            lastscrollY = window.scrollY;
-        });
-
-        
         document.addEventListener("DOMContentLoaded", function() {
-            flatpickr("#dateRange", {
-                mode: "range",
-                dateFormat: "Y-m-d",
-                locale: "ja",
-                onChange: function(selectedDates, dateStr, instance) {
-                    if (selectedDates.length === 2){
-                        const start = selectedDates[0];
-                        const end = selectedDates[1];
-
-                        document.querySelector('input[name="trip_start_date"]').value = instance.formatDate(start, "Y-m-d");
-                        document.querySelector('input[name="trip_end_date"]').value = instance.formatDate(end, "Y-m-d");
-                    }
-                }
-            });
+            const modal = document.getElementById("modal");
             const openBtn = document.getElementById("openModalBtn");
             const closeBtn = document.getElementById("closeModalBtn");
-            const modal = document.getElementById("modal");
+            const calendarIcon = document.querySelector(".calendar-icon");
 
-            if (openBtn && closeBtn && modal){
+            if (openBtn && closeBtn && modal) {
                 openBtn.onclick = function () {
                     modal.classList.remove("hidden");
                 };
@@ -77,6 +53,40 @@
                     modal.classList.add("hidden");
                 };
             }
+
+            let fp = flatpickr("#dateRange", {
+                mode: "range",
+                dateFormat: "Y-m-d",
+                locale: "ja",
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length === 2){
+                        const start = selectedDates[0];
+                        const end = selectedDates[1];
+                        document.querySelector('input[name="trip_start_date"]').value = instance.formatDate(start, "Y-m-d");
+                        document.querySelector('input[name="trip_end_date"]').value = instance.formatDate(end, "Y-m-d");
+                    }
+                }
+            });
+
+
+            if (calendarIcon) {
+                calendarIcon.addEventListener("click", function () {
+                    document.getElementById("dateRange").focus();
+                });
+            }
+
+            let lastScrollY = window.scrollY;
+            window.addEventListener('scroll', () => {
+                const nav = document.querySelector('.footer-nav');
+                if (!nav) return;
+
+                if (window.scrollY > lastscrollY) {
+                    nav.style.transform ='translateY(0)';
+                }else {
+                    nav.style.transform ='translateY(100)';
+                }
+                lastscrollY = window.scrollY;
+            });
         });
     </script>
 </body>

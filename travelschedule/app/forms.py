@@ -3,6 +3,7 @@ from .models import User
 from django.core.exceptions import ValidationError
 import re
 from django.contrib.auth import authenticate
+from .models import Schedule
 
 
 #アカウント登録画面用
@@ -94,3 +95,16 @@ class LoginForm(forms.Form):
     
     def get_user(self):
         return self.user
+    
+    
+#予定表用
+class ScheduleForm(forms.ModelForm):
+    class Meta:
+        model = Schedule
+        fields = ['title', 'trip_start_date', 'trip_end_date']
+        
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if len(title) > 50:
+            raise forms.ValidationError("タイトルは50文字以内で入力してください。")
+        return title

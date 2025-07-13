@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm
 from .models import User
 from django.contrib.auth import authenticate, login
@@ -13,6 +13,10 @@ from django.shortcuts import render
 
 from django.contrib.auth import logout
 from django.shortcuts import redirect
+
+from .models import Schedule#, Plan
+from .forms import ScheduleForm
+
 
 
 #portfolio
@@ -64,7 +68,28 @@ def logout_view(request):
 #ホーム画面（予定表一覧画面）
 @login_required
 def home_view(request):
-    return render(request, 'app/home.html')
+    if request.method =="POST":
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('app:home')
+    else:
+        form = ScheduleForm()
+    
+    schedules = Schedule.objects.all().order_by('-created_at')
+    return render(request, 'app/home.html', {
+        'form': form,
+        'schedules': schedules
+    })
+
+def schedule_detail_view(request, schedule_id):
+    schedule = get_object_or_404(Schedule, id=schedule_id)
+    #plans = Plan.objects.filter(schedule_id=schedule.id)
+    return render(request, 'app/schedule_detail.html', {
+        'schedule': schedule,
+        #'plans': plans,
+    })
+    
 
 #plan/add(仮)ページ
 def plan_add(request):
