@@ -9,6 +9,9 @@
         <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
     {% endblock %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
 </head>
 <body>
 
@@ -20,10 +23,10 @@
         <ul>
             <li><a href="{% url 'app:home' %}"><i class="fas fa-home"></i><br>ホーム</a></li>
             
-            {% if request.path == '/app/home/' %}
-                <li><a href="{% url 'app:schedule_add' %}"><i class="fas fa-circle-plus"></i><br>予定表追加</a></li>
+            {% if request.path == '/home/' %}
+                <li><a href="#" id="openModalBtn"><i class="fas fa-plus-square"></i><br>予定表追加</a></li>
             {% elif request.path == '/app/schedule/' %}
-                <li><a href="{% url 'app:plan_add' %}"><i class="fas fa-circle-plus"></i><br>予定追加</a></li>
+                <li><a href="{% url 'app:plan_add' %}"><i class="fas fa-plus-square"></i><br>予定追加</a></li>
             {% else %}
                 <li><span class="disabled-link">予定追加</span></li>
             {% endif %}
@@ -44,6 +47,36 @@
                 nav.style.transform ='translateY(100)';
             }
             lastscrollY = window.scrollY;
+        });
+
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            flatpickr("#dateRange", {
+                mode: "range",
+                dateFormat: "Y-m-d",
+                locale: "ja",
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length === 2){
+                        const start = selectedDates[0];
+                        const end = selectedDates[1];
+
+                        document.querySelector('input[name="trip_start_date"]').value = instance.formatDate(start, "Y-m-d");
+                        document.querySelector('input[name="trip_end_date"]').value = instance.formatDate(end, "Y-m-d");
+                    }
+                }
+            });
+            const openBtn = document.getElementById("openModalBtn");
+            const closeBtn = document.getElementById("closeModalBtn");
+            const modal = document.getElementById("modal");
+
+            if (openBtn && closeBtn && modal){
+                openBtn.onclick = function () {
+                    modal.classList.remove("hidden");
+                };
+                closeBtn.onclick = function () {
+                    modal.classList.add("hidden");
+                };
+            }
         });
     </script>
 </body>

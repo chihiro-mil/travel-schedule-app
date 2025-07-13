@@ -65,3 +65,12 @@ def logout_view(request):
 @login_required
 def home_view(request):
     return render(request, 'app/home.html')
+
+#plan/add(仮)ページ
+def plan_add(request):
+    if request.method == "POST":
+        print(request.POST.get('title'))
+        print(request.POST.get('trip_start_date'))
+        print(request.POST.get('trip_end_date'))
+        return redirect('app:home')
+    return redirect('app:home')

@@ -1,8 +1,10 @@
 {% extends 'app/base.html' %}
+{% load static %}
 
 {% block title %}Home page{% endblock %}
 
 {% block extra_head %}
+    {{ block.super }}
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -18,4 +20,25 @@
         <button class="sort-button">並び替え<br>（更新順）</button>
     </div>
 
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeModalBtn" class="close">&times;</span>
+            <h2>予定表追加</h2>
+            <form method="POST" action="{% url 'app:plan_add' %}">
+                {% csrf_token %}
+                <label>旅行タイトル</label><br>
+                <input type="text" name="title" required><br><br>
+
+                <label>旅行期間</label><br>
+                <div class="calendar-wrapper">
+                    <i class="fas fa-calendar-alt calendar-icon"></i>
+                    <input type="text" id="dateRange" name="trip_period" placeholder="日付を選択" required>
+                </div>
+                <input type="hidden" name="trip_start_date">
+                <input type="hidden" name="trip_end_date">
+
+                <button type="submit">保存</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
