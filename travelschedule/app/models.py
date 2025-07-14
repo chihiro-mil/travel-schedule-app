@@ -47,13 +47,13 @@ class Schedule(models.Model):
     
 #予定テーブル
 class Plan(models.Model):
-    schedule = models.ForeignKey('Schedule', on_delete=models.CASCADE, related_name='plans')
     CATEGORY_CHOICES = [
-        ('move', '移動')
-        ('sightseeing', '観光')
-        ('meal', '食事')
-        ('stay', '宿泊')
+        ('move', '移動'),
+        ('sightseeing', '観光'),
+        ('meal', '食事'),
+        ('stay', '宿泊'),
     ]
+    schedule = models.ForeignKey('Schedule', on_delete=models.CASCADE, related_name='plans')
     action_category = models.CharField(
         max_length=20,
         choices=CATEGORY_CHOICES,
@@ -69,11 +69,11 @@ class Plan(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"{self.name} ({self.action_category})"
+        return f"{self.name} ({self.action_category_display()})"
     
 #リンクテーブル
 class Link(models.Model):
-    plan = models.ForeignKey('plan', on_delete=models.CASCADE, related_name='links')
+    plan = models.ForeignKey('Plan', on_delete=models.CASCADE, related_name='links')
     url = models.URLField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -83,10 +83,32 @@ class Link(models.Model):
     
 #写真テーブル
 class Picture(models.Model):
-    plan = models.ForeignKey('plan', on_delete=models.CASCADE, related_name='links')
+    plan = models.ForeignKey('Plan', on_delete=models.CASCADE, related_name='pictures')
     image = models.ImageField(upload_to='plan_pictures/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.caption or "画像"
+    
+#移動カテゴリテーブル
+class TransportationMethod(models.Model):
+    plan = models.ForeignKey('Plan', on_delete=models.CASCADE, related_name='transportation_methods')
+    transportation = models.CharField(
+        max_length=20,
+        choices=[
+            ('walk', '徒歩'),
+            ('train', '電車'),
+            ('bus', 'バス'),
+            ('shinkansen', '新幹線'),
+            ('plane', '飛行機'),
+            ('car', '車'),
+            ('other', 'その他'),
+        ]
+    )
+    transportation_icon_url = models.URLField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.get_transportation_display()} ({self.transportation})"

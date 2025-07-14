@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 import re
 from django.contrib.auth import authenticate
 from .models import Schedule
+from .models import Plan, Link, Picture, TransportationMethod
 
 
 #アカウント登録画面用
@@ -108,3 +109,59 @@ class ScheduleForm(forms.ModelForm):
         if len(title) > 50:
             raise forms.ValidationError("タイトルは50文字以内で入力してください。")
         return title
+    
+#予定本体フォーム用
+class PlanForm(forms.ModelForm):
+    trip_date = forms.CharField(
+        choices=[],
+        label="出発日",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    
+    start_time = forms.TimeField(
+        label="出発時刻",
+        widget=forms.TimeInput(attrs={
+            'type': 'time',
+            'class': 'form-control',
+            'placeholder': '例：09:00'
+        })
+    )
+    
+    end_time = forms.TimeField(
+        label="到着時刻",
+        widget=forms.TimeInput(attrs={
+            'type': 'time',
+            'class': 'form-control',
+            'placeholder': '例：18:00'
+        })
+    )
+    
+    class Meta:
+        model = Plan
+        fields = [
+            'action_category', 'name',
+            'memo', 'departure_location', 'arrival_location'
+            ]
+        
+    def __init__(self, *args, trip_date_choices=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if trip_date_choices:
+            self.fields['trip_date'].choices = trip_date_choices
+        
+#リンクフォーム用
+class LinkForm(forms.ModelForm):
+    class Meta:
+        model = Link
+        fields = ['url']
+        
+#写真フォーム用
+class PictureForm(forms.ModelForm):
+    class Meta:
+        model = Picture
+        fields = ['image']
+        
+#移動手段（移動カテゴリのみ）
+class TransportationMethodForm(forms.ModelForm):
+    class Meta:
+        model = TransportationMethod
+        fields = ['transportation']
