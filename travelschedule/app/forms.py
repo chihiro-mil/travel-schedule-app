@@ -112,12 +112,10 @@ class ScheduleForm(forms.ModelForm):
     
 #予定本体フォーム用
 class PlanForm(forms.ModelForm):
-    trip_date = forms.CharField(
+    trip_date = forms.ChoiceField(
         choices=[],
-        label="出発日",
-        widget=forms.Select(attrs={'class': 'form-control'})
+        label="出発日"
     )
-    
     start_time = forms.TimeField(
         label="出発時刻",
         widget=forms.TimeInput(attrs={
@@ -126,7 +124,6 @@ class PlanForm(forms.ModelForm):
             'placeholder': '例：09:00'
         })
     )
-    
     end_time = forms.TimeField(
         label="到着時刻",
         widget=forms.TimeInput(attrs={
@@ -135,19 +132,33 @@ class PlanForm(forms.ModelForm):
             'placeholder': '例：18:00'
         })
     )
-    
     class Meta:
         model = Plan
         fields = [
             'action_category', 'name',
             'memo', 'departure_location', 'arrival_location'
             ]
-        
+
     def __init__(self, *args, trip_date_choices=None, **kwargs):
         super().__init__(*args, **kwargs)
         if trip_date_choices:
             self.fields['trip_date'].choices = trip_date_choices
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        trip_date = cleaned_data.get('trip_date')
+        start_time = cleaned_data.get('start_time')
+        end_time = cleaned_data.get('end_time')
         
+        if trip_date and start_time and end_time:
+            from datetime import datetime
+            start_datetime = datetime.combine(trip_date, start_time)
+            end_datetime = datetime.combine(trip_date, end_time)
+            cleaned_data['start_datetime'] = start_datetime
+            cleaned_data['end_datetime'] = end_datetime
+        return cleaned_data
+    
+    
 #リンクフォーム用
 class LinkForm(forms.ModelForm):
     class Meta:

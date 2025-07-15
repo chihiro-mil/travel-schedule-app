@@ -180,6 +180,17 @@
 
 /*base画面*/
 
+.footer-icon-label {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+.disabled-link {
+    color: #aaa;
+    pointer-events: none;
+}
+
 .footer-nav {
     position: fixed;
     bottom: 0;

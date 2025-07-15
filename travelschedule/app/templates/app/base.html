@@ -25,19 +25,56 @@
 
     <footer class="footer-nav">
         <ul>
-            <li><a href="{% url 'app:home' %}"><i class="fas fa-home"></i><br>ホーム</a></li>
+            <li>
+                <a href="{% url 'app:home' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-home"></i><br>ホーム
+                    </span>
+                </a>
+            </li>
             
             {% if request.path == '/home/' %}
-                <li><a href="#" id="openModalBtn"><i class="fas fa-plus-square"></i><br>予定表追加</a></li>
+                <li>
+                    <a href="#" id="openModalBtn">
+                        <span class="footer-icon-label">
+                            <i class="fas fa-plus-square"></i><br>予定表追加
+                        </span>
+                    </a>
+                </li>
             {% elif request.path == '/app/schedule/' %}
-                <li><a href="{% url 'app:plan_add' %}"><i class="fas fa-plus-square"></i><br>予定追加</a></li>
+                <li>
+                    <a href="{% url 'app:plan_add' %}">
+                        <span class="footer-icon-label">
+                            <i class="fas fa-plus-square"></i><br>予定追加
+                        </span>
+                    </a>
+                </li>
             {% else %}
-                <li><span class="disabled-link">予定追加</span></li>
+                <li>
+                    <span class="footer-icon-label disabled-link">
+                        <i class="fas fa-plus-square"></i><br>予定追加
+                    </span>
+                </li>
             {% endif %}
 
-            <li><a href="{% url 'app:edit_profile' %}"><i class="fas fa-user-cog"></i><br>マイページ設定</a></li>
-            <li><a href="{% url 'app:logout' %}"><i class="fas fa-sign-out-alt"></i><br>ログアウト</a></li>
+            <li>
+                <a href="{% url 'app:edit_profile' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-user-cog"></i><br>マイページ設定
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'app:logout' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-sign-out-alt"></i><br>ログアウト
+                    </span>
+                </a>
+            </li>
         </ul>
+    </footer>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const modal = document.getElementById("modal");

@@ -1,22 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegisterForm
-from .models import User
-from django.contrib.auth import authenticate, login
-from .forms import LoginForm
-
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login
-from django.contrib.auth import logout
-
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 
-from django.contrib.auth import logout
-from django.shortcuts import redirect
+from .forms import (
+    RegisterForm,
+    LoginForm,
+    ScheduleForm,
+    PlanForm,
+)
 
-from .models import Schedule#, Plan
-from .forms import ScheduleForm
+from .models import User, Schedule, Plan
 
+from datetime import timedelta
 
 
 #portfolio
@@ -90,12 +86,63 @@ def schedule_detail_view(request, schedule_id):
         #'plans': plans,
     })
     
+    
+#予定画面
+def plan_create_or_edit_view(request, schedule_id, plan_id=None):
+    schedule = get_object_or_404(Schedule, id=schedule_id)
+    
+    if plan_id:
+        plan = get_object_or_404(Plan, id=plan_id)
+    else:
+        plan = None
+        
+    if request.method == 'POST':
+        form = PlanForm(request.POST, isinstance=plan, trip_date_choices=generate_trip_date_choices(schedule))
+        if form.is_valid():
+            plan_instance = form.save(commit=False)
+            plan_instance.schedule = schedule
+            plan_instance.start_datetime = form.cleaned_data['start_datetime']
+            plan_instance.end_datetime = form.cleaned_data['end_datetime']
+            plan_instance.save()
+            return redirect('app:schedule_detail', schedule_id=schedule.id)
+    else:
+        form = PlanForm(isinstance=plan, trip_date_choices=generate_trip_date_choices(schedule))
+        
+    return render(request, 'app/plan_form.html', {'form': form, 'schedule': schedule})
 
-#plan/add(仮)ページ
-def plan_add(request):
-    if request.method == "POST":
-        print(request.POST.get('title'))
-        print(request.POST.get('trip_start_date'))
-        print(request.POST.get('trip_end_date'))
-        return redirect('app:home')
-    return redirect('app:home')
+def generate_trip_date_choices(schedule):
+    trip_dates = []
+    current_date = schedule.trip_start_date
+    while current_date <= schedule.trip_end_date:
+        label = current_date.strftime('%Y/%m/%d(%a)')
+        trip_dates.append((current_date, label))
+        current_date += timedelta(days=1)
+    return trip_dates
+
+#追加・編集共通
+@login_required
+def plan_form_view(request, schedule_id, plan_id=None):
+    schedule = get_object_or_404(Schedule, id=schedule_id)
+    
+    plan = get_object_or_404(Plan, id=plan_id) if plan_id else None
+    
+    trip_date_choices = generate_trip_date_choices(schedule)
+    
+    if request.method == 'POST':
+        form = PlanForm(request.POST, trip_date_choices=trip_date_choices, isinstance=plan)
+        if form.is_valid():
+            new_plan = form.save(commit=False)
+            new_plan.schedule = schedule
+            new_plan.start_datetime = form.cleaned_data['start_datetime']
+            new_plan.end_datetime = form.cleaned_data['end_datetime']
+            new_plan.save()
+            return redirect('app:schedule_detail', schedule_id=schedule.id)
+    else:
+        form = PlanForm(isinstance=plan, trip_date_choices=trip_date_choices)
+        
+    return render(request, 'app/plan_form.html', {
+        'form': form,
+        'schedule': schedule,
+        'plan': plan,
+    })
+

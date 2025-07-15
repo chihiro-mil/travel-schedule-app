@@ -1,0 +1,65 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Plan form page {% endblock %}
+
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'app/css/plan_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'app:schedule_detail' schedule_id=schedule.id %}"class="back-button">＜戻る</a>
+
+<div class="container">
+    <h2>予定の{{ form_title }}</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.action_category.label_tag }}
+            {{ form.action_category }}
+        </div>
+
+        <div class="form-group">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+        </div>
+
+        <div class="form-group" id="trip-date-field">
+            {{ form.trip_date.label_tag }}
+            {{ form.trip_date }}
+        </div>
+
+        <div class="form-group" id="start-time-field">
+            {{ form.start_time.label_tag }}
+            {{ form.start_time }}
+        </div>
+
+        <div class="form-group" id="end-time-field">
+            {{ form.end_time.label_tag }}
+            {{ form.end_time }}
+        </div>
+
+        <div class="form-group">
+            {{ form.memo.label_tag }}
+            {{ form.memo }}
+        </div>
+
+        <div class="form-group">
+            {{ form.departure_location.label_tag }}
+            {{ form.departure_location }}
+        </div>
+
+        <div class="form-group">
+            {{ form.arrival_location.label_tag }}
+            {{ form.arrival_location }}
+        </div>
+
+        <!-- リンク・画像・移動手段　後で追加予定 -->
+
+        <button type="submit" class="btn btn-primary">保存</button>
+    </form>
+</div>
+{% endblock %}
