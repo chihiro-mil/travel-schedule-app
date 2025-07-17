@@ -335,6 +335,27 @@
     pointer-events: none;
 }
 
+.transportation-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.transportation-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.transportation-option input {
+    margin-right: 5px;
+}
+
 /*予定表追加モーダル PC用*/
 @media screen and (min-width: 600px) {
     .modal-content {

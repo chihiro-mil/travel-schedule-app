@@ -145,11 +145,26 @@ class PlanForm(forms.ModelForm):
             'placeholder': '例：18:00'
         })
     )
+    transportation = forms.ModelChoiceField(
+        queryset=TransportationMethod.objects.all(),
+        label="移動手段",
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    transportation = forms.ChoiceField(
+        choices=[('徒歩', '徒歩'), ('電車', '電車'), ('新幹線', '新幹線'), ('バス', 'バス'), 
+                ('飛行機', '飛行機'), ('車', '車'), ('その他', 'その他')],
+        widget=forms.RadioSelect,
+        required=False,
+        label="移動手段"
+    )
+    
     class Meta:
         model = Plan
         fields = [
             'action_category', 'name',
-            'memo', 'departure_location', 'arrival_location'
+            'memo', 'departure_location', 'arrival_location',
+            'transportation',
             ]
 
     def __init__(self, *args, trip_date_choices=None, **kwargs):
