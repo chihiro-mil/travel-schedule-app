@@ -63,3 +63,47 @@
     </form>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const categorySelect = document.getElementById('id_action_category');
+        const tripDateField = document.getElementById('trip-date-field');
+        const startTimeField = document.getElementById('start-time-field');
+        const endTimeField = document.getElementById('end-time-field');
+
+        const tripDateLabel = tripDateField.querySelector('label');
+        const startTimeField = startTimeField.querySelector('label');
+        const endTimeField = endTimeField.querySelector('label');
+
+        function updateFields() {
+            const selected = categorySelect.value;
+
+            tripDateField.style.display = 'block';
+            startTimeField.style.display = 'block';
+            endTimeField.style.display = 'block';
+
+            if (selected === '移動') {
+                tripDateLabel.textContent = '出発日';
+                startTimeLabel.textContent = '出発時刻';
+                endTimeLabel.textContent = '到着時刻';
+            } else if (selected === '観光地') {
+                tripDateLabel.textContent = '滞在開始日';
+                startTimeLabel.textContent = '滞在開始時刻';
+                endTimeLabel.textContent = '滞在終了時刻';
+            } else if (selected === '食事') {
+                tripDateLabel.textContent = '食事日';
+                startTimeLabel.textContent = '食事開始時刻';
+                endTimeLabel.textContent = '食事終了時刻'; 
+            } else if (selected === '宿泊') {
+                tripDateLabel.textContent = '滞在日';
+                startTimeLabel.textContent = '滞在開始時刻';
+                endTimeLabel.textContent = '滞在終了時刻'; 
+            }
+        }
+
+        categorySelect.addEventListener('change', updateFields);
+        updateFields();
+    });
+</script>
+{% endblock %}
