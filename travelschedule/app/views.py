@@ -129,12 +129,12 @@ def plan_form_view(request, schedule_id, plan_id=None):
     trip_date_choices = generate_trip_date_choices(schedule)
     
     if request.method == 'POST':
-        form = PlanForm(request.POST, trip_date_choices=trip_date_choices, isinstance=plan)
+        form = PlanForm(request.POST, request.FILES, trip_date_choices=trip_date_choices, isinstance=plan)
         if form.is_valid():
             new_plan = form.save(commit=False)
             new_plan.schedule = schedule
-            new_plan.start_datetime = form.cleaned_data['start_datetime']
-            new_plan.end_datetime = form.cleaned_data['end_datetime']
+            new_plan.start_datetime = form.cleaned_data.get('start_datetime')
+            new_plan.end_datetime = form.cleaned_data.get('end_datetime')
             new_plan.save()
             return redirect('app:schedule_detail', schedule_id=schedule.id)
     else:
@@ -144,5 +144,6 @@ def plan_form_view(request, schedule_id, plan_id=None):
         'form': form,
         'schedule': schedule,
         'plan': plan,
+        'form_title': '予定編集' if plan else '予定追加',
     })
 

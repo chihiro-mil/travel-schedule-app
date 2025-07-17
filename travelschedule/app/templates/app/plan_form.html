@@ -1,7 +1,7 @@
 {% extends 'app/base.html' %}
 {% load static %}
 
-{% block title %}Plan form page {% endblock %}
+{% block title %}{{ form_title }}page{% endblock %}
 
 {% block extra_head %}
     {{ block.super }}
@@ -27,20 +27,27 @@
             {{ form.name }}
         </div>
 
-        <div class="form-group" id="trip-date-field">
-            {{ form.trip_date.label_tag }}
+    <div id="datetime-fields">
+        <div class="form-group" id="start-date-group">
+            <label id="start-date-label">開始日</label>
             {{ form.trip_date }}
         </div>
 
-        <div class="form-group" id="start-time-field">
-            {{ form.start_time.label_tag }}
+        <div class="form-group" id="start-time-group">
+            <label id="start-time-label">開始時刻</label>
             {{ form.start_time }}
         </div>
 
-        <div class="form-group" id="end-time-field">
-            {{ form.end_time.label_tag }}
+        <div class="form-group" id="end-date-group">
+            <label id="end-date-group">終了日</label>
+            {{ form.end_date }}
+        </div>
+
+        <div class="form-group" id="end-time-group">
+            <label id="end-time-group">終了時刻</label>
             {{ form.end_time }}
         </div>
+    </div>
 
         <div class="form-group">
             {{ form.memo.label_tag }}
@@ -66,44 +73,47 @@
 
 {% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const categorySelect = document.getElementById('id_action_category');
-        const tripDateField = document.getElementById('trip-date-field');
-        const startTimeField = document.getElementById('start-time-field');
-        const endTimeField = document.getElementById('end-time-field');
+document.addEventListener('DOMContentLoaded', function () {
+    const categoryField = document.querySelector("#id_action_category");
+    const startDateLabel = document.getElementById("start-date-label");
+    const startTimeLabel = document.getElementById("start-time-label");
+    const endDateLabel = document.getElementById("end-date-label");
+    const endTimeLabel = document.getElementById("end-time-label");
 
-        const tripDateLabel = tripDateField.querySelector('label');
-        const startTimeField = startTimeField.querySelector('label');
-        const endTimeField = endTimeField.querySelector('label');
+    function updateLabels() {
+        const selected = categoryField.value;
 
-        function updateFields() {
-            const selected = categorySelect.value;
+        if (!selected) {
+            datetimeFields.style.display = "none";
+            return;
+        }
 
-            tripDateField.style.display = 'block';
-            startTimeField.style.display = 'block';
-            endTimeField.style.display = 'block';
+        datetimeFields.style.display = "block";
 
-            if (selected === '移動') {
-                tripDateLabel.textContent = '出発日';
-                startTimeLabel.textContent = '出発時刻';
-                endTimeLabel.textContent = '到着時刻';
-            } else if (selected === '観光地') {
-                tripDateLabel.textContent = '滞在開始日';
-                startTimeLabel.textContent = '滞在開始時刻';
-                endTimeLabel.textContent = '滞在終了時刻';
-            } else if (selected === '食事') {
-                tripDateLabel.textContent = '食事日';
-                startTimeLabel.textContent = '食事開始時刻';
-                endTimeLabel.textContent = '食事終了時刻'; 
-            } else if (selected === '宿泊') {
-                tripDateLabel.textContent = '滞在日';
-                startTimeLabel.textContent = '滞在開始時刻';
-                endTimeLabel.textContent = '滞在終了時刻'; 
+        if (selected === "移動") {
+                startDateLabel.textContent = "出発日";
+                startTimeLabel.textContent = "出発時刻";
+                endDateLabel.textContent = "到着日";
+                endTimeLabel.textContent = "到着時刻";
+            } else if (selected === "観光地") {
+                startDateLabel.textContent = "滞在開始日";
+                startTimeLabel.textContent = "滞在開始時";
+                endDateLabel.textContent = "滞在終了日";
+                endTimeLabel.textContent = "滞在終了時刻";
+            } else if (selected === "食事") {
+                startDateLabel.textContent = "食事日";
+                startTimeLabel.textContent = "食事開始時刻";
+                endTimeLabel.textContent = "食事終了時刻"; 
+            } else if (selected === "宿泊") {
+                startDateLabel.textContent = "滞在開始日";
+                startTimeLabel.textContent = "滞在開始時刻";
+                endDateLabel.textContent = "滞在終了日";
+                endTimeLabel.textContent = "滞在終了時刻"; 
             }
         }
 
-        categorySelect.addEventListener('change', updateFields);
-        updateFields();
+        updateLabels();
+        categoryField.addEventListener("change", updateLabels);
     });
 </script>
 {% endblock %}

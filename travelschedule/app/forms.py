@@ -5,6 +5,7 @@ import re
 from django.contrib.auth import authenticate
 from .models import Schedule
 from .models import Plan, Link, Picture, TransportationMethod
+from datetime import datetime
 
 
 #アカウント登録画面用
@@ -112,20 +113,32 @@ class ScheduleForm(forms.ModelForm):
     
 #予定本体フォーム用
 class PlanForm(forms.ModelForm):
-    trip_date = forms.ChoiceField(
+    start_date = forms.ChoiceField(
         choices=[],
-        label="出発日"
+        label="開始日",
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'form-control',
+        })
     )
     start_time = forms.TimeField(
-        label="出発時刻",
+        label="開始時刻",
         widget=forms.TimeInput(attrs={
             'type': 'time',
             'class': 'form-control',
             'placeholder': '例：09:00'
         })
     )
+    end_date = forms.ChoiceField(
+        choices=[],
+        label="終了日",
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'form-control',
+        })
+    )
     end_time = forms.TimeField(
-        label="到着時刻",
+        label="終了時刻",
         widget=forms.TimeInput(attrs={
             'type': 'time',
             'class': 'form-control',
@@ -142,20 +155,34 @@ class PlanForm(forms.ModelForm):
     def __init__(self, *args, trip_date_choices=None, **kwargs):
         super().__init__(*args, **kwargs)
         if trip_date_choices:
-            self.fields['trip_date'].choices = trip_date_choices
+            self.fields['start_date'].choices = trip_date_choices
+            self.fields['end_date'].choices = trip_date_choices
     
     def clean(self):
         cleaned_data = super().clean()
-        trip_date = cleaned_data.get('trip_date')
+        start_date = cleaned_data.get('start_date')
         start_time = cleaned_data.get('start_time')
+        end_date = cleaned_data.get('end_date')
         end_time = cleaned_data.get('end_time')
         
-        if trip_date and start_time and end_time:
-            from datetime import datetime
-            start_datetime = datetime.combine(trip_date, start_time)
-            end_datetime = datetime.combine(trip_date, end_time)
-            cleaned_data['start_datetime'] = start_datetime
-            cleaned_data['end_datetime'] = end_datetime
+        if start_date and end_date:
+            if start_date > end_date:
+                    raise forms.ValidationError(f"到着日は出発日と同じか、それ以降の日付にしてください。")
+        
+        if start_date and start_time and end_date and end_time:
+            try:
+                start_datetime = datetime.combine(start_date, start_time)
+                end_datetime = datetime.combine(end_date, end_time)
+                
+                if start_datetime > end_datetime:
+                    raise forms.ValidationError(f"到着時刻は出発時刻より後にしてください。")
+        
+                cleaned_data['start_datetime'] = datetime.combine(start_date, start_time)
+                cleaned_data['end_datetime'] = datetime.combine(end_date, end_time)
+                
+            except Exception as e:
+                raise forms.ValidationError(f"日時の形式が正しくありません。日付と時刻を正しく入力してください。")
+            
         return cleaned_data
     
     
