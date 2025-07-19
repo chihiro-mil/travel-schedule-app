@@ -8,9 +8,11 @@ from .forms import (
     LoginForm,
     ScheduleForm,
     PlanForm,
+    LinkFormSet,
+    PictureFormSet,
 )
 
-from .models import User, Schedule, Plan
+from .models import User, Schedule, Plan, Link, Picture
 
 from datetime import timedelta
 
@@ -90,25 +92,42 @@ def schedule_detail_view(request, schedule_id):
 #予定画面
 def plan_create_or_edit_view(request, schedule_id, plan_id=None):
     schedule = get_object_or_404(Schedule, id=schedule_id)
-    
-    if plan_id:
-        plan = get_object_or_404(Plan, id=plan_id)
-    else:
-        plan = None
+    plan = get_object_or_404(Plan, id=plan_id)if plan_id else None
+
+    trip_choices = generate_trip_date_choices(schedule)
         
     if request.method == 'POST':
-        form = PlanForm(request.POST, isinstance=plan, trip_date_choices=generate_trip_date_choices(schedule))
-        if form.is_valid():
+        form = PlanForm(request.POST, request.FILES, isinstance=plan, trip_date_choices=trip_choices)
+        link_formset = LinkFormSet(request.POST, prefix='links')
+        picture_formset = PictureFormSet(request.POST, request.FILES, prefix='pictures')
+        
+        if form.is_valid() and link_formset.is_valid() and picture_formset.is_valid():
             plan_instance = form.save(commit=False)
             plan_instance.schedule = schedule
             plan_instance.start_datetime = form.cleaned_data['start_datetime']
             plan_instance.end_datetime = form.cleaned_data['end_datetime']
             plan_instance.save()
+            
+            for link in link_formset.save(commit=False):
+                link.plan = plan_instance
+                link.save()
+                
+            for picture in picture_formset.save(commit=False):
+                picture.plan = plan_instance
+                picture.save()
+                
             return redirect('app:schedule_detail', schedule_id=schedule.id)
     else:
-        form = PlanForm(isinstance=plan, trip_date_choices=generate_trip_date_choices(schedule))
+        form = PlanForm(isinstance=plan, trip_date_choices=trip_choices)
+        link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')
+        picture_formset = PictureFormSet(queryset=Picture.objects.none(), prefix='pictures')
         
-    return render(request, 'app/plan_form.html', {'form': form, 'schedule': schedule})
+    return render(request, 'app/plan_form.html', {
+        'form': form, 
+        'link_formset': link_formset,
+        'picture_formset': picture_formset,
+        'schedule': schedule,
+    })
 
 def generate_trip_date_choices(schedule):
     trip_dates = []

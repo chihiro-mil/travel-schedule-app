@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from .models import Schedule
 from .models import Plan, Link, Picture, TransportationMethod
 from datetime import datetime
+from .models import modelformset_factory
 
 
 #アカウント登録画面用
@@ -206,15 +207,23 @@ class LinkForm(forms.ModelForm):
     class Meta:
         model = Link
         fields = ['url']
-        
+        widgets = {
+            'url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': '例：https://example.com'
+            }),
+        }
+LinkFormSet = modelformset_factory(Link, form=LinkForm, extra=1, can_delete=True)
+
 #写真フォーム用
 class PictureForm(forms.ModelForm):
     class Meta:
         model = Picture
         fields = ['image']
-        
-#移動手段（移動カテゴリのみ）
-class TransportationMethodForm(forms.ModelForm):
-    class Meta:
-        model = TransportationMethod
-        fields = ['transportation']
+        widgets = {
+            'image': forms.ClearableFileInput(attrs={
+                'multiple': 'True',
+                'class': 'form-control-file'
+            }),
+        }
+PictureFormSet = modelformset_factory(Picture, form=PictureForm, extra=1, can_delete=True)
