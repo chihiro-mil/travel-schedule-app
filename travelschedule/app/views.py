@@ -201,7 +201,7 @@ def schedule_detail_view(request, schedule_id):
     }
     
     context = {
-        'schedule': schedule,
+        'schedule_id': schedule.id,
         'plans_by_date': plans_by_date,
         'sorted_dates': sorted_dates,
         'transportation_map': transportation_map,

@@ -5,12 +5,12 @@
 
 {% block extra_head %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static 'app/css/plan_form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'app:schedule_detail' schedule_id=schedule.id %}"class="back-button">＜戻る</a>
+<a href="{% url 'app:schedule_detail' schedule_id=schedule_id %}"class="back-button">＜戻る</a>
 
 <div class="container">
     <h2>予定の{{ form_title }}</h2>

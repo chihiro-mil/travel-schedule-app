@@ -251,10 +251,12 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    justify-content: center;
 }
 
 .home-title {
     font-weight: bold;
+    color: #000;
     font-size: 20px;
 }
 
@@ -265,9 +267,18 @@
     font-size: 14px;
     border-radius: 6px;
     cursor: pointer;
+    margin-left: auto;
 }
 
 /*予定表詳細画面*/
+
+.schedule-detail-container {
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+}
 .day-tabs {
     display: flex;
     gap: 10px;
