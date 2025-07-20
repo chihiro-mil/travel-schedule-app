@@ -379,4 +379,39 @@
     .modal-content button {
         font-size: 14px;
     }
+    .image-preview{
+        width: 80px;
+        height: 64px;
+    }
+    .remove-picture {
+        font-size: 14px;
+        top: 0;
+        right: 0;
+    }
+}
+
+/*予定表追加 リンク、画像*/
+.link-form, .image-form {
+    margin-bottom: 10px;
+}
+
+.image-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.image-preview {
+    width: 100px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.remove-picture {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    cursor: pointer;
+    display: none;
+    font-size: 16px;
+    color: #696969;
 }

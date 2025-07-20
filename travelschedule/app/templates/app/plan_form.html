@@ -92,7 +92,33 @@
             {% endfor %}
         </div>
     </div>
-        <!-- リンク・画像　後で追加予定 -->
+
+    <div id="link-formset-container">
+        {{ link_formset.management_form }}
+        {% for form in link_formset %}
+            <div class="link-form">
+                {{ fotm.url }}
+                <button type="button" class="remove-link">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        {% end for %}
+    </div>
+    <button type="button" id="add-link">＋リンクを追加</button>
+
+    <div id="picture-formset-container">
+        {{ picture_formset.management_form }}
+        {% for form in picture_formset %}
+            <div class="picture-form">
+                {{ fotm.image }}
+                <div class="image-preview-wrapper">
+                    <img src="#" class="image-preview" style="display: none;">
+                    <span class="remove-picture" title="削除">&times;</span>
+                </div>
+            </div>
+        {% end for %}
+    </div>
+    <button type="button" id="add-picture">＋画像を追加</button>
 
         <button type="submit" class="btn btn-primary">保存</button>
     </form>
@@ -147,6 +173,56 @@ document.addEventListener('DOMContentLoaded', function () {
 
         updateLabels();
         categoryField.addEventListener("change", updateLabels);
+
+    
+    const addLinkBtn = document.getElementById("add-link");
+    const linkContainer = document.getElementById("link-formset-container");
+    const linkTotalForms = document.querySelector("#id_links-TOTAL_FORMS");
+
+    addLinkBtn.addEventListener("click", () => {
+        const currentCount = parseInt(linkTotalForms.value);
+        const newFormHtml = linkContainer.querySelector(".link-form").outerHTML.replace(/-0-/g, `-${currentCount}-`).replace(/_0/g, `_${currentCount}`);
+        const newForm = document.createElement("div");
+        newForm.innerHTML = newFormHtml;
+        linkContainer.appendChild(newForm);
+        linkTotalForms.value = currentCount + 1;
+    });
+
+    linkContainer.addEventListener("click", function (e) {
+        if (e.target.classList.contains("remove-link")) {
+            e.target.parentElement.remove();
+        }
+    });
+
+
+    const container = document.getElementById("picture-formset-container");
+
+    container.querySelectorAll(".picture-form").forEach((formDiv, index) => {
+        const input = formDiv.querySelector("input[type='file']");
+        const preview = formDiv.querySelector(".image-preview");
+        const removeIcon = formDiv.querySelector(".remove-picture");
+
+        input.addEventListener("change", function () {
+            const file = input.files[0];
+            if (file){
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                    removeIcon.style.display = "inline";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeIcon.addEventListener("click", function () {
+            input.value = "";
+            preview.src = "#";
+            preview.style.display = "none";
+            removeIcon.style.display = "none";
+        });
+    });
+
     });
 </script>
 {% endblock %}
