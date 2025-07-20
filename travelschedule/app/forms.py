@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate
 from .models import Schedule
 from .models import Plan, Link, Picture, TransportationMethod
 from datetime import datetime
-from .models import modelformset_factory
+from django.forms import modelformset_factory
 
 
 #アカウント登録画面用
@@ -222,7 +222,6 @@ class PictureForm(forms.ModelForm):
         fields = ['image']
         widgets = {
             'image': forms.ClearableFileInput(attrs={
-                'multiple': 'True',
                 'class': 'form-control-file'
             }),
         }

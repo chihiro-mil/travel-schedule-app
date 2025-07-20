@@ -12,9 +12,11 @@ from .forms import (
     PictureFormSet,
 )
 
-from .models import User, Schedule, Plan, Link, Picture
+from .models import User, Schedule, Plan, Link, Picture, TransportationMethod
 
 from datetime import timedelta
+
+from collections import defaultdict
 
 
 #portfolio
@@ -89,7 +91,7 @@ def schedule_detail_view(request, schedule_id):
     })
     
     
-#予定画面
+#予定追加・編集画面
 def plan_create_or_edit_view(request, schedule_id, plan_id=None):
     schedule = get_object_or_404(Schedule, id=schedule_id)
     plan = get_object_or_404(Plan, id=plan_id)if plan_id else None
@@ -166,3 +168,43 @@ def plan_form_view(request, schedule_id, plan_id=None):
         'form_title': '予定編集' if plan else '予定追加',
     })
 
+#予定表画面
+@login_required
+def schedule_detail_view(request, schedule_id):
+    schedule = get_object_or_404(Schedule, id=schedule_id)
+    plans = Plan.objects.filter(schedule=schedule).order_by('start_datetime')
+    
+    plans_by_date = defaultdict(list)
+    for plan in plans:
+        if plan.start_datetime:
+            day = plan.start_datetime.date()
+            plans_by_date[day].append(plan)
+        
+    sorted_dates = sorted(plans_by_date.keys())
+    
+    transportation_icon_map = {
+        'walk': 'fa-person-walking',
+        'train': 'fa-train',
+        'subway': 'fa-subway',
+        'bus': 'fa-bus',
+        'plane': 'fa-plane',
+        'car': 'fa-car',
+        'compass': 'fa-compass',
+    }
+    transportation_map ={
+        tm.plan_id: tm.transportation for tm in TransportationMethod.objects.filter(plan__in=plans)
+    }
+    
+    icon_class_map = {
+        plan_id: transportation_icon_map.get(transportation, 'fa-question')
+        for plan_id, transportation in transportation_map.items()
+    }
+    
+    context = {
+        'schedule': schedule,
+        'plans_by_date': plans_by_date,
+        'sorted_dates': sorted_dates,
+        'transportation_map': transportation_map,
+        'transportation_icon_map': transportation_icon_map,
+    }
+    return render(request, 'app/schedule_detail.html', context)

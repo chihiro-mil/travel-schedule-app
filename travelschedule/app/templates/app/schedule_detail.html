@@ -1,0 +1,78 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}schedule detail page{% endblock %}
+
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ schedule.title }} 予定表</h2>
+
+    <div id="day-tabs" class="day-tabs">
+        {% for date, plans in plans_by_date.items %}
+            <button class="day-tab {% if forloop.first %}active{% endif %}" data-day="day{{ forloop.counter }}">
+                {{ forloop.counter }}日目 {{ date|date:"n/j (D)" }}
+            </button>
+        {% endfor %}
+    </div>
+
+    <div id="day-contents">
+        {% for date, plans in plans_by_date.items %}
+            <div class="day-content {% if not forloop.first %}hidden{% endif %}" id="day{{ forloop.counter }}">
+                {% for plans in plans %}
+                    <div class="plan-card">
+                        {% if plan.action_category != "移動" %}
+                            <i class="fa-solid
+                            {% if plan.action_category == "観光地" %}
+                                fa-location-dot
+                            {% elif plan.action_category == "食事" %}
+                                fa-utensils
+                            {% elif plan.action_category == "宿泊" %}
+                                fa-bed
+                            {% endif %}
+                            "></i>
+                        {% endif %}
+                        <p>{{ plan.name }}({{ plan.action_category }})</p>
+                        <p>{{ plan.start_datetime|date:"H:i" }} ～ {{ plan.end_datetime|date:"H:i" }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if plan.action_category == "移動" %}
+        {% with transportation=transportation_map|get_item:plan.id %}
+            <div class="transportation-icon">
+                <i class="fas {{ icon_class }}"</i>
+            </div>
+        {% endwith %}
+    {% endif %}
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tabs = document.querySelectorAll(".day-tab");
+    const contents = document.querySelectorAll(".day-content");
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            tabs.forEach(t => t.classList.remove("active"));
+            contents.forEach(c => c.classList.add("hidden"));
+
+            tab.classList.add("active");
+            const targetId = tab.dataset.day;
+            document.getElementById(targetId).classList.remove("hidden");
+        });
+    });
+});
+</script>
+{% endblock %}

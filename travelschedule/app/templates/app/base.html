@@ -41,9 +41,9 @@
                         </span>
                     </a>
                 </li>
-            {% elif request.path == '/app/schedule/' %}
+            {% elif '/app/schedule_detail/' in request.path %}
                 <li>
-                    <a href="{% url 'app:plan_add' %}">
+                    <a href="{% url 'app:plan_add' schedule.id %}">
                         <span class="footer-icon-label">
                             <i class="fas fa-plus-square"></i><br>予定追加
                         </span>
