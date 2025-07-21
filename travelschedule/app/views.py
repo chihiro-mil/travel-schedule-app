@@ -130,6 +130,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         'picture_formset': picture_formset,
         'schedule': schedule,
         'form_title': '予定編集' if plan else '予定追加',
+        'schedule_id': schedule_id,
     })
 
 def generate_trip_date_choices(schedule):

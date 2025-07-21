@@ -469,17 +469,20 @@
 
 .category-radio {
     display: flex;
-    gap: 15px;
-    border: 2px solid red;
+    gap: 10px;
+    justify-content: space-around;
 }
 
-.category-radio label {
-    display: inline-flex;
-    align-items: center;
-    margin-right: 10px;
-    font-weight: normal;
+.category-label {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
 }
 
-.category-radio input {
-    margin-right: 5px;
+input[type="radio"][name="action_category"],
+.category-radio input[type="radio"] {
+    display: none !important;
 }

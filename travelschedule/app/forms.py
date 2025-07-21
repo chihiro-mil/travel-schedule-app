@@ -116,10 +116,10 @@ class ScheduleForm(forms.ModelForm):
 
 
 ACTION_CATEGORY_CHOICES = [
-    ('移動', '移動'),
-    ('観光地', '観光地'),
-    ('食事', '食事'),
-    ('宿泊', '宿泊'),
+    ('move', '移動'),
+    ('sightseeing', '観光地'),
+    ('meal', '食事'),
+    ('stay', '宿泊'),
 ]
 
 class PlanForm(forms.ModelForm):
@@ -131,10 +131,7 @@ class PlanForm(forms.ModelForm):
     start_date = forms.ChoiceField(
         choices=[],
         label='開始日',
-        widget=forms.DateInput(attrs={
-            'type': 'date',
-            'class': 'form-control',
-        })
+        widget=forms.Select(attrs={'class': 'form-control'})
     )
     start_time = forms.TimeField(
         label='開始時刻',
@@ -147,10 +144,7 @@ class PlanForm(forms.ModelForm):
     end_date = forms.ChoiceField(
         choices=[],
         label='終了日',
-        widget=forms.DateInput(attrs={
-            'type': 'date',
-            'class': 'form-control',
-        })
+        widget=forms.Select(attrs={'class': 'form-control'})
     )
     end_time = forms.TimeField(
         label='終了時刻',

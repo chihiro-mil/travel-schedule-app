@@ -1,26 +1,158 @@
-{# {% extends 'app/base.html' %} #}
 {% load static %}
-<link rel="stylesheet" href="{% static "css/style.css" %}">
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ form_title }}</title>
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/rangePlugin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+    <script>
+        flatpickr.localize(flatpickr.l10ns.ja);
+    </script>
+
 {% block title %}{{ form_title }}{% endblock %}
 
-{% block extra_head %}{% endblock %}
+<h1>{{ form_title }}</h1>
 
-{# {% block content %} #}
 <a href="{% url 'app:schedule_detail' schedule_id=schedule.id %}"class="back-button">＜戻る</a>
 
 <div class="container">
-    <h2>{{ form_title }}</h2>
 
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
 
-        <div class="form-group category-radio">
-            <label><input type="radio" name="action_category" value="move"> 移動</label>
-            <label><input type="radio" name="action_category" value="sightseeing"> 観光地</label>
-            <label><input type="radio" name="action_category" value="meal"> 食事</label>
-            <label><input type="radio" name="action_category" value="stay"> 宿泊</label>
+        <div class="category-radio">
+            <input type="radio" name="action_category" value="move" id="category-move"> 
+            <label for="category-move" class="category-label">移動</label>
+
+            <input type="radio" name="action_category" value="sightseeing" id="category-sightseeing">
+            <label for="category-sightseeing" class="category-label">観光地</label>
+
+            <input type="radio" name="action_category" value="meal" id="category-meal">
+            <label for="category-meal" class="category-label">食事</label>
+
+            <input type="radio" name="action_category" value="stay" id="category-stay">
+            <label for="category-stay" class="category-label">宿泊</label>
         </div>
+
+        <div class="category-fields" data-category="move" style="display: none;">
+            {{ form.name.label_tag }} {{ form.name }}
+
+            {{ form.trip_date.label_tag }} {{ form.trip_date }}
+            {{ form.start_time.label_tag }} {{ form.start_time }}
+            {{ form.departure_location.label_tag }} {{ form.departure_location }}
+
+            {{ form.end_date.label_tag }} {{ form.end_date }}
+            {{ form.end_time.label_tag }} {{ form.end_time }}
+            {{ form.arrival_location.label_tag }} {{ form.arrival_location }}
+
+            {{ form.memo.label_tag }} {{ form.memo }}
+            <div id="transportation-options">
+                {% for choice in form.transportation.field.choices %}
+                    <label>
+                        <input type="radio" name="{{ form.transportation.name }}" value="{{ choice.0 }}">
+                        {{ choice.1 }}
+                    </label>
+                {% endfor %}
+            </div>
+
+            <div id="link-formset">
+                {{ link_formset.management_form }}
+                {% for form in link_formset %}
+                    {{ form.url }}
+                {% endfor %}
+            </div>
+
+            <div id="picture-formset">
+                {{ picture_formset.management_form }}
+                {% for form in picture_formset %}
+                    {{ form.image }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="category-fields" data-category="sightseeing" style="display: none;">
+            {{ form.name.label_tag }} {{ form.name }}
+
+            {{ form.trip_date.label_tag }} {{ form.trip_date }}
+            {{ form.start_time.label_tag }} {{ form.start_time }}
+            {{ form.end_date.label_tag }} {{ form.end_date }}
+            {{ form.end_time.label_tag }} {{ form.end_time }}
+
+            {{ form.memo.label_tag }} {{ form.memo }}
+
+            <div id="link-formset">
+                {{ link_formset.management_form }}
+                {% for form in link_formset %}
+                    {{ form.url }}
+                {% endfor %}
+            </div>
+
+            <div id="picture-formset">
+                {{ picture_formset.management_form }}
+                {% for form in picture_formset %}
+                    {{ form.image }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="category-fields" data-category="meal" style="display: none;">
+            {{ form.name.label_tag }} {{ form.name }}
+
+            {{ form.trip_date.label_tag }} {{ form.trip_date }}
+            {{ form.start_time.label_tag }} {{ form.start_time }}
+            {{ form.end_time.label_tag }} {{ form.end_time }}
+
+            {{ form.memo.label_tag }} {{ form.memo }}
+
+            <div id="link-formset">
+                {{ link_formset.management_form }}
+                {% for form in link_formset %}
+                    {{ form.url }}
+                {% endfor %}
+            </div>
+
+            <div id="picture-formset">
+                {{ picture_formset.management_form }}
+                {% for form in picture_formset %}
+                    {{ form.image }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="category-fields" data-category="stay" style="display: none;">
+            {{ form.name.label_tag }} {{ form.name }}
+
+            {{ form.trip_date.label_tag }} {{ form.trip_date }}
+            {{ form.start_time.label_tag }} {{ form.start_time }}
+            {{ form.end_date.label_tag }} {{ form.end_date }}
+            {{ form.end_time.label_tag }} {{ form.end_time }}
+
+            {{ form.memo.label_tag }} {{ form.memo }}
+
+            <div id="link-formset">
+                {{ link_formset.management_form }}
+                {% for form in link_formset %}
+                    {{ form.url }}
+                {% endfor %}
+            </div>
+
+            <div id="picture-formset">
+                {{ picture_formset.management_form }}
+                {% for form in picture_formset %}
+                    {{ form.image }}
+                {% endfor %}
+            </div>
+        </div>
+
+
+
 
         <div class="form-group">
             {{ form.name.label_tag }}
@@ -30,7 +162,7 @@
     <div id="datetime-fields">
         <div class="form-group" id="start-date-group">
             <label id="start-date-label">開始日</label>
-            {{ form.trip_date }}
+            {{ form.start_date }}
         </div>
 
         <div class="form-group" id="start-time-group">
@@ -120,13 +252,110 @@
     <button type="button" id="add-picture">＋画像を追加</button>
 
         <button type="submit" class="btn btn-primary">保存</button>
+    
     </form>
 </div>
-{# {% endblock %} #}
 
-{% block extra_js %}
+<footer class="footer-nav">
+    <ul>
+        <li>
+            <a href="{% url 'app:home' %}">
+                <span class="footer-icon-label">
+                    <i class="fas fa-home"></i><br>ホーム
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'app:plan_create_or_edit' schedule_id=schedule_id %}">
+                <span class="footer-icon-label disabled-link">
+                    <i class="fas fa-plus-square"></i><br>予定追加
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'app:edit_profile' %}">
+                <span class="footer-icon-label">
+                    <i class="fas fa-user-cog"></i><br>マイページ設定
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'app:logout' %}">
+                <span class="footer-icon-label">
+                    <i class="fas fa-sign-out-alt"></i><br>ログアウト
+                </span>
+            </a>
+        </li>
+    </ul>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById("modal");
+    const openBtn = document.getElementById("openModalBtn");
+    const closeBtn = document.getElementById("closeModalBtn");
+    const calendarIcon = document.querySelector(".calendar-icon");
+
+    if (openBtn && closeBtn && modal) {
+        openBtn.onclick = function () {
+            modal.classList.remove("hidden");
+        };
+        closeBtn.onclick = function () {
+            modal.classList.add("hidden");
+        };
+    }
+
+    let fp = flatpickr("#dateRange", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        locale: "ja",
+        onChange: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length === 2){
+                const start = selectedDates[0];
+                const end = selectedDates[1];
+                document.querySelector('input[name="trip_start_date"]').value = instance.formatDate(start, "Y-m-d");
+                document.querySelector('input[name="trip_end_date"]').value = instance.formatDate(end, "Y-m-d");
+            }
+        }
+    });
+    if (calendarIcon) {
+        calendarIcon.addEventListener("click", function () {
+            document.getElementById("dateRange").focus();
+        });
+    }
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('.footer-nav');
+        if (!nav) return;
+
+        if (window.scrollY > lastscrollY) {
+            nav.style.transform ='translateY(0)';
+        }else {
+            nav.style.transform ='translateY(100)';
+        }
+        lastscrollY = window.scrollY;
+    });
+
+    const radios = document.querySelectorAll("input[name="action_category"]");
+    const categoryFields = document.querySelectorAll(".category-fields");
+
+    function showCategoryFields(value) {
+        categoryFields.forEach(div =>{
+            div.style.display = (div.getAttribute("data-category") === value) ? "block" : "none";
+        });
+    }
+
+    radios.forEach(radio => {
+        radio.addEventListener("change", function() {
+            showCategoryFields(this.value);
+        });
+    });
+
+    const checkedRadio = document.querySelector("input[name="action_category"]:checked");
+    if (checkedRadio) {
+        showCategoryFields(checkedRadio.value);
+    }
+
+
     const categoryField = document.querySelector("#id_action_category");
     const startDateLabel = document.getElementById("start-date-label");
     const startTimeLabel = document.getElementById("start-time-label");
@@ -168,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             document.getElementById("transportation-fields").style.display = "none";
         }
-        }
+    }
 
         updateLabels();
         categoryField.addEventListener("change", updateLabels);
@@ -221,7 +450,27 @@ document.addEventListener('DOMContentLoaded', function () {
             removeIcon.style.display = "none";
         });
     });
+    
+    const categoryRadios = document.querySelectorAll("input[name="action_category"]");
+    const allCategoryFields = document.querySelectorAll("[data-category]");
 
+    function showCategoryFields(selectedValue) {
+        allCategoryFields.forEach(field => {
+            field.style.display = field.dataset.category === selectedValue ? "block" : "none";
+        });
+    }
+
+    categoryRadios.forEach(radio => {
+        radio.addEventListener("change", () => {
+            showCategoryFields(radio.value);
+        });
     });
+
+    const checkedRadio = document.querySelector("input[name="action_category"]:checked");
+    if (checkedRadio) {
+        showCategoryFields(checkedRadio.value);
+    }
+});
 </script>
-{% endblock %}
+</body>
+</html>
