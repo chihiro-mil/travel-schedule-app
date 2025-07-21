@@ -239,19 +239,26 @@
 /*home画面*/
 .home-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
     background-color: #ffffff;
     border-bottom: 1px solid #ccc;
+}
+.home-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 8px;
     font-size: 18px;
+    font-weight: bold;
 }
 
 .header-left {
     display: flex;
     align-items: center;
     gap: 8px;
-    justify-content: center;
 }
 
 .home-title {
@@ -267,7 +274,6 @@
     font-size: 14px;
     border-radius: 6px;
     cursor: pointer;
-    margin-left: auto;
 }
 
 /*予定表詳細画面*/
@@ -459,4 +465,21 @@
     display: none;
     font-size: 16px;
     color: #696969;
+}
+
+.category-radio {
+    display: flex;
+    gap: 15px;
+    border: 2px solid red;
+}
+
+.category-radio label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+    font-weight: normal;
+}
+
+.category-radio input {
+    margin-right: 5px;
 }

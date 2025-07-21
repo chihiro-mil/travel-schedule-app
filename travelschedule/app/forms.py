@@ -113,17 +113,31 @@ class ScheduleForm(forms.ModelForm):
         return title
     
 #予定本体フォーム用
+
+
+ACTION_CATEGORY_CHOICES = [
+    ('移動', '移動'),
+    ('観光地', '観光地'),
+    ('食事', '食事'),
+    ('宿泊', '宿泊'),
+]
+
 class PlanForm(forms.ModelForm):
+    action_category = forms.ChoiceField(
+        choices=ACTION_CATEGORY_CHOICES,
+        label='',
+        widget=forms.RadioSelect(attrs={'class': 'category-radio'})
+    )
     start_date = forms.ChoiceField(
         choices=[],
-        label="開始日",
+        label='開始日',
         widget=forms.DateInput(attrs={
             'type': 'date',
             'class': 'form-control',
         })
     )
     start_time = forms.TimeField(
-        label="開始時刻",
+        label='開始時刻',
         widget=forms.TimeInput(attrs={
             'type': 'time',
             'class': 'form-control',
@@ -132,14 +146,14 @@ class PlanForm(forms.ModelForm):
     )
     end_date = forms.ChoiceField(
         choices=[],
-        label="終了日",
+        label='終了日',
         widget=forms.DateInput(attrs={
             'type': 'date',
             'class': 'form-control',
         })
     )
     end_time = forms.TimeField(
-        label="終了時刻",
+        label='終了時刻',
         widget=forms.TimeInput(attrs={
             'type': 'time',
             'class': 'form-control',

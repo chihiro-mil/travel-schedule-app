@@ -46,7 +46,7 @@
     </div>
 
     {% if plan.action_category == "移動" %}
-        {% with transportation=transportation_map|get_item:plan.id %}
+        {% with icon_class=icon_class_map|get_item:plan.id %}
             <div class="transportation-icon">
                 <i class="fas {{ icon_class }}"</i>
             </div>

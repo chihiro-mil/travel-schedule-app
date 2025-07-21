@@ -99,7 +99,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
     trip_choices = generate_trip_date_choices(schedule)
         
     if request.method == 'POST':
-        form = PlanForm(request.POST, request.FILES, isinstance=plan, trip_date_choices=trip_choices)
+        form = PlanForm(request.POST, request.FILES, instance=plan, trip_date_choices=trip_choices)
         link_formset = LinkFormSet(request.POST, prefix='links')
         picture_formset = PictureFormSet(request.POST, request.FILES, prefix='pictures')
         
@@ -120,7 +120,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 
             return redirect('app:schedule_detail', schedule_id=schedule.id)
     else:
-        form = PlanForm(isinstance=plan, trip_date_choices=trip_choices)
+        form = PlanForm(instance=plan, trip_date_choices=trip_choices)
         link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')
         picture_formset = PictureFormSet(queryset=Picture.objects.none(), prefix='pictures')
         
@@ -129,6 +129,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         'link_formset': link_formset,
         'picture_formset': picture_formset,
         'schedule': schedule,
+        'form_title': '予定編集' if plan else '予定追加',
     })
 
 def generate_trip_date_choices(schedule):
@@ -150,7 +151,7 @@ def plan_form_view(request, schedule_id, plan_id=None):
     trip_date_choices = generate_trip_date_choices(schedule)
     
     if request.method == 'POST':
-        form = PlanForm(request.POST, request.FILES, trip_date_choices=trip_date_choices, isinstance=plan)
+        form = PlanForm(request.POST, request.FILES, trip_date_choices=trip_date_choices, instance=plan)
         if form.is_valid():
             new_plan = form.save(commit=False)
             new_plan.schedule = schedule
@@ -159,7 +160,7 @@ def plan_form_view(request, schedule_id, plan_id=None):
             new_plan.save()
             return redirect('app:schedule_detail', schedule_id=schedule.id)
     else:
-        form = PlanForm(isinstance=plan, trip_date_choices=trip_date_choices)
+        form = PlanForm(instance=plan, trip_date_choices=trip_date_choices)
         
     return render(request, 'app/plan_form.html', {
         'form': form,
@@ -207,4 +208,7 @@ def schedule_detail_view(request, schedule_id):
         'transportation_map': transportation_map,
         'transportation_icon_map': transportation_icon_map,
     }
-    return render(request, 'app/schedule_detail.html', context)
+    return render(request, 'app/schedule_detail.html', {
+        'schedule': schedule,
+        'plans_by_date': plans_by_date,
+    })
