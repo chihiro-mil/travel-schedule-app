@@ -131,10 +131,12 @@ class PlanForm(forms.ModelForm):
     start_date = forms.ChoiceField(
         choices=[],
         label='開始日',
+        required=False,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     start_time = forms.TimeField(
         label='開始時刻',
+        required=False,
         widget=forms.TimeInput(attrs={
             'type': 'time',
             'class': 'form-control',
@@ -144,10 +146,12 @@ class PlanForm(forms.ModelForm):
     end_date = forms.ChoiceField(
         choices=[],
         label='終了日',
+        required=False,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     end_time = forms.TimeField(
         label='終了時刻',
+        required=False,
         widget=forms.TimeInput(attrs={
             'type': 'time',
             'class': 'form-control',
@@ -159,13 +163,6 @@ class PlanForm(forms.ModelForm):
         label="移動手段",
         required=False,
         widget=forms.Select(attrs={'class': 'form-control'})
-    )
-    transportation = forms.ChoiceField(
-        choices=[('徒歩', '徒歩'), ('電車', '電車'), ('新幹線', '新幹線'), ('バス', 'バス'), 
-                ('飛行機', '飛行機'), ('車', '車'), ('その他', 'その他')],
-        widget=forms.RadioSelect,
-        required=False,
-        label="移動手段"
     )
     
     class Meta:

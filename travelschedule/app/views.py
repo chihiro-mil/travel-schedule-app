@@ -106,8 +106,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         if form.is_valid() and link_formset.is_valid() and picture_formset.is_valid():
             plan_instance = form.save(commit=False)
             plan_instance.schedule = schedule
-            plan_instance.start_datetime = form.cleaned_data['start_datetime']
-            plan_instance.end_datetime = form.cleaned_data['end_datetime']
+            plan_instance.start_datetime = form.cleaned_data.get['start_datetime']
+            plan_instance.end_datetime = form.cleaned_data.get['end_datetime']
             plan_instance.save()
             
             for link in link_formset.save(commit=False):
@@ -123,6 +123,9 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         form = PlanForm(instance=plan, trip_date_choices=trip_choices)
         link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')
         picture_formset = PictureFormSet(queryset=Picture.objects.none(), prefix='pictures')
+        print("PlanForm errors:", form.errors)
+        print("LinkFormSet errors:", link_formset.errors)
+        print("PictureFormSet errors:" , picture_formset.errors)
         
     return render(request, 'app/plan_form.html', {
         'form': form, 
@@ -159,9 +162,11 @@ def plan_form_view(request, schedule_id, plan_id=None):
             new_plan.start_datetime = form.cleaned_data.get('start_datetime')
             new_plan.end_datetime = form.cleaned_data.get('end_datetime')
             new_plan.save()
+            print("保存成功")
             return redirect('app:schedule_detail', schedule_id=schedule.id)
     else:
         form = PlanForm(instance=plan, trip_date_choices=trip_date_choices)
+        print("フォームが無効です:", form.errors)
         
     return render(request, 'app/plan_form.html', {
         'form': form,
