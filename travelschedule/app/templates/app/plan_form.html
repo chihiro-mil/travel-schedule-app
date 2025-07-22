@@ -9,287 +9,341 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/rangePlugin.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <script>
         flatpickr.localize(flatpickr.l10ns.ja);
-    </script>
+    </script>-->
 
-{% block title %}{{ form_title }}{% endblock %}
 
-<h1>{{ form_title }}</h1>
+    <a href="{% url 'app:schedule_detail' schedule_id=schedule.id %}"class="back-button">＜戻る</a>
+    <div class="plan-form-container">
+        <h1 class="page-title">{{ form_title }}</h1>
 
-<a href="{% url 'app:schedule_detail' schedule_id=schedule.id %}"class="back-button">＜戻る</a>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
 
-<div class="container">
+            <div class="category-radio">
+                <input type="radio" name="action_category" value="move" id="category-move"> 
+                <label for="category-move" class="category-label">移動</label>
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+                <input type="radio" name="action_category" value="sightseeing" id="category-sightseeing">
+                <label for="category-sightseeing" class="category-label">観光地</label>
 
-        <div class="category-radio">
-            <input type="radio" name="action_category" value="move" id="category-move"> 
-            <label for="category-move" class="category-label">移動</label>
+                <input type="radio" name="action_category" value="meal" id="category-meal">
+                <label for="category-meal" class="category-label">食事</label>
 
-            <input type="radio" name="action_category" value="sightseeing" id="category-sightseeing">
-            <label for="category-sightseeing" class="category-label">観光地</label>
-
-            <input type="radio" name="action_category" value="meal" id="category-meal">
-            <label for="category-meal" class="category-label">食事</label>
-
-            <input type="radio" name="action_category" value="stay" id="category-stay">
-            <label for="category-stay" class="category-label">宿泊</label>
-        </div>
-
-        <div class="category-fields" data-category="move" style="display: none;">
-            {{ form.name.label_tag }} {{ form.name }}
-
-            {{ form.trip_date.label_tag }} {{ form.trip_date }}
-            {{ form.start_time.label_tag }} {{ form.start_time }}
-            {{ form.departure_location.label_tag }} {{ form.departure_location }}
-
-            {{ form.end_date.label_tag }} {{ form.end_date }}
-            {{ form.end_time.label_tag }} {{ form.end_time }}
-            {{ form.arrival_location.label_tag }} {{ form.arrival_location }}
-
-            {{ form.memo.label_tag }} {{ form.memo }}
-            <div id="transportation-options">
-                {% for choice in form.transportation.field.choices %}
-                    <label>
-                        <input type="radio" name="{{ form.transportation.name }}" value="{{ choice.0 }}">
-                        {{ choice.1 }}
-                    </label>
-                {% endfor %}
+                <input type="radio" name="action_category" value="stay" id="category-stay">
+                <label for="category-stay" class="category-label">宿泊</label>
             </div>
 
-            <div id="link-formset">
-                {{ link_formset.management_form }}
-                {% for form in link_formset %}
-                    {{ form.url }}
-                {% endfor %}
-            </div>
-
-            <div id="picture-formset">
-                {{ picture_formset.management_form }}
-                {% for form in picture_formset %}
-                    {{ form.image }}
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="category-fields" data-category="sightseeing" style="display: none;">
-            {{ form.name.label_tag }} {{ form.name }}
-
-            {{ form.trip_date.label_tag }} {{ form.trip_date }}
-            {{ form.start_time.label_tag }} {{ form.start_time }}
-            {{ form.end_date.label_tag }} {{ form.end_date }}
-            {{ form.end_time.label_tag }} {{ form.end_time }}
-
-            {{ form.memo.label_tag }} {{ form.memo }}
-
-            <div id="link-formset">
-                {{ link_formset.management_form }}
-                {% for form in link_formset %}
-                    {{ form.url }}
-                {% endfor %}
-            </div>
-
-            <div id="picture-formset">
-                {{ picture_formset.management_form }}
-                {% for form in picture_formset %}
-                    {{ form.image }}
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="category-fields" data-category="meal" style="display: none;">
-            {{ form.name.label_tag }} {{ form.name }}
-
-            {{ form.trip_date.label_tag }} {{ form.trip_date }}
-            {{ form.start_time.label_tag }} {{ form.start_time }}
-            {{ form.end_time.label_tag }} {{ form.end_time }}
-
-            {{ form.memo.label_tag }} {{ form.memo }}
-
-            <div id="link-formset">
-                {{ link_formset.management_form }}
-                {% for form in link_formset %}
-                    {{ form.url }}
-                {% endfor %}
-            </div>
-
-            <div id="picture-formset">
-                {{ picture_formset.management_form }}
-                {% for form in picture_formset %}
-                    {{ form.image }}
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="category-fields" data-category="stay" style="display: none;">
-            {{ form.name.label_tag }} {{ form.name }}
-
-            {{ form.trip_date.label_tag }} {{ form.trip_date }}
-            {{ form.start_time.label_tag }} {{ form.start_time }}
-            {{ form.end_date.label_tag }} {{ form.end_date }}
-            {{ form.end_time.label_tag }} {{ form.end_time }}
-
-            {{ form.memo.label_tag }} {{ form.memo }}
-
-            <div id="link-formset">
-                {{ link_formset.management_form }}
-                {% for form in link_formset %}
-                    {{ form.url }}
-                {% endfor %}
-            </div>
-
-            <div id="picture-formset">
-                {{ picture_formset.management_form }}
-                {% for form in picture_formset %}
-                    {{ form.image }}
-                {% endfor %}
-            </div>
-        </div>
-
-
-
-
-        <div class="form-group">
-            {{ form.name.label_tag }}
-            {{ form.name }}
-        </div>
-
-    <div id="datetime-fields">
-        <div class="form-group" id="start-date-group">
-            <label id="start-date-label">開始日</label>
-            {{ form.start_date }}
-        </div>
-
-        <div class="form-group" id="start-time-group">
-            <label id="start-time-label">開始時刻</label>
-            {{ form.start_time }}
-        </div>
-
-        <div class="form-group" id="end-date-group">
-            <label id="end-date-group">終了日</label>
-            {{ form.end_date }}
-        </div>
-
-        <div class="form-group" id="end-time-group">
-            <label id="end-time-group">終了時刻</label>
-            {{ form.end_time }}
-        </div>
-    </div>
-
-        <div class="form-group">
-            {{ form.memo.label_tag }}
-            {{ form.memo }}
-        </div>
-
-        <div class="form-group">
-            {{ form.departure_location.label_tag }}
-            {{ form.departure_location }}
-        </div>
-
-        <div class="form-group">
-            {{ form.arrival_location.label_tag }}
-            {{ form.arrival_location }}
-        </div>
-
-
-    <div id="transportation-fields" class="category-fields" style="display: none;">
-        <label>移動手段</label>
-        <div class="transportation-options">
-            {% for choice in form.transportation.field.choices %}
-                <label class="transportation-option">
-                    <input type="radio" name="{{ form.transportation.name }}" value="{{ choice.0 }}"
-                        {% if form.transportation.value == choice.0 %}checked{% endif %}>
-                    {% if choice.0 == '徒歩' %}
-                        <i class="fas fa-person-walking"></i> 徒歩
-                    {% elif  choice.0 == '電車' %}
-                        <i class="fas fa-train"></i> 電車
-                    {% elif  choice.0 == '新幹線' %}
-                        <i class="fas fa-subway"></i> 新幹線
-                    {% elif  choice.0 == 'バス' %}
-                        <i class="fas fa-bus"></i> バス
-                    {% elif  choice.0 == '飛行機' %}
-                        <i class="fas fa-plane"></i> 飛行機
-                    {% elif  choice.0 == '車' %}
-                        <i class="fas fa-car"></i> 車
-                    {% elif  choice.0 == 'その他' %}
-                        <i class="fas fa-compass"></i> その他
-                    {% endif %}
-                </label>
-            {% endfor %}
-        </div>
-    </div>
-
-    <div id="link-formset-container">
-        {{ link_formset.management_form }}
-        {% for form in link_formset %}
-            <div class="link-form">
-                {{ fotm.url }}
-                <button type="button" class="remove-link">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        {% endfor %}
-    </div>
-    <button type="button" id="add-link">＋リンクを追加</button>
-
-    <div id="picture-formset-container">
-        {{ picture_formset.management_form }}
-        {% for form in picture_formset %}
-            <div class="picture-form">
-                {{ fotm.image }}
-                <div class="image-preview-wrapper">
-                    <img src="#" class="image-preview" style="display: none;">
-                    <span class="remove-picture" title="削除">&times;</span>
+            <div id="transportation-fields" class="category-fields" style="display: block;">
+                <label class-"transportation-title">移動手段</label>
+                <div class="transportation-options">
+                    {% for choice in form.transportation.field.choices %}
+                        <label class="transportation-option">
+                            <input type="radio" name="{{ form.transportation.name }}" value="{{ choice.0 }}"
+                            {% if form.transportation.value == choice.0 %}checked{% endif %}>
+                            {% if choice.0 == '徒歩' %}
+                                <i class="fas fa-person-walking"></i> 徒歩
+                            {% elif  choice.0 == '電車' %}
+                                <i class="fas fa-train"></i> 電車
+                            {% elif  choice.0 == '新幹線' %}
+                                <i class="fas fa-subway"></i> 新幹線
+                            {% elif  choice.0 == 'バス' %}
+                                <i class="fas fa-bus"></i> バス
+                            {% elif  choice.0 == '飛行機' %}
+                                <i class="fas fa-plane"></i> 飛行機
+                            {% elif  choice.0 == '車' %}
+                                <i class="fas fa-car"></i> 車
+                            {% elif  choice.0 == 'その他' %}
+                                <i class="fas fa-compass"></i> その他
+                            {% endif %}
+                        </label>
+                    {% endfor %}
                 </div>
             </div>
-        {% endfor %}
+
+            <!--移動カテゴリ-->
+            <div class="category-fields" data-category="move">
+                <div class="form-group" id="move-start-date">
+                    <label id="move-start-date-label">出発日</label>
+                    {{ form.start_date }}
+                </div>
+
+                <div class="form-group" id="move-start-time">
+                    <label id="move-start-time-label">出発時刻</label>
+                    {{ form.start_time }}
+                </div>
+
+                <div class="form-group" id="move-departure-location">
+                    <label id="move-departure-location-label">出発地</label>
+                {{ form.departure_location }}
+                </div>
+
+                <div class="form-group" id="move-end-date">
+                    <label id="move-end-date-label">到着日</label>
+                    {{ form.end_date }}
+                </div>
+
+                <div class="form-group" id="move-end-time">
+                    <label id="move-end-time-label">終了時刻</label>
+                    {{ form.end_time }}
+                </div>
+
+                <div class="form-group" id="move-arrival-location">
+                    <label id="move-arrival-location-label">到着地</label>
+                    {{ form.arrival_location }}
+                </div>
+
+                <div class="form-group" id="move-memo">
+                    <label id="move-memo-label">メモ</label>
+                    {{ form.memo }}
+                </div>
+
+                <div id="move-link-formset-container">
+                    {{ link_formset.management_form }}
+                    {% for form in link_formset %}
+                        <div class="move-link-form">
+                            {{ fotm.url }}
+                            <button type="button" class="remove-link">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                    <button type="button" id="move-add-link">＋リンクを追加</button>
+                </div>
+
+                <div id="move-picture-formset-container">
+                    {{ picture_formset.management_form }}
+                    {% for form in picture_formset %}
+                        <div class="move-picture-form">
+                            {{ fotm.image }}
+                            <div class="image-preview-wrapper">
+                                <img src="#" class="image-preview">
+                                <span class="remove-picture" title="削除">&times;</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" id="move-add-picture">＋画像を追加</button>
+
+                <button type="submit" class="btn-primary">保存</button>
+            </div>
+
+            <!--観光地カテゴリ-->
+
+            <div class="category-fields" data-category="sightseeing">
+                <div class="form-group" id="sightseeing-name">
+                    <label id="sightseeing-name-label">観光地名</label>
+                    {{ form.name }}
+                </div>
+
+                <div class="form-group" id="sightseeing-start-date">
+                    <label id="sightseeing-start-date-label">滞在開始日</label>
+                    {{ form.start_date }}
+                </div>
+
+                <div class="form-group" id="sightseeing-start-time">
+                    <label id="sightseeing-start-time-label">滞在開始時刻</label>
+                    {{ form.start_time }}
+                </div>
+
+                <div class="form-group" id="sightseeing-end-date">
+                    <label id="sightseeing-end-date-label">滞在終了日</label>
+                    {{ form.end_date }}
+                </div>
+
+                <div class="form-group" id="sightseeing-end-time">
+                    <label id="sightseeing-end-time-label">滞在終了時刻</label>
+                    {{ form.end_time }}
+                </div>
+
+                <div class="form-group" id="sightseeing-memo">
+                    <label id="sightseeing-memo-label">メモ</label>
+                    {{ form.memo }}
+                </div>
+
+                <div id="sightseeing-link-formset-container">
+                    {{ link_formset.management_form }}
+                    {% for form in link_formset %}
+                        <div class="link-form">
+                            {{ fotm.url }}
+                            <button type="button" class="remove-link">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                    <button type="button" id="sightseeing-add-link">＋リンクを追加</button>
+                </div>
+
+                <div id="sightseeing-picture-formset-container">
+                    {{ picture_formset.management_form }}
+                    {% for form in picture_formset %}
+                        <div class="picture-form">
+                            {{ fotm.image }}
+                            <div class="image-preview-wrapper">
+                                <img src="#" class="image-preview">
+                                <span class="remove-picture" title="削除">&times;</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" id="sightseeing-add-picture">＋画像を追加</button>
+
+                <button type="submit" class="btn-primary">保存</button>
+            </div>
+
+
+            <!--食事カテゴリ-->
+            <div class="category-fields" data-category="meal">
+                <div class="form-group" id="meal-name">
+                    <label id="meal-name-label">店名</label>
+                    {{ form.name }}
+                </div>
+
+                <div class="form-group" id="meal-start-date">
+                    <label id="meal-start-date-label">食事日</label>
+                    {{ form.start_date }}
+                </div>
+
+                <div class="form-group" id="meal-start-time">
+                    <label id="meal-start-time-label">食事開始時刻</label>
+                    {{ form.start_time }}
+                </div>
+
+                <div class="form-group" id="meal-end-time">
+                    <label id="meal-end-time-label">食事終了時刻</label>
+                    {{ form.end_time }}
+                </div>
+
+                <div class="form-group" id="meal-memo">
+                    <label id="meal-memo-label">メモ</label>
+                    {{ form.memo }}
+                </div>
+
+                <div id="meal-link-formset-container">
+                    {{ link_formset.management_form }}
+                    {% for form in link_formset %}
+                        <div class="link-form">
+                            {{ fotm.url }}
+                            <button type="button" class="remove-link">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                    <button type="button" id="meal-add-link">＋リンクを追加</button>
+                </div>
+
+                <div id="meal-picture-formset-container">
+                    {{ picture_formset.management_form }}
+                    {% for form in picture_formset %}
+                        <div class="picture-form">
+                            {{ fotm.image }}
+                            <div class="image-preview-wrapper">
+                                <img src="#" class="image-preview">
+                                <span class="remove-picture" title="削除">&times;</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" id="meal-add-picture">＋画像を追加</button>
+
+                <button type="submit" class="btn-primary">保存</button>
+            </div>
+
+            <!--宿泊カテゴリ-->
+
+            <div class="category-fields" data-category="stay">
+                <div class="form-group" id="stay-name">
+                    <label id="stay-name-label">宿泊施設名</label>
+                    {{ form.name }}
+                </div>
+
+                <div class="form-group" id="stay-start-date">
+                    <label id="stay-date-label">滞在日</label>
+                    {{ form.start_date }}～{{ form.end_date }}
+                </div>
+
+                <div class="form-group" id="stay-start-time">
+                    <label id="stay-time-label">滞在時間</label>
+                    {{ form.start_time }}～{{ form.end_time }}
+                </div>
+
+                <div class="form-group" id="stay-memo">
+                    <label id="stay-memo-label">メモ</label>
+                    {{ form.memo }}
+                </div>
+
+                <div id="stay-link-formset-container">
+                    {{ link_formset.management_form }}
+                    {% for form in link_formset %}
+                        <div class="link-form">
+                            {{ fotm.url }}
+                            <button type="button" class="remove-link">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                    <button type="button" id="stay-add-link">＋リンクを追加</button>
+                </div>
+
+                <div id="stay-picture-formset-container">
+                    {{ picture_formset.management_form }}
+                    {% for form in picture_formset %}
+                        <div class="picture-form">
+                            {{ fotm.image }}
+                            <div class="image-preview-wrapper">
+                                <img src="#" class="image-preview">
+                                <span class="remove-picture" title="削除">&times;</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" id="stay-add-picture">＋画像を追加</button>
+
+                <button type="submit" class="btn-primary">保存</button>
+            </div>
+
+
+        </form>
     </div>
-    <button type="button" id="add-picture">＋画像を追加</button>
 
-        <button type="submit" class="btn btn-primary">保存</button>
-    
-    </form>
-</div>
+    <footer class="footer-nav">
+        <ul>
+            <li>
+                <a href="{% url 'app:home' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-home"></i><br>ホーム
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:plan_create_or_edit' schedule_id=schedule_id %}">
+                    <span class="footer-icon-label disabled-link">
+                        <i class="fas fa-plus-square"></i><br>予定追加
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:edit_profile' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-user-cog"></i><br>マイページ設定
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:logout' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-sign-out-alt"></i><br>ログアウト
+                    </span>
+                </a>
+            </li>
+        </ul>
 
-<footer class="footer-nav">
-    <ul>
-        <li>
-            <a href="{% url 'app:home' %}">
-                <span class="footer-icon-label">
-                    <i class="fas fa-home"></i><br>ホーム
-                </span>
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'app:plan_create_or_edit' schedule_id=schedule_id %}">
-                <span class="footer-icon-label disabled-link">
-                    <i class="fas fa-plus-square"></i><br>予定追加
-                </span>
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'app:edit_profile' %}">
-                <span class="footer-icon-label">
-                    <i class="fas fa-user-cog"></i><br>マイページ設定
-                </span>
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'app:logout' %}">
-                <span class="footer-icon-label">
-                    <i class="fas fa-sign-out-alt"></i><br>ログアウト
-                </span>
-            </a>
-        </li>
-    </ul>
-
-<script>
-{# document.addEventListener('DOMContentLoaded', function () { #}
+<!--<script>
+document.addEventListener('DOMContentLoaded', function () { 
     const modal = document.getElementById("modal");
     const openBtn = document.getElementById("openModalBtn");
     const closeBtn = document.getElementById("closeModalBtn");
@@ -451,7 +505,7 @@
         });
     });
     
-    const categoryRadios = document.querySelectorAll("input[name="action_category"]");
+    const categoryRadios = document.querySelectorAll("input[name='action_category']");
     const allCategoryFields = document.querySelectorAll("[data-category]");
 
     function showCategoryFields(selectedValue) {
@@ -466,11 +520,11 @@
         });
     });
 
-    const checkedRadio = document.querySelector("input[name="action_category"]:checked");
+    const checkedRadio = document.querySelector("input[name='action_category']:checked");
     if (checkedRadio) {
         showCategoryFields(checkedRadio.value);
     }
-{# }}); #}
-</script>
+}});
+</script>-->
 </body>
 </html>
