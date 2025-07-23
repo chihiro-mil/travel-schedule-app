@@ -13,6 +13,6 @@ urlpatterns = [
     path('home/', views.home_view, name='home'),
     path('schedule/<int:schedule_id>/', views.schedule_detail_view, name='schedule_detail'),
     path('schedule/<int:schedule_id>/plan/add/', views.plan_create_or_edit_view, name='plan_create_or_edit'),
-    path('schedule/<int:schedule_id>/plan/<int:plan_id>/edit/', views.plan_form_view, name='plan_edit'),
+    path('schedule/<int:schedule_id>/plan/<int:plan_id>/edit/', views.plan_create_or_edit_view, name='plan_edit'),
     path('schedule/<int:schedule_id>/', views.schedule_detail_view, name='schedule_detail'),
 ]

@@ -59,6 +59,13 @@ class Plan(models.Model):
         choices=CATEGORY_CHOICES,
         blank=True
     )
+    transportation = models.ForeignKey(
+        'TransportationMethod',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='plans'
+    )
     name = models.CharField(max_length=24)
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
@@ -93,22 +100,23 @@ class Picture(models.Model):
     
 #移動カテゴリテーブル
 class TransportationMethod(models.Model):
-    plan = models.ForeignKey('Plan', on_delete=models.CASCADE, related_name='transportation_methods')
+    TRANSPORTATION_CHOICES=[
+        ('walk', '徒歩'),
+        ('train', '電車'),
+        ('bus', 'バス'),
+        ('shinkansen', '新幹線'),
+        ('plane', '飛行機'),
+        ('car', '車'),
+        ('other', 'その他'),
+    ]
     transportation = models.CharField(
         max_length=20,
-        choices=[
-            ('walk', '徒歩'),
-            ('train', '電車'),
-            ('bus', 'バス'),
-            ('shinkansen', '新幹線'),
-            ('plane', '飛行機'),
-            ('car', '車'),
-            ('other', 'その他'),
-        ]
+        choices=TRANSPORTATION_CHOICES,
+        unique=True
     )
     transportation_icon_url = models.URLField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"{self.get_transportation_display()} ({self.transportation})"
+        return self.get_transportation_display()

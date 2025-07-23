@@ -160,9 +160,9 @@ class PlanForm(forms.ModelForm):
     )
     transportation = forms.ModelChoiceField(
         queryset=TransportationMethod.objects.all(),
-        label="移動手段",
         required=False,
-        widget=forms.Select(attrs={'class': 'form-control'})
+        widget=forms.RadioSelect(),
+        empty_label=None
     )
     
     class Meta:

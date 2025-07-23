@@ -41,27 +41,7 @@
             <div id="transportation-fields" class="category-fields" style="display: block;">
                 <label class-"transportation-title">移動手段</label>
                 <div class="transportation-options">
-                    {% for choice in form.transportation.field.choices %}
-                        <label class="transportation-option">
-                            <input type="radio" name="{{ form.transportation.name }}" value="{{ choice.0 }}"
-                            {% if form.transportation.value == choice.0 %}checked{% endif %}>
-                            {% if choice.0 == '徒歩' %}
-                                <i class="fas fa-person-walking"></i> 徒歩
-                            {% elif  choice.0 == '電車' %}
-                                <i class="fas fa-train"></i> 電車
-                            {% elif  choice.0 == '新幹線' %}
-                                <i class="fas fa-subway"></i> 新幹線
-                            {% elif  choice.0 == 'バス' %}
-                                <i class="fas fa-bus"></i> バス
-                            {% elif  choice.0 == '飛行機' %}
-                                <i class="fas fa-plane"></i> 飛行機
-                            {% elif  choice.0 == '車' %}
-                                <i class="fas fa-car"></i> 車
-                            {% elif  choice.0 == 'その他' %}
-                                <i class="fas fa-compass"></i> その他
-                            {% endif %}
-                        </label>
-                    {% endfor %}
+                    {{ form.transportation }}
                 </div>
             </div>
 
@@ -104,30 +84,30 @@
 
                 <div id="move-link-formset-container">
                     {{ link_formset.management_form }}
-                    {% for form in link_formset %}
-                        <div class="move-link-form">
-                            {{ fotm.url }}
-                            <button type="button" class="remove-link">
+                    <!--{% for form in link_formset %}-->
+                    <div class="move-link-form">
+                        {{ link_formset.0.url }}
+                            <!--<button type="button" class="remove-link">
                                 <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    {% endfor %}
-                    <button type="button" id="move-add-link">＋リンクを追加</button>
+                            </button>-->
+                    </div>
+                    <!--{% endfor %}
+                    <button type="button" id="move-add-link">＋リンクを追加</button>-->
                 </div>
 
                 <div id="move-picture-formset-container">
                     {{ picture_formset.management_form }}
-                    {% for form in picture_formset %}
-                        <div class="move-picture-form">
-                            {{ fotm.image }}
-                            <div class="image-preview-wrapper">
+                    <!--{% for form in picture_formset %}-->
+                    <div class="move-picture-form">
+                        {{ picture_formset.0.image }}
+                            <!--<div class="image-preview-wrapper">
                                 <img src="#" class="image-preview">
                                 <span class="remove-picture" title="削除">&times;</span>
-                            </div>
-                        </div>
-                    {% endfor %}
+                            </div>-->
+                    </div>
+                    <!--{% endfor %}-->
                 </div>
-                <button type="button" id="move-add-picture">＋画像を追加</button>
+                <!--<button type="button" id="move-add-picture">＋画像を追加</button>-->
 
                 <button type="submit" class="btn-primary">保存</button>
             </div>
@@ -167,30 +147,30 @@
 
                 <div id="sightseeing-link-formset-container">
                     {{ link_formset.management_form }}
-                    {% for form in link_formset %}
-                        <div class="link-form">
-                            {{ fotm.url }}
-                            <button type="button" class="remove-link">
+                    <!--{% for form in link_formset %}-->
+                    <div class="link-form">
+                        {{ link_formset.0.url }}
+                            <!--<button type="button" class="remove-link">
                                 <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    {% endfor %}
-                    <button type="button" id="sightseeing-add-link">＋リンクを追加</button>
+                            </button>-->
+                    </div>
+                    <!--{% endfor %}
+                    <button type="button" id="sightseeing-add-link">＋リンクを追加</button>-->
                 </div>
 
                 <div id="sightseeing-picture-formset-container">
                     {{ picture_formset.management_form }}
-                    {% for form in picture_formset %}
-                        <div class="picture-form">
-                            {{ fotm.image }}
-                            <div class="image-preview-wrapper">
+                    <!--{% for form in picture_formset %}-->
+                    <div class="picture-form">
+                        {{ picture_formset.0.image }}
+                            <!--<div class="image-preview-wrapper">
                                 <img src="#" class="image-preview">
                                 <span class="remove-picture" title="削除">&times;</span>
-                            </div>
-                        </div>
-                    {% endfor %}
+                            </div>-->
+                    </div>
+                    <!--{% endfor %}-->
                 </div>
-                <button type="button" id="sightseeing-add-picture">＋画像を追加</button>
+                <!--<button type="button" id="sightseeing-add-picture">＋画像を追加</button>-->
 
                 <button type="submit" class="btn-primary">保存</button>
             </div>
@@ -225,30 +205,30 @@
 
                 <div id="meal-link-formset-container">
                     {{ link_formset.management_form }}
-                    {% for form in link_formset %}
-                        <div class="link-form">
-                            {{ fotm.url }}
-                            <button type="button" class="remove-link">
+                    <!--{% for form in link_formset %}-->
+                    <div class="link-form">
+                        {{ link_formset.0.url }}
+                            <!--<button type="button" class="remove-link">
                                 <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    {% endfor %}
-                    <button type="button" id="meal-add-link">＋リンクを追加</button>
+                            </button>-->
+                    </div>
+                    <!--{% endfor %}
+                    <button type="button" id="meal-add-link">＋リンクを追加</button>-->
                 </div>
 
                 <div id="meal-picture-formset-container">
                     {{ picture_formset.management_form }}
-                    {% for form in picture_formset %}
-                        <div class="picture-form">
-                            {{ fotm.image }}
-                            <div class="image-preview-wrapper">
+                    <!--{% for form in picture_formset %}-->
+                    <div class="picture-form">
+                        {{ picture_formset.0.image }}
+                            <!--<div class="image-preview-wrapper">
                                 <img src="#" class="image-preview">
                                 <span class="remove-picture" title="削除">&times;</span>
-                            </div>
-                        </div>
-                    {% endfor %}
+                            </div>-->
+                    </div>
+                    <!--{% endfor %}-->
                 </div>
-                <button type="button" id="meal-add-picture">＋画像を追加</button>
+                <!--<button type="button" id="meal-add-picture">＋画像を追加</button>-->
 
                 <button type="submit" class="btn-primary">保存</button>
             </div>
@@ -278,30 +258,30 @@
 
                 <div id="stay-link-formset-container">
                     {{ link_formset.management_form }}
-                    {% for form in link_formset %}
-                        <div class="link-form">
-                            {{ fotm.url }}
-                            <button type="button" class="remove-link">
+                    <!--{% for form in link_formset %}-->
+                    <div class="link-form">
+                        {{ link_formset.0.url }}
+                            <!--<button type="button" class="remove-link">
                                 <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    {% endfor %}
-                    <button type="button" id="stay-add-link">＋リンクを追加</button>
+                            </button>-->
+                    </div>
+                    <!--{% endfor %}
+                    <button type="button" id="stay-add-link">＋リンクを追加</button>-->
                 </div>
 
                 <div id="stay-picture-formset-container">
                     {{ picture_formset.management_form }}
-                    {% for form in picture_formset %}
-                        <div class="picture-form">
-                            {{ fotm.image }}
-                            <div class="image-preview-wrapper">
+                    <!--{% for form in picture_formset %}-->
+                    <div class="picture-form">
+                        {{ picture_formset.0.image }}
+                            <!--<div class="image-preview-wrapper">
                                 <img src="#" class="image-preview">
                                 <span class="remove-picture" title="削除">&times;</span>
-                            </div>
-                        </div>
-                    {% endfor %}
+                            </div>-->
+                    </div>
+                    <!--{% endfor %}-->
                 </div>
-                <button type="button" id="stay-add-picture">＋画像を追加</button>
+                <!--<button type="button" id="stay-add-picture">＋画像を追加</button>-->
 
                 <button type="submit" class="btn-primary">保存</button>
             </div>

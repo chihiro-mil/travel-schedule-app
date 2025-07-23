@@ -92,11 +92,14 @@ def schedule_detail_view(request, schedule_id):
     
     
 #予定追加・編集画面
+@login_required
 def plan_create_or_edit_view(request, schedule_id, plan_id=None):
     schedule = get_object_or_404(Schedule, id=schedule_id)
     plan = get_object_or_404(Plan, id=plan_id)if plan_id else None
 
     trip_choices = generate_trip_date_choices(schedule)
+    
+    form = PlanForm(request.POST or None, request.FILES or None, instance=plan)
         
     if request.method == 'POST':
         form = PlanForm(request.POST, request.FILES, instance=plan, trip_date_choices=trip_choices)
@@ -145,36 +148,6 @@ def generate_trip_date_choices(schedule):
         current_date += timedelta(days=1)
     return trip_dates
 
-#追加・編集共通
-@login_required
-def plan_form_view(request, schedule_id, plan_id=None):
-    schedule = get_object_or_404(Schedule, id=schedule_id)
-    
-    plan = get_object_or_404(Plan, id=plan_id) if plan_id else None
-    
-    trip_date_choices = generate_trip_date_choices(schedule)
-    
-    if request.method == 'POST':
-        form = PlanForm(request.POST, request.FILES, trip_date_choices=trip_date_choices, instance=plan)
-        if form.is_valid():
-            new_plan = form.save(commit=False)
-            new_plan.schedule = schedule
-            new_plan.start_datetime = form.cleaned_data.get('start_datetime')
-            new_plan.end_datetime = form.cleaned_data.get('end_datetime')
-            new_plan.save()
-            print("保存成功")
-            return redirect('app:schedule_detail', schedule_id=schedule.id)
-    else:
-        form = PlanForm(instance=plan, trip_date_choices=trip_date_choices)
-        print("フォームが無効です:", form.errors)
-        
-    return render(request, 'app/plan_form.html', {
-        'form': form,
-        'schedule': schedule,
-        'plan': plan,
-        'form_title': '予定編集' if plan else '予定追加',
-    })
-
 #予定表画面
 @login_required
 def schedule_detail_view(request, schedule_id):
@@ -198,21 +171,15 @@ def schedule_detail_view(request, schedule_id):
         'car': 'fa-car',
         'compass': 'fa-compass',
     }
-    transportation_map ={
-        tm.plan_id: tm.transportation for tm in TransportationMethod.objects.filter(plan__in=plans)
-    }
-    
-    icon_class_map = {
-        plan_id: transportation_icon_map.get(transportation, 'fa-question')
-        for plan_id, transportation in transportation_map.items()
-    }
+    for plan in plans:
+        icon_class = transportation_icon_map.get(plan.transportation.transportation, 'fa-question')
     
     context = {
         'schedule_id': schedule.id,
         'plans_by_date': plans_by_date,
         'sorted_dates': sorted_dates,
-        'transportation_map': transportation_map,
         'transportation_icon_map': transportation_icon_map,
+        'schedule': schedule,
     }
     return render(request, 'app/schedule_detail.html', {
         'schedule': schedule,
