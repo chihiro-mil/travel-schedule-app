@@ -23,19 +23,31 @@
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+            
+            <div class="category-radio"> 
+                <label class="category-label category-move">
+                    <input type="radio" name="action_category" value="move" />
+                    <span>移動</span>
+                </label>
 
-            <div class="category-radio">
-                {{ form.action_category }}
+                <input type="radio" name="action_category" value="sightseeing" id="category-sightseeing">
+                <label for="category-sightseeing" class="category-label">観光地</label>
+
+                <input type="radio" name="action_category" value="meal" id="category-meal">
+                <label for="category-meal" class="category-label">食事</label>
+
+                <input type="radio" name="action_category" value="stay" id="category-stay">
+                <label for="category-stay" class="category-label">宿泊</label>
             </div>
 
             <!--移動カテゴリ-->
-            <div class="category-fields" data-category="move">
+            <div class="category-fields" data-category="move" style="display: none;">
                 <label class-"transportation-title">移動手段</label>
                 <div class="transportation-options">
                     {{ form.transportation }}
                 </div>
 
-                <div class="form-group" id="move-start-date">
+                <div class="form-group" id="move-start-date" >
                     <label id="move-start-date-label">出発日</label>
                     {{ form.start_date }}
                 </div>
@@ -102,7 +114,7 @@
 
             <!--観光地カテゴリ-->
 
-            <div class="category-fields" data-category="sightseeing">
+            <div class="category-fields" data-category="sightseeing" style="display: none;">
                 <div class="form-group" id="sightseeing-name">
                     <label id="sightseeing-name-label">観光地名</label>
                     {{ form.name }}
@@ -165,7 +177,7 @@
 
 
             <!--食事カテゴリ-->
-            <div class="category-fields" data-category="meal">
+            <div class="category-fields" data-category="meal" style="display: none;">
                 <div class="form-group" id="meal-name">
                     <label id="meal-name-label">店名</label>
                     {{ form.name }}
@@ -223,7 +235,7 @@
 
             <!--宿泊カテゴリ-->
 
-            <div class="category-fields" data-category="stay">
+            <div class="category-fields" data-category="stay" style="display: none;">
                 <div class="form-group" id="stay-name">
                     <label id="stay-name-label">宿泊施設名</label>
                     {{ form.name }}
@@ -314,6 +326,11 @@
         document.addEventListener('DOMContentLoaded', function () {
             const categoryRadios = document.querySelectorAll('input[name="action_category"]');
             const allCategoryForms = document.querySelectorAll('[data-category]');
+
+            allCategoryForms.forEach(function (block) {
+                block.style.display = "none";
+                block.querySelectorAll("input, select, textarea").forEach(el => el.disabled = true);
+            });
 
             categoryRadios.forEach(function (radio) {
                 radio.addEventListener("change", function(){

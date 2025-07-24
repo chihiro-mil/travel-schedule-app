@@ -495,19 +495,62 @@
     font-size: 16px;
     color: #696969;
 }
+.category-radio input[type="radio"]{
+    display: none;
+}
 
 .category-radio {
     display: flex;
-    gap: 10px;
-    justify-content: space-around;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px auto;
+    max-width: 400px;
+}
+
+.category-radio label {
+    display: inline-block;
+    padding: 10px 16px;
+    margin: 4px;
+    border: 2px solid #888;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.category-radio label:hover {
+    background-color: #eee;
+}
+
+.category-label input[type="radio"]{
+    display: none;
+}
+
+.category-label.category-move input[type="radio"]:checked + span {
+    background-color: #87cefa;
+    color: #000;
+}
+.category-radio input[type="radio"]:checked + label.category-label.category-sightseeing {
+    background-color: #f0e68c;
+    color: #000;
+}
+.category-radio input[type="radio"]:checked + label.category-label.category-meal {
+    background-color: #f08080;
+    color: #000;
+}
+
+.category-radio input[type="radio"]:checked + label.category-label.category-stay {
+    background-color: #90ee90;
+    color: #000;
 }
 
 .category-label {
     padding: 10px 15px;
-    border: 1px solid #ccc;
+    border: 1px;
     border-radius: 8px;
     cursor: pointer;
-    background-color: #f9f9f9;
     transition: background-color 0.3s;
 }
 
