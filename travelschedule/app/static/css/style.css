@@ -511,7 +511,8 @@
     transition: background-color 0.3s;
 }
 
+/*ラジオボタン非表示設定
 input[type="radio"][name="action_category"],
 .category-radio input[type="radio"] {
     display: none !important;
-}
+}*/

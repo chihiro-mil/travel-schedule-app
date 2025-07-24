@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
+
 from .forms import (
     RegisterForm,
     LoginForm,
@@ -99,18 +100,26 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
 
     trip_choices = generate_trip_date_choices(schedule)
     
-    form = PlanForm(request.POST or None, request.FILES or None, instance=plan)
-        
     if request.method == 'POST':
-        form = PlanForm(request.POST, request.FILES, instance=plan, trip_date_choices=trip_choices)
-        link_formset = LinkFormSet(request.POST, prefix='links')
+        form = PlanForm(
+            request.POST,
+            request.FILES,
+            instance=plan,
+            trip_dates=trip_choices
+        )
+        link_formset = LinkFormSet(request.POST, request.FILES, prefix='links')
         picture_formset = PictureFormSet(request.POST, request.FILES, prefix='pictures')
         
         if form.is_valid() and link_formset.is_valid() and picture_formset.is_valid():
+            print('cleaned_dataの中身:')
+            for key, value in form.cleaned_data.items():
+                print(f' {key} : {value}')
+            print('start_datetime:', form.cleaned_data.get('start_datetime'))
+            print('end_datetime:', form.cleaned_data.get('end_datetime'))
             plan_instance = form.save(commit=False)
             plan_instance.schedule = schedule
-            plan_instance.start_datetime = form.cleaned_data.get['start_datetime']
-            plan_instance.end_datetime = form.cleaned_data.get['end_datetime']
+            plan_instance.start_datetime = form.cleaned_data.get('start_datetime')
+            plan_instance.end_datetime = form.cleaned_data.get('end_datetime')
             plan_instance.save()
             
             for link in link_formset.save(commit=False):
@@ -122,14 +131,15 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 picture.save()
                 
             return redirect('app:schedule_detail', schedule_id=schedule.id)
+            
     else:
-        form = PlanForm(instance=plan, trip_date_choices=trip_choices)
+        form = PlanForm(instance=plan, trip_dates=trip_choices)
         link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')
         picture_formset = PictureFormSet(queryset=Picture.objects.none(), prefix='pictures')
         print("PlanForm errors:", form.errors)
         print("LinkFormSet errors:", link_formset.errors)
         print("PictureFormSet errors:" , picture_formset.errors)
-        
+    
     return render(request, 'app/plan_form.html', {
         'form': form, 
         'link_formset': link_formset,
@@ -138,15 +148,13 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         'form_title': '予定編集' if plan else '予定追加',
         'schedule_id': schedule_id,
     })
-
+    
 def generate_trip_date_choices(schedule):
-    trip_dates = []
-    current_date = schedule.trip_start_date
-    while current_date <= schedule.trip_end_date:
-        label = current_date.strftime('%Y/%m/%d(%a)')
-        trip_dates.append((current_date, label))
-        current_date += timedelta(days=1)
-    return trip_dates
+    start = schedule.trip_start_date
+    end = schedule.trip_end_date
+    delta = (end - start).days
+    
+    return [start + timedelta(days=i) for i in range(delta + 1)]
 
 #予定表画面
 @login_required

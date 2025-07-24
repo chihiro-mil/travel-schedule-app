@@ -25,28 +25,16 @@
             {% csrf_token %}
 
             <div class="category-radio">
-                <input type="radio" name="action_category" value="move" id="category-move"> 
-                <label for="category-move" class="category-label">移動</label>
-
-                <input type="radio" name="action_category" value="sightseeing" id="category-sightseeing">
-                <label for="category-sightseeing" class="category-label">観光地</label>
-
-                <input type="radio" name="action_category" value="meal" id="category-meal">
-                <label for="category-meal" class="category-label">食事</label>
-
-                <input type="radio" name="action_category" value="stay" id="category-stay">
-                <label for="category-stay" class="category-label">宿泊</label>
-            </div>
-
-            <div id="transportation-fields" class="category-fields" style="display: block;">
-                <label class-"transportation-title">移動手段</label>
-                <div class="transportation-options">
-                    {{ form.transportation }}
-                </div>
+                {{ form.action_category }}
             </div>
 
             <!--移動カテゴリ-->
             <div class="category-fields" data-category="move">
+                <label class-"transportation-title">移動手段</label>
+                <div class="transportation-options">
+                    {{ form.transportation }}
+                </div>
+
                 <div class="form-group" id="move-start-date">
                     <label id="move-start-date-label">出発日</label>
                     {{ form.start_date }}
@@ -322,189 +310,31 @@
             </li>
         </ul>
 
-<!--<script>
-document.addEventListener('DOMContentLoaded', function () { 
-    const modal = document.getElementById("modal");
-    const openBtn = document.getElementById("openModalBtn");
-    const closeBtn = document.getElementById("closeModalBtn");
-    const calendarIcon = document.querySelector(".calendar-icon");
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const categoryRadios = document.querySelectorAll('input[name="action_category"]');
+            const allCategoryForms = document.querySelectorAll('[data-category]');
 
-    if (openBtn && closeBtn && modal) {
-        openBtn.onclick = function () {
-            modal.classList.remove("hidden");
-        };
-        closeBtn.onclick = function () {
-            modal.classList.add("hidden");
-        };
-    }
+            categoryRadios.forEach(function (radio) {
+                radio.addEventListener("change", function(){
+                    const selected = this.value;
 
-    let fp = flatpickr("#dateRange", {
-        mode: "range",
-        dateFormat: "Y-m-d",
-        locale: "ja",
-        onChange: function(selectedDates, dateStr, instance) {
-            if (selectedDates.length === 2){
-                const start = selectedDates[0];
-                const end = selectedDates[1];
-                document.querySelector('input[name="trip_start_date"]').value = instance.formatDate(start, "Y-m-d");
-                document.querySelector('input[name="trip_end_date"]').value = instance.formatDate(end, "Y-m-d");
-            }
-        }
-    });
-    if (calendarIcon) {
-        calendarIcon.addEventListener("click", function () {
-            document.getElementById("dateRange").focus();
-        });
-    }
-    let lastScrollY = window.scrollY;
-    window.addEventListener('scroll', () => {
-        const nav = document.querySelector('.footer-nav');
-        if (!nav) return;
-
-        if (window.scrollY > lastscrollY) {
-            nav.style.transform ='translateY(0)';
-        }else {
-            nav.style.transform ='translateY(100)';
-        }
-        lastscrollY = window.scrollY;
-    });
-
-    const radios = document.querySelectorAll("input[name="action_category"]");
-    const categoryFields = document.querySelectorAll(".category-fields");
-
-    function showCategoryFields(value) {
-        categoryFields.forEach(div =>{
-            div.style.display = (div.getAttribute("data-category") === value) ? "block" : "none";
-        });
-    }
-
-    radios.forEach(radio => {
-        radio.addEventListener("change", function() {
-            showCategoryFields(this.value);
-        });
-    });
-
-    const checkedRadio = document.querySelector("input[name="action_category"]:checked");
-    if (checkedRadio) {
-        showCategoryFields(checkedRadio.value);
-    }
-
-
-    const categoryField = document.querySelector("#id_action_category");
-    const startDateLabel = document.getElementById("start-date-label");
-    const startTimeLabel = document.getElementById("start-time-label");
-    const endDateLabel = document.getElementById("end-date-label");
-    const endTimeLabel = document.getElementById("end-time-label");
-
-    function updateLabels() {
-        const selected = categoryField.value;
-
-        if (!selected) {
-            datetimeFields.style.display = "none";
-            return;
-        }
-
-        datetimeFields.style.display = "block";
-
-        if (selected === "移動") {
-                startDateLabel.textContent = "出発日";
-                startTimeLabel.textContent = "出発時刻";
-                endDateLabel.textContent = "到着日";
-                endTimeLabel.textContent = "到着時刻";
-            } else if (selected === "観光地") {
-                startDateLabel.textContent = "滞在開始日";
-                startTimeLabel.textContent = "滞在開始時";
-                endDateLabel.textContent = "滞在終了日";
-                endTimeLabel.textContent = "滞在終了時刻";
-            } else if (selected === "食事") {
-                startDateLabel.textContent = "食事日";
-                startTimeLabel.textContent = "食事開始時刻";
-                endTimeLabel.textContent = "食事終了時刻"; 
-            } else if (selected === "宿泊") {
-                startDateLabel.textContent = "滞在開始日";
-                startTimeLabel.textContent = "滞在開始時刻";
-                endDateLabel.textContent = "滞在終了日";
-                endTimeLabel.textContent = "滞在終了時刻"; 
-            }
-        if (selectedCategory === 'move') {
-            document.getElementById("transportation-fields").style.display = "block";
-        } else {
-            document.getElementById("transportation-fields").style.display = "none";
-        }
-    }
-
-        updateLabels();
-        categoryField.addEventListener("change", updateLabels);
-
-    
-    const addLinkBtn = document.getElementById("add-link");
-    const linkContainer = document.getElementById("link-formset-container");
-    const linkTotalForms = document.querySelector("#id_links-TOTAL_FORMS");
-
-    addLinkBtn.addEventListener("click", () => {
-        const currentCount = parseInt(linkTotalForms.value);
-        const newFormHtml = linkContainer.querySelector(".link-form").outerHTML.replace(/-0-/g, `-${currentCount}-`).replace(/_0/g, `_${currentCount}`);
-        const newForm = document.createElement("div");
-        newForm.innerHTML = newFormHtml;
-        linkContainer.appendChild(newForm);
-        linkTotalForms.value = currentCount + 1;
-    });
-
-    linkContainer.addEventListener("click", function (e) {
-        if (e.target.classList.contains("remove-link")) {
-            e.target.parentElement.remove();
-        }
-    });
-
-
-    const container = document.getElementById("picture-formset-container");
-
-    container.querySelectorAll(".picture-form").forEach((formDiv, index) => {
-        const input = formDiv.querySelector("input[type='file']");
-        const preview = formDiv.querySelector(".image-preview");
-        const removeIcon = formDiv.querySelector(".remove-picture");
-
-        input.addEventListener("change", function () {
-            const file = input.files[0];
-            if (file){
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    preview.src = e.target.result;
-                    preview.style.display = "block";
-                    removeIcon.style.display = "inline";
-                };
-                reader.readAsDataURL(file);
+                    allCategoryForms.forEach(function (block) {
+                        if (block.dataset.category === selected) {
+                            block.style.display = "block";
+                            block.querySelectorAll("input, select, textarea").forEach(el => el.disabled = false);
+                        } else {
+                            block.style.display = "none";
+                            block.querySelectorAll("input, select, textarea").forEach(el => el.disabled = true);
+                        }
+                    });
+                });
+            });
+            const checkedRadio = document.querySelector('input[name="action_category"]:checked');
+            if (checkedRadio) {
+                checkedRadio.dispatchEvent(new Event("change"));
             }
         });
-
-        removeIcon.addEventListener("click", function () {
-            input.value = "";
-            preview.src = "#";
-            preview.style.display = "none";
-            removeIcon.style.display = "none";
-        });
-    });
-    
-    const categoryRadios = document.querySelectorAll("input[name='action_category']");
-    const allCategoryFields = document.querySelectorAll("[data-category]");
-
-    function showCategoryFields(selectedValue) {
-        allCategoryFields.forEach(field => {
-            field.style.display = field.dataset.category === selectedValue ? "block" : "none";
-        });
-    }
-
-    categoryRadios.forEach(radio => {
-        radio.addEventListener("change", () => {
-            showCategoryFields(radio.value);
-        });
-    });
-
-    const checkedRadio = document.querySelector("input[name='action_category']:checked");
-    if (checkedRadio) {
-        showCategoryFields(checkedRadio.value);
-    }
-}});
-</script>-->
+    </script>
 </body>
 </html>

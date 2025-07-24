@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from .models import Schedule
 from .models import Plan, Link, Picture, TransportationMethod
 from datetime import datetime
+from datetime import date
 from django.forms import modelformset_factory
 
 
@@ -128,11 +129,20 @@ class PlanForm(forms.ModelForm):
         label='',
         widget=forms.RadioSelect(attrs={'class': 'category-radio'})
     )
-    start_date = forms.ChoiceField(
-        choices=[],
-        label='開始日',
+    transportation = forms.ModelChoiceField(
+        queryset=TransportationMethod.objects.all(),
         required=False,
-        widget=forms.Select(attrs={'class': 'form-control'})
+        widget=forms.RadioSelect(),
+        empty_label=None
+    )
+    start_date = forms.DateField()
+    end_date = forms.DateField()
+    
+    start_date = forms.DateField(
+        widget=forms.Select(),
+        input_formats=['%Y-%m-%d'],
+        required=False,
+        label='開始日',
     )
     start_time = forms.TimeField(
         label='開始時刻',
@@ -143,11 +153,11 @@ class PlanForm(forms.ModelForm):
             'placeholder': '例：09:00'
         })
     )
-    end_date = forms.ChoiceField(
-        choices=[],
-        label='終了日',
+    end_date = forms.DateField(
+        widget=forms.Select(),
+        input_formats=['%Y-%m-%d'],
         required=False,
-        widget=forms.Select(attrs={'class': 'form-control'})
+        label='終了日',
     )
     end_time = forms.TimeField(
         label='終了時刻',
@@ -158,26 +168,25 @@ class PlanForm(forms.ModelForm):
             'placeholder': '例：18:00'
         })
     )
-    transportation = forms.ModelChoiceField(
-        queryset=TransportationMethod.objects.all(),
-        required=False,
-        widget=forms.RadioSelect(),
-        empty_label=None
-    )
+    
+    start_date = forms.DateField()
+    end_date = forms.DateField()
     
     class Meta:
         model = Plan
         fields = [
             'action_category', 'name',
             'memo', 'departure_location', 'arrival_location',
-            'transportation',
-            ]
+            'transportation', 'start_date', 'start_time', 'end_date', 'end_time'
+        ]
 
-    def __init__(self, *args, trip_date_choices=None, **kwargs):
+    def __init__(self, *args, trip_dates=None, **kwargs):
         super().__init__(*args, **kwargs)
-        if trip_date_choices:
-            self.fields['start_date'].choices = trip_date_choices
-            self.fields['end_date'].choices = trip_date_choices
+        
+        if trip_dates:
+            date_choices = [(date, date.strftime('%Y-%m-%d')) for date in trip_dates]
+            self.fields['start_date'].widget = forms.Select(choices=date_choices)
+            self.fields['end_date'].widget = forms.Select(choices=date_choices)
     
     def clean(self):
         cleaned_data = super().clean()
@@ -186,25 +195,43 @@ class PlanForm(forms.ModelForm):
         end_date = cleaned_data.get('end_date')
         end_time = cleaned_data.get('end_time')
         
+        print("clean()内の値確認：")
+        print("start_date =", start_date)
+        print("start_time =", start_time)
+        print("end_date =", end_date)
+        print("end_time =", end_time)
+        
         if start_date and end_date:
             if start_date > end_date:
                     raise forms.ValidationError(f"到着日は出発日と同じか、それ以降の日付にしてください。")
         
         if start_date and start_time and end_date and end_time:
             try:
+                print("combine開始")
                 start_datetime = datetime.combine(start_date, start_time)
                 end_datetime = datetime.combine(end_date, end_time)
+                print("combine成功")
                 
                 if start_datetime > end_datetime:
                     raise forms.ValidationError(f"到着時刻は出発時刻より後にしてください。")
         
                 cleaned_data['start_datetime'] = datetime.combine(start_date, start_time)
                 cleaned_data['end_datetime'] = datetime.combine(end_date, end_time)
+                print("cleaned_data 格納完了")
                 
             except Exception as e:
+                print("例外発生:", e)
                 raise forms.ValidationError(f"日時の形式が正しくありません。日付と時刻を正しく入力してください。")
             
         return cleaned_data
+    
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.start_datetime = self.cleaned_data.get('start_datetime')
+        instance.end_datetime = self.cleaned_data.get('end_datetime')
+        if commit:
+            instance.save()
+        return instance
     
     
 #リンクフォーム用

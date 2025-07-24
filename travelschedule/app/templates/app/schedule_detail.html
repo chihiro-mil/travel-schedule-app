@@ -1,27 +1,67 @@
-{% extends 'app/base.html' %}
 {% load static %}
-{% load custom_filters %}
-{% block title %}schedule detail page{% endblock %}
-
-{% block extra_head %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static "css/style.css" %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-{% endblock %}
-
-{% block content %}
-<div class="schedule-detail-container">
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予定表詳細</title>
+    <!--<link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">-->
+</head>
+<body>
+    <!--<div class="schedule-detail-container">-->
     <h2>{{ schedule.title }} 予定表</h2>
 
-    <div id="day-tabs" class="day-tabs">
-        {% for date, plans in plans_by_date.items %}
-            <button class="day-tab {% if forloop.first %}active{% endif %}" data-day="day{{ forloop.counter }}">
-                {{ forloop.counter }}日目 {{ date|date:"n/j (D)" }}
-            </button>
-        {% endfor %}
-    </div>
+        <!--<div id="day-tabs" class="day-tabs">-->
+    {% for date, plans in plans_by_date.items %}
+            <!--<button class="day-tab {% if forloop.first %}active{% endif %}" data-day="day{{ forloop.counter }}">-->
+        <h3>{{ forloop.counter }}日目 {{ date|date:"n/j (D)" }}</h3>
+            <!--</button>-->
+    <!--</div>-->
+        
+        {% for plan in plans %}
+            <div class="plan-card">
+                <p>
+                    {% if plan.action_category == "移動" %}
 
-    <div id="day-contents">
+                    {% elif plan.action_category == "観光地" %}
+
+                    {% elif plan.action_category == "食事" %}
+
+                    {% elif plan.action_category == "宿泊" %}
+
+                    {% endif %}
+
+                    {{ plan.action_category }}
+                </p>
+
+                <p>{{ plan.start_datetime|date:"H:i" }} ～ {{ plan.end_datetime|date:"H:i" }}</p>
+
+                {% if plan.action_category == "移動" %}
+                    <p>出発地： {{ plan.departure_location }}</p>
+                    <p>到着地： {{ plan.arrival_location }}</p>
+                    {% if plan.transportation is not None %}
+                        <p>移動手段： {{ plan.transportation }}</p>
+                    {% else %}
+                        <p>移動手段：未設定</p>
+                    {% endif %}
+                {% elif plan.action_category == "観光地" %}
+                    <p>観光地名：{{ plan.name }}</p>
+                {% elif plan.action_category == "食事" %}
+                    <p>店名：{{ plan.name }}</p>
+                {% elif plan.action_category == "宿泊" %}
+                    <p>宿泊施設名：{{ plan.name }}</p>
+                {% endif %}
+
+                {% if plan.memo %}
+                    <p>メモ：{{ plan.memo}}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+
+    <!--<div id="day-contents">
         {% for date, plans in plans_by_date.items %}
             <div class="day-content {% if not forloop.first %}hidden{% endif %}" id="day{{ forloop.counter }}">
                 {% for plans in plans %}
@@ -76,4 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-{% endblock %}
+{% endblock %}-->
+
+</body>
+</html>
