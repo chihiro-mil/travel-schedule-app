@@ -76,7 +76,7 @@ class Plan(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"{self.name} ({self.action_category_display()})"
+        return f"{self.name} ({self.get_action_category_display()})"
     
 #リンクテーブル
 class Link(models.Model):

@@ -112,7 +112,14 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             plan_instance.schedule = schedule
             plan_instance.start_datetime = form.cleaned_data.get('start_datetime')
             plan_instance.end_datetime = form.cleaned_data.get('end_datetime')
+            
+            print("保存直前の plan_instans:")
+            print("schedule_id:", plan_instance.schedule_id)
+            print("start_datetime:", plan_instance.start_datetime)
+            print("end_datetime:", plan_instance.end_datetime)
+            
             plan_instance.save()
+            print("保存直後 一覧:", Plan.objects.all())
             
             for link in link_formset.save(commit=False):
                 link.plan = plan_instance
@@ -152,13 +159,22 @@ def generate_trip_date_choices(schedule):
 @login_required
 def schedule_detail_view(request, schedule_id):
     schedule = get_object_or_404(Schedule, id=schedule_id)
-    plans = Plan.objects.filter(schedule_id=schedule_id, transportation__isnull=False).order_by('start_datetime')
+    plans = Plan.objects.filter(schedule_id=schedule_id,).order_by('start_datetime')
+    print("取得されたplan一覧：", plans)
+    for plan in plans:
+        print("plan.schedule_id:", plan.schedule_id, "start:", plan.start_datetime)
     
-    plans_by_date = defaultdict(list)
+    plans_by_date = {}
     for plan in plans:
         if plan.start_datetime:
-            day = plan.start_datetime.date()
-            plans_by_date[day].append(plan)
+            date = plan.start_datetime.date()
+            if date not in plans_by_date:
+                plans_by_date[date] = []
+            plans_by_date[date].append(plan)
+            
+    print("plans_by_date:", plans_by_date)
+            
+    
         
     sorted_dates = sorted(plans_by_date.keys())
     
@@ -172,6 +188,9 @@ def schedule_detail_view(request, schedule_id):
         'compass': 'fa-compass',
     }
     for plan in plans:
+        print("plan:", plan)
+        print("start_datetime:", plan.start_datetime)
+        print("カテゴリ:", plan.action_category)
         if plan.transportation:
             icon_class = transportation_icon_map.get(plan.transportation.transportation, 'fa-question')
         else:

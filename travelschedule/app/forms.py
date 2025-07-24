@@ -201,10 +201,6 @@ class PlanForm(forms.ModelForm):
         print("end_date =", end_date)
         print("end_time =", end_time)
         
-        if start_date and end_date:
-            if start_date > end_date:
-                    raise forms.ValidationError(f"到着日は出発日と同じか、それ以降の日付にしてください。")
-        
         if start_date and start_time and end_date and end_time:
             try:
                 print("combine開始")
@@ -213,6 +209,8 @@ class PlanForm(forms.ModelForm):
                 print("combine成功")
                 
                 if start_datetime > end_datetime:
+                    print("! start_datetime:", start_datetime)
+                    print("! end_datetime:", end_datetime)
                     raise forms.ValidationError(f"到着時刻は出発時刻より後にしてください。")
         
                 cleaned_data['start_datetime'] = datetime.combine(start_date, start_time)
