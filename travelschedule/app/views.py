@@ -82,14 +82,6 @@ def home_view(request):
         'form': form,
         'schedules': schedules
     })
-
-def schedule_detail_view(request, schedule_id):
-    schedule = get_object_or_404(Schedule, id=schedule_id)
-    #plans = Plan.objects.filter(schedule_id=schedule.id)
-    return render(request, 'app/schedule_detail.html', {
-        'schedule': schedule,
-        #'plans': plans,
-    })
     
     
 #予定追加・編集画面
@@ -160,7 +152,7 @@ def generate_trip_date_choices(schedule):
 @login_required
 def schedule_detail_view(request, schedule_id):
     schedule = get_object_or_404(Schedule, id=schedule_id)
-    plans = Plan.objects.filter(schedule=schedule).order_by('start_datetime')
+    plans = Plan.objects.filter(schedule_id=schedule_id, transportation__isnull=False).order_by('start_datetime')
     
     plans_by_date = defaultdict(list)
     for plan in plans:
@@ -180,7 +172,10 @@ def schedule_detail_view(request, schedule_id):
         'compass': 'fa-compass',
     }
     for plan in plans:
-        icon_class = transportation_icon_map.get(plan.transportation.transportation, 'fa-question')
+        if plan.transportation:
+            icon_class = transportation_icon_map.get(plan.transportation.transportation, 'fa-question')
+        else:
+            icon_class = 'fa-question'
     
     context = {
         'schedule_id': schedule.id,
@@ -189,7 +184,4 @@ def schedule_detail_view(request, schedule_id):
         'transportation_icon_map': transportation_icon_map,
         'schedule': schedule,
     }
-    return render(request, 'app/schedule_detail.html', {
-        'schedule': schedule,
-        'plans_by_date': plans_by_date,
-    })
+    return render(request, 'app/schedule_detail.html', context)

@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -40,11 +41,17 @@
                 {% if plan.action_category == "移動" %}
                     <p>出発地： {{ plan.departure_location }}</p>
                     <p>到着地： {{ plan.arrival_location }}</p>
-                    {% if plan.transportation is not None %}
-                        <p>移動手段： {{ plan.transportation }}</p>
+
+                    {% if plan.transportation %}
+                        <p>
+                            移動手段：
+                            <i class="fa-solid{{ transportation_icon_map|get_item:plan.transportation.transportation}}"></i>
+                            {{ plan.transportation }}
+                        </p>
                     {% else %}
                         <p>移動手段：未設定</p>
                     {% endif %}
+
                 {% elif plan.action_category == "観光地" %}
                     <p>観光地名：{{ plan.name }}</p>
                 {% elif plan.action_category == "食事" %}
@@ -59,7 +66,38 @@
             </div>
         {% endfor %}
     {% endfor %}
-
+    
+    <footer class="footer-nav">
+        <ul>
+            <li>
+                <a href="{% url 'app:home' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-home"></i><br>ホーム
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:plan_create_or_edit' schedule_id=schedule_id %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-plus-square"></i><br>予定追加
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:edit_profile' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-user-cog"></i><br>マイページ設定
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:logout' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-sign-out-alt"></i><br>ログアウト
+                    </span>
+                </a>
+            </li>
+        </ul>
 
     <!--<div id="day-contents">
         {% for date, plans in plans_by_date.items %}
@@ -97,8 +135,6 @@
 
     </div>
 </div>
-{% endblock %}
-{% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const tabs = document.querySelectorAll(".day-tab");
@@ -115,8 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-</script>
-{% endblock %}-->
+</script>-->
 
 </body>
 </html>
