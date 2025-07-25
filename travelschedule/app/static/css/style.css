@@ -178,7 +178,7 @@
     color: #808080;
 }
 
-/*base画面*/
+/*フッター*/
 
 .footer-icon-label {
     display: inline-block;
@@ -441,7 +441,7 @@
     }
 }
 
-/*予定表追加 リンク、画像*/
+/*予定表追加 画面*/
 
 .page-title {
     text-align: center;
@@ -466,11 +466,6 @@
     border-radius: 6px;
 }
 
-
-
-
-
-/*予定表追加 リンク、画像 保留用*/
 .link-form, .image-form {
     margin-bottom: 10px;
 }
@@ -514,37 +509,15 @@
     margin: 4px;
     border: 2px solid #888;
     border-radius: 8px;
-    background-color: #f9f9f9;
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s;
-}
-
-.category-radio label:hover {
-    background-color: #eee;
 }
 
 .category-label input[type="radio"]{
     display: none;
 }
 
-.category-label.category-move input[type="radio"]:checked + span {
-    background-color: #87cefa;
-    color: #000;
-}
-.category-radio input[type="radio"]:checked + label.category-label.category-sightseeing {
-    background-color: #f0e68c;
-    color: #000;
-}
-.category-radio input[type="radio"]:checked + label.category-label.category-meal {
-    background-color: #f08080;
-    color: #000;
-}
-
-.category-radio input[type="radio"]:checked + label.category-label.category-stay {
-    background-color: #90ee90;
-    color: #000;
-}
 
 .category-label {
     padding: 10px 15px;
@@ -554,8 +527,86 @@
     transition: background-color 0.3s;
 }
 
-/*ラジオボタン非表示設定
-input[type="radio"][name="action_category"],
-.category-radio input[type="radio"] {
-    display: none !important;
-}*/
+
+input[type="radio"]:checked + label.label {
+    color: #000;
+}
+
+.label-move {
+    background-color: #add8e6;
+}
+.label-move:hover {
+    background-color: #00bfff;
+}
+
+.label-sightseeing {
+    background-color: #f0e68c;
+}
+.label-sightseeing:hover {
+    background-color: #ffd700;
+}
+
+.label-meal {
+    background-color: #f08080;
+}
+.label-meal:hover {
+    background-color: #ff0000;
+}
+
+.label-stay {
+    background-color: #90ee90;
+}
+.label-stay:hover {
+    background-color: #7fff00;
+}
+
+.transportation-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 1rem;
+}
+
+.transportation-title {
+    min-width: 80px;
+    font-weight: bold;
+}
+
+.custom-select-box {
+    position: relative;
+    width: 300px;
+}
+.selected-option {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 4px;
+    background-color: #fff;
+}
+.options-list{
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.option-item {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.option-item:hover {
+    background-color: #f0f0f0;
+}

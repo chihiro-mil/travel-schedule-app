@@ -132,7 +132,7 @@ class PlanForm(forms.ModelForm):
     transportation = forms.ModelChoiceField(
         queryset=TransportationMethod.objects.all(),
         required=False,
-        widget=forms.RadioSelect(),
+        widget=forms.Select(attrs={'style': 'display:none;'}),
         empty_label=None
     )
     start_date = forms.DateField()

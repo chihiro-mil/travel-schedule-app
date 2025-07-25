@@ -25,27 +25,40 @@
             {% csrf_token %}
             
             <div class="category-radio"> 
-                <label class="category-label category-move">
-                    <input type="radio" name="action_category" value="move" />
-                    <span>移動</span>
-                </label>
+
+                <input type="radio" name="action_category" value="move" id="category-move">
+                <label for="category-move" class="label-move">移動</label>
 
                 <input type="radio" name="action_category" value="sightseeing" id="category-sightseeing">
-                <label for="category-sightseeing" class="category-label">観光地</label>
+                <label for="category-sightseeing" class="label-sightseeing">観光地</label>
 
                 <input type="radio" name="action_category" value="meal" id="category-meal">
-                <label for="category-meal" class="category-label">食事</label>
+                <label for="category-meal" class="label-meal">食事</label>
 
                 <input type="radio" name="action_category" value="stay" id="category-stay">
-                <label for="category-stay" class="category-label">宿泊</label>
+                <label for="category-stay" class="label-stay">宿泊</label>
             </div>
 
             <!--移動カテゴリ-->
             <div class="category-fields" data-category="move" style="display: none;">
-                <label class-"transportation-title">移動手段</label>
-                <div class="transportation-options">
-                    {{ form.transportation }}
-                </div>
+                <div class="transportation-row">
+                    <label class-"transportation-title">移動手段</label>
+                    <div class="custom-select-box">
+                        <div class="selected-option" id="selected-option">
+                            <i id="selected-icon" class="" ></i>
+                            <span id="selected-label">選択してください</span>
+                        </div>
+                        <div class="options-list" id="options-list">
+                            {% for method in transportation_methods %}
+                                <div class="option-item" data-id="{{ method.id }}" data-label="{{ method.get_transportation_display }}" data-icon="{{ method.transportation_icon_class }}">
+                                    <i class="{{ method.transportation_icon_class }}"></i>
+                                    <span class="transportation-label">{{ method.get_transportation_display }}</span>
+                                </div>
+                            {% endfor %}
+                            </div>
+                            <input type="hidden" name="transportation" id="transportation-hidden-input">
+                        </div>
+                    </div>
 
                 <div class="form-group" id="move-start-date" >
                     <label id="move-start-date-label">出発日</label>
@@ -326,6 +339,13 @@
         document.addEventListener('DOMContentLoaded', function () {
             const categoryRadios = document.querySelectorAll('input[name="action_category"]');
             const allCategoryForms = document.querySelectorAll('[data-category]');
+            const selectedOption = document.getElementById('selected-option');
+            const optionsList = document.getElementById('options-list');
+            const hiddenInput = document.getElementById('transportation-hidden-input');
+            const selectedIcon = document.getElementById('selected-icon');
+            const selectedLabel = document.getElementById('selected-label');
+
+
 
             allCategoryForms.forEach(function (block) {
                 block.style.display = "none";
@@ -351,6 +371,30 @@
             if (checkedRadio) {
                 checkedRadio.dispatchEvent(new Event("change"));
             }
+
+            selectedOption.addEventListener('click', () => {
+                optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
+            });
+
+            document.querySelectorAll('.option-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const id = item.dataset.id;
+                    const label = item.dataset.label;
+                    const icon = item.dataset.icon;
+
+                    selectedIcon.className = icon;
+                    selectedLabel.textContent = label;
+                    hiddenInput.value = id;
+
+                    optionsList.style.display = 'none';
+                });
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.custom-select-box')) {
+                    optionsList.style.display = 'none';
+                }
+            });
         });
     </script>
 </body>

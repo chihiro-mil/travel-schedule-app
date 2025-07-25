@@ -146,6 +146,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         'schedule': schedule,
         'form_title': '予定編集' if plan else '予定追加',
         'schedule_id': schedule_id,
+        'transportation_methods': TransportationMethod.objects.all(),
     })
     
 def generate_trip_date_choices(schedule):
