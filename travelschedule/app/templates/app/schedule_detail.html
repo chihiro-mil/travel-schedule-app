@@ -23,13 +23,13 @@
         {% for plan in plans %}
             <div class="plan-card">
                 <p>
-                    {% if plan.action_category == "移動" %}
+                    {% if plan.action_category == "move" %}
 
-                    {% elif plan.action_category == "観光地" %}
+                    {% elif plan.action_category == "sightseeing" %}
 
-                    {% elif plan.action_category == "食事" %}
+                    {% elif plan.action_category == "meal" %}
 
-                    {% elif plan.action_category == "宿泊" %}
+                    {% elif plan.action_category == "stay" %}
 
                     {% endif %}
 
@@ -38,7 +38,7 @@
 
                 <p>{{ plan.start_datetime|date:"H:i" }} ～ {{ plan.end_datetime|date:"H:i" }}</p>
 
-                {% if plan.action_category == "移動" %}
+                {% if plan.action_category == "move" %}
                     <p>出発地： {{ plan.departure_location }}</p>
                     <p>到着地： {{ plan.arrival_location }}</p>
 
@@ -52,11 +52,11 @@
                         <p>移動手段：未設定</p>
                     {% endif %}
 
-                {% elif plan.action_category == "観光地" %}
+                {% elif plan.action_category == "sightseeing" %}
                     <p>観光地名：{{ plan.name }}</p>
-                {% elif plan.action_category == "食事" %}
+                {% elif plan.action_category == "meal" %}
                     <p>店名：{{ plan.name }}</p>
-                {% elif plan.action_category == "宿泊" %}
+                {% elif plan.action_category == "stay" %}
                     <p>宿泊施設名：{{ plan.name }}</p>
                 {% endif %}
 

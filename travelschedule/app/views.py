@@ -105,6 +105,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         picture_formset = PictureFormSet(request.POST, request.FILES, prefix='pictures')
         
         if form.is_valid() and link_formset.is_valid() and picture_formset.is_valid():
+            print('フォームバリア:', form.is_valid())
+            print('クリーン:', form.cleaned_data())
             print('このフォームは有効')
             print('cleaned_dataの中身:')
             for key, value in form.cleaned_data.items():
@@ -114,9 +116,6 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             
             plan_instance = form.save(commit=False)
             
-            plan_instance.start_datetime = form.cleaned_data.get('start_datetime')
-            plan_instance.end_datetime = form.cleaned_data.get('end_datetime')
-            plan_instance.action_category = form.cleaned_data.get('action_category')
             print("保存直前の plan_instans:")
             print("schedule_id:", plan_instance.schedule_id)
             print("start_datetime:", plan_instance.start_datetime)
@@ -138,6 +137,16 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 
             return redirect('app:schedule_detail', schedule_id=schedule.id)
             
+        else:
+            return render(request, 'app/plan_form.html', {
+                'form': form, 
+                'link_formset': link_formset,
+                'picture_formset': picture_formset,
+                'schedule': schedule,
+                'form_title': '予定編集' if plan else '予定追加',
+                'schedule_id': schedule_id,
+                'transportation_methods': TransportationMethod.objects.all(),
+            })
     else:
         form = PlanForm(instance=plan, trip_dates=trip_choices)
         link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')
@@ -145,16 +154,16 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         print("PlanForm errors:", form.errors)
         print("LinkFormSet errors:", link_formset.errors)
         print("PictureFormSet errors:" , picture_formset.errors)
-    
-    return render(request, 'app/plan_form.html', {
-        'form': form, 
-        'link_formset': link_formset,
-        'picture_formset': picture_formset,
-        'schedule': schedule,
-        'form_title': '予定編集' if plan else '予定追加',
-        'schedule_id': schedule_id,
-        'transportation_methods': TransportationMethod.objects.all(),
-    })
+        
+        return render(request, 'app/plan_form.html', {
+            'form': form, 
+            'link_formset': link_formset,
+            'picture_formset': picture_formset,
+            'schedule': schedule,
+            'form_title': '予定編集' if plan else '予定追加',
+            'schedule_id': schedule_id,
+            'transportation_methods': TransportationMethod.objects.all(),
+        })
     
 def generate_trip_date_choices(schedule):
     start = schedule.trip_start_date

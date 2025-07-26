@@ -8,6 +8,8 @@ from .models import Plan, Link, Picture, TransportationMethod
 from datetime import datetime
 from datetime import date
 from django.forms import modelformset_factory
+from django.utils import timezone
+import datetime
 
 
 #アカウント登録画面用
@@ -135,6 +137,14 @@ class PlanForm(forms.ModelForm):
         widget=forms.Select(attrs={'style': 'display:none;'}),
         empty_label=None
     )
+    memo = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
+            'placeholder': 'メモを入力'
+        })
+    )
     start_date = forms.DateField()
     end_date = forms.DateField()
     
@@ -187,47 +197,71 @@ class PlanForm(forms.ModelForm):
             date_choices = [(date, date.strftime('%Y-%m-%d')) for date in trip_dates]
             self.fields['start_date'].widget = forms.Select(choices=date_choices)
             self.fields['end_date'].widget = forms.Select(choices=date_choices)
-            
-    def clean_action_category(self):
-        value = self.cleaned_data.get('action_category')
-        if not value:
-            raise forms.ValidationError("カテゴリを選択してください")
-        return value
     
     def clean(self):
         cleaned_data = super().clean()
+        print("planform.cleand=", cleaned_data)
+        
+        action_category = cleaned_data.get('action_category')
+        name = cleaned_data.get('name')
+        memo = cleaned_data.get('memo')
+        departure = cleaned_data.get('departure_location')
+        arrival = cleaned_data.get('arrival_location')
+        
         start_date = cleaned_data.get('start_date')
         start_time = cleaned_data.get('start_time')
         end_date = cleaned_data.get('end_date')
         end_time = cleaned_data.get('end_time')
         
-        print("clean()内の値確認：")
-        print("start_date =", start_date)
-        print("start_time =", start_time)
-        print("end_date =", end_date)
-        print("end_time =", end_time)
+        start_datetime = None
+        end_datetime = None
         
-        if start_date and start_time and end_date and end_time:
-            try:
-                print("combine開始")
-                start_datetime = datetime.combine(start_date, start_time)
-                end_datetime = datetime.combine(end_date, end_time)
-                print("combine成功")
-                
-                if start_datetime > end_datetime:
-                    print("! start_datetime:", start_datetime)
-                    print("! end_datetime:", end_datetime)
-                    raise forms.ValidationError(f"到着時刻は出発時刻より後にしてください。")
+        if start_date and start_time:
+            start_datetime = datetime.datetime.combine(start_date, start_time)
+        elif start_date and not start_time:
+            self.add_error('start_time', '開始時刻を入力してください。')
+        elif start_time and not start_date:
+            self.add_error('start_date', '開始日を入力してください。')
+            
+        if end_date and end_time:
+            end_datetime = datetime.datetime.combine(end_date, end_time)
+        elif end_date and not end_time:
+            self.add_error('end_time', '終了時刻を入力してください。')
+        elif end_time and not end_date:
+            self.add_error('end_date', '終了日を入力してください。')
         
-                cleaned_data['start_datetime'] = datetime.combine(start_date, start_time)
-                cleaned_data['end_datetime'] = datetime.combine(end_date, end_time)
-                print("cleaned_data 格納完了")
-                
-            except Exception as e:
-                print("例外発生:", e)
-                raise forms.ValidationError(f"日時の形式が正しくありません。日付と時刻を正しく入力してください。")
+        
+        if action_category == 'move':
+            if not departure:
+                self.add_error('departure_location', '出発地を入力してください。')
+            if not arrival:
+                self.add_error('arrival_location', '到着地を入力してください。')
+            if start_datetime and end_datetime and start_datetime > end_datetime:
+                raise ValidationError('出発日時は到着日より前にしてください。')
+            
+        elif action_category == 'sightseeing':
+            if not name:
+                self.add_error('name', '観光地名を入力してください。')
+            if start_datetime and end_datetime and start_datetime > end_datetime:
+                raise ValidationError('滞在開始日時は終了日時より前にしてください。')
+            
+        elif action_category == 'meal':
+            if not name:
+                self.add_error('name', '店名を入力してください。')
+            if start_datetime and end_datetime and start_datetime > end_datetime:
+                raise ValidationError('食事の開始時刻は終了時刻より前にしてください。')
+            
+        elif action_category == 'stay':
+            if not name:
+                self.add_error('name', '宿泊施設を入力してください。')
+            if start_datetime and end_datetime and start_datetime > end_datetime:
+                raise ValidationError('宿泊の開始時刻は終了時刻より前にしてください。')
+            
+        cleaned_data['start_datetime'] = start_datetime
+        cleaned_data['end_datetime'] = end_datetime
             
         return cleaned_data
+        
     
     def save(self, commit=True):
         instance = super().save(commit=False)
