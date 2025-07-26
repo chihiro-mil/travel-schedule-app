@@ -455,7 +455,9 @@
     max-width: 600px;
     margin: 20px auto 40px auto;
     text-align: center;
+    padding-bottom: 80px;
 }
+
 
 .category-fields .btn-primary {
     display: block;
@@ -609,4 +611,18 @@ input[type="radio"]:checked + label.label {
 
 .option-item:hover {
     background-color: #f0f0f0;
+}
+
+.link-form {
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.disabled-link-form {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #ff0000;
 }

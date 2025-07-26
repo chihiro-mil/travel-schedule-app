@@ -26,7 +26,7 @@
             
             <div class="category-radio"> 
 
-                <input type="radio" name="action_category" value="move" id="category-move">
+                <input type="radio" name="action_category" value="move" id="category-move" checked>
                 <label for="category-move" class="label-move">移動</label>
 
                 <input type="radio" name="action_category" value="sightseeing" id="category-sightseeing">
@@ -55,10 +55,10 @@
                                     <span class="transportation-label">{{ method.get_transportation_display }}</span>
                                 </div>
                             {% endfor %}
-                            </div>
-                            <input type="hidden" name="transportation" id="transportation-hidden-input">
                         </div>
+                            <input type="hidden" name="transportation" id="transportation-hidden-input">
                     </div>
+                </div>
 
                 <div class="form-group" id="move-start-date" >
                     <label id="move-start-date-label">出発日</label>
@@ -95,17 +95,8 @@
                     {{ form.memo }}
                 </div>
 
-                <div id="move-link-formset-container">
-                    {{ link_formset.management_form }}
-                    <!--{% for form in link_formset %}-->
-                    <div class="move-link-form">
-                        {{ link_formset.0.url }}
-                            <!--<button type="button" class="remove-link">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>-->
-                    </div>
-                    <!--{% endfor %}
-                    <button type="button" id="move-add-link">＋リンクを追加</button>-->
+                <div class="link-form-container" data-category="move">
+                    <button type="button" class="add-link-button" data-category="move">リンクを追加</button>
                 </div>
 
                 <div id="move-picture-formset-container">
@@ -158,18 +149,10 @@
                     {{ form.memo }}
                 </div>
 
-                <div id="sightseeing-link-formset-container">
-                    {{ link_formset.management_form }}
-                    <!--{% for form in link_formset %}-->
-                    <div class="link-form">
-                        {{ link_formset.0.url }}
-                            <!--<button type="button" class="remove-link">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>-->
-                    </div>
-                    <!--{% endfor %}
-                    <button type="button" id="sightseeing-add-link">＋リンクを追加</button>-->
+                <div class="link-form-container" data-category="sightseeing">
+                    <button type="button" class="add-link-button" data-category="sightseeing">リンクを追加</button>
                 </div>
+
 
                 <div id="sightseeing-picture-formset-container">
                     {{ picture_formset.management_form }}
@@ -216,17 +199,8 @@
                     {{ form.memo }}
                 </div>
 
-                <div id="meal-link-formset-container">
-                    {{ link_formset.management_form }}
-                    <!--{% for form in link_formset %}-->
-                    <div class="link-form">
-                        {{ link_formset.0.url }}
-                            <!--<button type="button" class="remove-link">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>-->
-                    </div>
-                    <!--{% endfor %}
-                    <button type="button" id="meal-add-link">＋リンクを追加</button>-->
+                <div class="link-form-container" data-category="meal">
+                    <button type="button" class="add-link-button" data-category="meal">リンクを追加</button>
                 </div>
 
                 <div id="meal-picture-formset-container">
@@ -269,17 +243,8 @@
                     {{ form.memo }}
                 </div>
 
-                <div id="stay-link-formset-container">
-                    {{ link_formset.management_form }}
-                    <!--{% for form in link_formset %}-->
-                    <div class="link-form">
-                        {{ link_formset.0.url }}
-                            <!--<button type="button" class="remove-link">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>-->
-                    </div>
-                    <!--{% endfor %}
-                    <button type="button" id="stay-add-link">＋リンクを追加</button>-->
+                <div class="link-form-container" data-category="stay">
+                    <button type="button" class="add-link-button" data-category="stay">リンクを追加</button>
                 </div>
 
                 <div id="stay-picture-formset-container">
@@ -297,6 +262,27 @@
                 <!--<button type="button" id="stay-add-picture">＋画像を追加</button>-->
 
                 <button type="submit" class="btn-primary">保存</button>
+            </div>
+
+            <div id="link-formset-container">
+                {{ link_formset.management_form }}
+
+                {% for form in link_formset %}
+                    <div class="link-form" data-category="{{ form.instance.action_category|default:"move" }}"> 
+                        {{ form.url }}
+                            
+                        {% if form.url %}
+                            <span class="delete-link-form"><i class="fas fa-trash"></i></span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div id="empty-link-form" style="display: none;">
+                <div class-"link-form" data-category="">
+                    <input type="url" name="__name__-url" class="form-control" />
+                    <span class="delete-link-form"><i class="fas fa-trash"></i></span>
+                </div>
             </div>
 
 
@@ -345,8 +331,6 @@
             const selectedIcon = document.getElementById('selected-icon');
             const selectedLabel = document.getElementById('selected-label');
 
-
-
             allCategoryForms.forEach(function (block) {
                 block.style.display = "none";
                 block.querySelectorAll("input, select, textarea").forEach(el => el.disabled = true);
@@ -394,6 +378,39 @@
                 if (!e.target.closest('.custom-select-box')) {
                     optionsList.style.display = 'none';
                 }
+            });
+
+            function updateCategoryDisplay(selectedValue) {
+                allCategoryForms.forEach(function (block) {
+                    block.style.display = block.dataset.category === selectedValue ? 'block' : 'none';
+                });
+            }
+
+            categoryRadios.forEach(function (radio) {
+                radio.addEventListener('change', function() {
+                    updateCategoryDisplay(this.value);
+                });
+            });
+
+            const checkedRadio = document.querySelector('input[name="action_category"]:checked');
+            if (checkedRadio) {
+                updateCategoryDisplay(checkedRadio.value);
+            }
+
+
+
+            let lastScrollTop = 0;
+            const footer = document.querySelector('.footer-nav');
+
+            window.addEventListener('scroll', function () {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (scrollTop > lastScrollTop) {
+                    footer.style.transform ='translateY(100%)';
+                } else {
+                    footer.style.transform ='translateY(0)';
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
             });
         });
     </script>
