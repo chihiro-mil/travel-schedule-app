@@ -610,3 +610,7 @@ input[type="radio"]:checked + label.label {
 .option-item:hover {
     background-color: #f0f0f0;
 }
+
+.plan-form-container {
+    padding-bottom: 80px;
+}

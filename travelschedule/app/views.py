@@ -93,6 +93,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
     trip_choices = generate_trip_date_choices(schedule)
     
     if request.method == 'POST':
+        print('post成功')
+        print("post中身", request.POST)
         form = PlanForm(
             request.POST,
             request.FILES,
@@ -103,20 +105,25 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         picture_formset = PictureFormSet(request.POST, request.FILES, prefix='pictures')
         
         if form.is_valid() and link_formset.is_valid() and picture_formset.is_valid():
+            print('このフォームは有効')
             print('cleaned_dataの中身:')
             for key, value in form.cleaned_data.items():
                 print(f' {key} : {value}')
             print('start_datetime:', form.cleaned_data.get('start_datetime'))
             print('end_datetime:', form.cleaned_data.get('end_datetime'))
+            
             plan_instance = form.save(commit=False)
-            plan_instance.schedule = schedule
+            
             plan_instance.start_datetime = form.cleaned_data.get('start_datetime')
             plan_instance.end_datetime = form.cleaned_data.get('end_datetime')
-            
+            plan_instance.action_category = form.cleaned_data.get('action_category')
             print("保存直前の plan_instans:")
             print("schedule_id:", plan_instance.schedule_id)
             print("start_datetime:", plan_instance.start_datetime)
             print("end_datetime:", plan_instance.end_datetime)
+            print("action_category:", plan_instance.action_category)
+            
+            plan_instance.schedule = schedule
             
             plan_instance.save()
             print("保存直後 一覧:", Plan.objects.all())

@@ -187,6 +187,12 @@ class PlanForm(forms.ModelForm):
             date_choices = [(date, date.strftime('%Y-%m-%d')) for date in trip_dates]
             self.fields['start_date'].widget = forms.Select(choices=date_choices)
             self.fields['end_date'].widget = forms.Select(choices=date_choices)
+            
+    def clean_action_category(self):
+        value = self.cleaned_data.get('action_category')
+        if not value:
+            raise forms.ValidationError("カテゴリを選択してください")
+        return value
     
     def clean(self):
         cleaned_data = super().clean()
