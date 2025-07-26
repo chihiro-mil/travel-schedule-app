@@ -2,7 +2,7 @@ from django import forms
 from .models import User
 from django.core.exceptions import ValidationError
 import re
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from .models import Schedule
 from .models import Plan, Link, Picture, TransportationMethod
 from datetime import datetime
@@ -102,6 +102,20 @@ class LoginForm(forms.Form):
     def get_user(self):
         return self.user
     
+#アカウント設定変更
+User = get_user_model()
+
+class ChangeUsernameForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['name']
+        labels = {'name': '新しいユーザー名'}
+        
+class ChangeEmailForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['email']
+        labels = {'email': '新しいメールアドレス'}
     
 #予定表用
 class ScheduleForm(forms.ModelForm):

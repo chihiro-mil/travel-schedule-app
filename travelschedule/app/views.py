@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 from .forms import (
@@ -11,6 +12,8 @@ from .forms import (
     PlanForm,
     LinkFormSet,
     PictureFormSet,
+    ChangeUsernameForm, 
+    ChangeEmailForm,
 )
 
 from .models import User, Schedule, Plan, Link, Picture, TransportationMethod
@@ -60,6 +63,55 @@ def login_view(request):
 
 def edit_profile_view(request):
     return render(request, 'app/edit_profile.html')
+
+#マイページ設定画面
+@login_required
+def mypage_view(request):
+    referer = request.META.get('HTTP_REFERER')
+    return render(request, 'app/mypage.html', {
+        'user': request.user,
+        'back_url': referer
+    })
+
+#ユーザー名変更画面
+@login_required
+def change_username_view(request):
+    if request.method == 'POST':
+        form = ChangeUsernameForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'ユーザー名を変更しました')
+            return redirect('app/mypage.html')
+    else:
+        form = ChangeUsernameForm(instance=request.user)
+    return render(request, 'app:change_username', {'form': form})
+
+#メールアドレス変更画面
+@login_required
+def change_email_view(request):
+    if request.method == 'POST':
+        form = ChangeEmailForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'メールアドレスを変更しました')
+            return redirect('app/mypage.html')
+    else:
+        form = ChangeEmailForm(instance=request.user)
+    return render(request, 'app:change_email', {'form': form})
+    
+#パスワード変更画面
+@login_required
+def change_password_view(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'パスワードを変更しました')
+            return redirect('app/mypage.html')
+    else:
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'app:change_password', {'form': form})
 
 #ログアウト
 def logout_view(request):
