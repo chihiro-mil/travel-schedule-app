@@ -75,14 +75,14 @@
     </footer>
     
     <script>
-        {# document.addEventListener("DOMContentLoaded", function() { #}
             const modal = document.getElementById("modal");
             const openBtn = document.getElementById("openModalBtn");
             const closeBtn = document.getElementById("closeModalBtn");
             const calendarIcon = document.querySelector(".calendar-icon");
 
             if (openBtn && closeBtn && modal) {
-                openBtn.onclick = function () {
+                openBtn.onclick = function (e) {
+                    e.preventDefault();
                     modal.classList.remove("hidden");
                 };
                 closeBtn.onclick = function () {
@@ -123,7 +123,6 @@
                 }
                 lastscrollY = window.scrollY;
             });
-        {# }}); #}
     </script>
 </body>
 </html>

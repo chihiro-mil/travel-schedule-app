@@ -202,6 +202,44 @@
     margin-bottom: 15px;
 }
 
+.change-title {
+    font-size: 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.change-submit-button {
+    margin-top: 15px;
+    padding: 8px 16px;
+    font-size: 16px;
+}
+
+
+.change-row label {
+    margin-bottom: 35px;
+    margin-top: 20px;
+    font-size: 25px;
+}
+
+.change-row input {
+    font-size: 25px;
+    padding: 10px 15px;
+}
+
+.change-form {
+    padding: 10px 10px;
+    font-size: 16px;
+}
+
+.change-form-group label {
+    font-size: 25px;
+}
+
+.change-form-group input {
+    font-size: 25px;
+    padding: 10px 15px;
+}
+
 /*フッター*/
 
 .footer-icon-label {
@@ -300,6 +338,30 @@
     cursor: pointer;
 }
 
+.schedule-card {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    margin: 0 auto 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+    background-color: #c0c0c0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kebab-menu {
+    font-size: 18px;
+    color: #555;
+}
+
 /*予定表詳細画面*/
 
 .schedule-detail-container {
@@ -390,23 +452,24 @@
     color: #000;
 }
 
-.calendar-wrapper {
-    position: relative;
-    display: inline-block;
+.calendar-wrapper-horizontal {
+    display: flex;
     width: 100%;
+    align-items: center;
+    gap: 8px;
 }
 
-.calendar-wrapper input {
-    width: 100%;
-    padding-right: 30px;
+.calendar-wrapper-horizontal input {
+    flex-grow: 1;
+    padding: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
 .calendar-icon {
-    position: absolute;
-    top: 50%;
-    right: 8px;
-    transform: translateY(-50%);
+    cursor: default;
     color: #888;
+    font-size: 20px;
     pointer-events: none;
 }
 
@@ -441,6 +504,9 @@
     .modal-content input,
     .modal-content button {
         font-size: 16px;
+    }
+    .schedule-card{
+        width: 70%;
     }
 }
 

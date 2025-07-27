@@ -16,7 +16,7 @@
 
         <form method='POST'>
             {% csrf_token %}
-            <div>
+            <div class="change-row">
                 <label class="change-title-form" for="{{ form.email.id_for_label }}">新しいメールアドレス</label><br>
                 {{ form.email }}
                 {% if form.email.errors %}

@@ -1,15 +1,18 @@
-{% extends 'app/base.html' %}
 {% load static %}
 
-{% block title %}Home page{% endblock %}
-
-{% block extra_head %}
-    {{ block.super }}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="{% static "css/style.css" %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-{% endblock %}
+</head>
+<body>
 
-{% block content %}
     <div class="home-header">
         <div class="header-left"></div>
         <div class="header-center">
@@ -18,6 +21,56 @@
         </div>
         <button class="sort-button">並び替え<br>（更新順）</button>
     </div>
+
+
+    {% for schedule in schedules %}
+        <div class="schedule-card">
+            <div class="schedule-header"> 
+                <strong>{{ schedule.title }}</strong>
+                <div class="kebab-menu">
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </div>
+
+            <p>{{ schedule.trip_start_date }} ～ {{ schedule.trip_end_date }}</p>
+            <a href="{% url 'app:schedule_detail' schedule.id %}" class="schedule-link">
+            </a>
+        </div>
+    {% endfor %}
+
+
+    <footer class="footer-nav">
+        <ul>
+            <li>
+                <a href="{% url 'app:home' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-home"></i><br>ホーム
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="openModalBtn">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-plus-square"></i><br>予定表追加
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:mypage' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-user-cog"></i><br>マイページ設定
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:logout' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-sign-out-alt"></i><br>ログアウト
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </footer>
 
     <div id="modal" class="modal hidden">
         <div class="modal-content">
@@ -30,8 +83,8 @@
 
                 <label>旅行期間</label><br>
                 <div class="calendar-wrapper">
-                    <i class="fas fa-calendar-alt calendar-icon"></i>
                     <input type="text" id="dateRange" name="trip_period" placeholder="日付を選択" readonly>
+                    <i class="fas fa-calendar-alt calendar-icon"></i>
                     <input type="hidden" name="trip_start_date">
                     <input type="hidden" name="trip_end_date">
                 </div><br>
@@ -41,14 +94,56 @@
         </div>
     </div>
 
-    <div>
-        {% for schedule in schedules %}
-            <a href="{% url 'app:schedule_detail' schedule.id %}" class="schedule-link">
-                <div class="schedule-box">
-                    <p><strong>{{ schedule.title }}</strong></p>
-                    <p>{{ schedule.trip_start_date }} ～ {{ schedule.trip_end_date }}</p>
-                </div>
-            </a>
-        {% endfor %}
-    </div>
-{% endblock %}
+
+    <script>
+        const modal = document.getElementById("modal");
+        const openBtn = document.getElementById("openModalBtn");
+        const closeBtn = document.getElementById("closeModalBtn");
+
+        if (openBtn && closeBtn && modal) {
+            openBtn.onclick = function (e) {
+                e.preventDefault();
+                modal.classList.remove("hidden");
+            };
+            closeBtn.onclick = function () {
+                modal.classList.add("hidden");
+            };
+        }
+
+        let fp = flatpickr("#dateRange", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            locale: "ja",
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2){
+                    const start = selectedDates[0];
+                    const end = selectedDates[1];
+                    document.querySelector('input[name="trip_start_date"]').value = instance.formatDate(start, "Y-m-d");
+                    document.querySelector('input[name="trip_end_date"]').value = instance.formatDate(end, "Y-m-d");
+                }
+            }
+        });
+
+
+        if (calendarIcon) {
+            calendarIcon.addEventListener("click", function () {
+                document.getElementById("dateRange").focus();
+            });
+        }
+
+        let lastScrollTop = 0;
+        const footer = document.querySelector('.footer-nav');
+
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > lastScrollTop) {
+                footer.style.transform = 'translateY(100%)';
+            } else {
+                footer.style.transform = 'translateY(0)';
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 :scrollTop;
+        });
+    </script>
+</body>
+</html>

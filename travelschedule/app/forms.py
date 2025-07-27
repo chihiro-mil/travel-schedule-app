@@ -119,6 +119,10 @@ class ChangeEmailForm(forms.ModelForm):
         fields = ['email']
         labels = {'email': '新しいメールアドレス'}
         
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].initial = ''
+        
 class CustomPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

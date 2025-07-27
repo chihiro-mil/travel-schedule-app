@@ -16,7 +16,7 @@
 
         <form method='POST'>
             {% csrf_token %}
-            <div>
+            <div class="change-row">
                 <label for="{{ form.name.id_for_label }}">新しいユーザー名</label><br>
                 {{ form.name }}
                 {% if form.name.errors %}
