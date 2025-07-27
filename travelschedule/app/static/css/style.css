@@ -178,6 +178,30 @@
     color: #808080;
 }
 
+/*マイページ設定*/
+
+.change-container {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.user-title {
+    font-size: 20px;
+    margin-top: 30px;
+}
+
+.user-button {
+    margin-top: 15px;
+    margin-bottom: 10px;
+    padding: 8px 16px;
+    font-size: 16px;
+}
+
+.change-title-form {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 /*フッター*/
 
 .footer-icon-label {

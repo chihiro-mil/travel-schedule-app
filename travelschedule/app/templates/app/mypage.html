@@ -1,24 +1,74 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mypage</title>
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <a href="{{ back_url|default:"#" }}"class="back-button">＜戻る</a>
 
-    <div class="mypage-container">
-        <h1 class=mypage-title>マイページ設定</h1>
+    <div class="change-container">
+        <h1 class=change-title>マイページ設定</h1>
 
         <div class=user-title>現在のユーザー名</div>
         <p>{{ user.name }}</p>
 
-        <a href="{% url 'app:change_username' %}"><button>ユーザー名変更</button></a><br><br>
-        <a href="{% url 'app:change_email' %}"><button>メールアドレス変更</button></a><br><br>
-        <a href="{% url 'app:change_password' %}"><button>パスワード変更</button></a><br><br>
+        <a href="{% url 'app:change_username' %}"><button class="user-button">ユーザー名変更</button></a><br><br>
+        <a href="{% url 'app:change_email' %}"><button class="user-button">メールアドレス変更</button></a><br><br>
+        <a href="{% url 'app:change_password' %}"><button class="user-button">パスワード変更</button></a><br><br>
 
 
     </div>
+
+    <footer class="footer-nav">
+        <ul>
+            <li>
+                <a href="{% url 'app:home' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-home"></i><br>ホーム
+                    </span>
+                </a>
+            </li>
+            <li>
+                <span class="footer-icon-label disabled-link">
+                    <i class="fas fa-plus-square"></i><br>予定追加
+                </span>
+            </li>
+            <li>
+                <a href="{% url 'app:mypage' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-user-cog"></i><br>マイページ設定
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:logout' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-sign-out-alt"></i><br>ログアウト
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </footer>
+
+    <script>
+        let lastScrollTop = 0;
+        const footer = document.querySelector('.footer-nav');
+
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > lastScrollTop) {
+                footer.style.transform = 'translateY(100%)';
+            } else {
+                footer.style.transform = 'translateY(0)';
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 :scrollTop;
+        });
+    </script>
 </body>
 </html>

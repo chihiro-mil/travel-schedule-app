@@ -9,7 +9,9 @@ from datetime import datetime
 from datetime import date
 from django.forms import modelformset_factory
 from django.utils import timezone
+from django.contrib.auth.forms import PasswordChangeForm
 import datetime
+
 
 
 #アカウント登録画面用
@@ -116,6 +118,15 @@ class ChangeEmailForm(forms.ModelForm):
         model = User
         fields = ['email']
         labels = {'email': '新しいメールアドレス'}
+        
+class CustomPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['old_password'].label = '現在のパスワード'
+        self.fields['new_password1'].label = '新しいパスワード'
+        self.fields['new_password2'].label = '新しいパスワード(確認）'
+        
+        self.fields['new_password1'].widget.attrs['placeholder'] = '英数字＋６文字以上'
     
 #予定表用
 class ScheduleForm(forms.ModelForm):
