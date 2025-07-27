@@ -122,7 +122,7 @@ def logout_view(request):
 #ホーム画面（予定表一覧画面）
 @login_required
 def home_view(request):
-    if request.method =="POST":
+    if request.method == 'POST':
         form = ScheduleForm(request.POST)
         if form.is_valid():
             form.save()
@@ -136,7 +136,24 @@ def home_view(request):
         'schedules': schedules
     })
     
-    
+#予定表のタイトル編集ケバブ
+def edit_schedule_title(request):
+    if request.method == 'POST':
+        schedule_id = request.POST.get('schedule_id')
+        new_title = request.POST.get('title')
+        schedule = get_object_or_404(Schedule, id=schedule_id)
+        schedule.title = new_title
+        schedule.save()
+    return redirect('app:home')
+
+#予定表の削除モーダル
+def delete_schedule(request):
+    if request.method == 'POST':
+        schedule_id = request.POST.get('schedule_id')
+        schedule = get_object_or_404(Schedule, id=schedule_id, user=request.user)
+        schedule.delete()
+    return redirect('app:home')
+
 #予定追加・編集画面
 @login_required
 def plan_create_or_edit_view(request, schedule_id, plan_id=None):

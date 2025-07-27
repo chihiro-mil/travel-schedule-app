@@ -8,6 +8,7 @@
     <title>Home page</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <link rel="stylesheet" href="{% static "css/style.css" %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -29,6 +30,19 @@
                 <strong>{{ schedule.title }}</strong>
                 <div class="kebab-menu">
                     <i class="fas fa-ellipsis-v"></i>
+                    <div class="kebab-dropdown hidden">
+                        <button class="edit-schedule-btn edit-button" 
+                                data-schedule-id="{{ schedule.id }}"
+                                data-title="{{ schedule.title }}"
+                                data-start="{{ schedule.trip_start_date }}"
+                                data-end="{{ schedule.trip_end_date }}">
+                            タイトルの変更
+                        </button>
+                        <button class="delete-schedule-btn" 
+                                data-schedule-id="{{ schedule.id }}">
+                            予定表を削除
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -94,6 +108,42 @@
         </div>
     </div>
 
+    <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" id="editModalClose">&times;</span>
+            <form method="post" action="{% url 'app:edit_schedule_title' %}">
+                {% csrf_token %}
+                <input type="hidden" name="schedule_id" id="editScheduleId">
+
+                <label for="editTitle">旅行タイトル</label>
+                <input type="text" name="title" id="editTitle" required>
+
+                <label>旅行期間</label>
+                <input type="text" id="editTripStart" readonly>
+                <span>～</span>
+                <input type="text" id="editTripEnd" readonly>
+
+                <button type="submit">保存</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="deleteModel" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" id="deleteModelClose">&times;</span>
+            <p>予定表を削除してよろしいですか？</p>
+            <form method="POST" action="{% url 'app:delete_schedule' %}">
+                {% csrf_token %}
+                <input type="hidden" name="schedule_id" id="deleteScheduleId">
+                <div style="text-align: right; margin-top: 10px;">
+                    <button type="submit">はい</button>
+                    <button type="button" id="cancelDeleteBtn">いいえ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
 
     <script>
         const modal = document.getElementById("modal");
@@ -125,11 +175,88 @@
         });
 
 
-        if (calendarIcon) {
-            calendarIcon.addEventListener("click", function () {
-                document.getElementById("dateRange").focus();
-            });
+document.querySelectorAll(".kebab-menu").forEach(menu => {
+    const icon = menu.querySelector("i");
+    const dropdown = menu.querySelector(".kebab-dropdown");
+
+    icon.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle("hidden");
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!menu.contains(e.target)) {
+            dropdown.classList.add("hidden");
         }
+    });
+});
+
+document.querySelectorAll(".edit-button").forEach(button => {
+    button.addEventListener("click", function () {
+        const scheduleId = this.dataset.scheduleId;
+        const title = this.dataset.title;
+        const start = this.dataset.start;
+        const end = this.dataset.end;
+
+        document.getElementById("editScheduleId").value = scheduleId;
+        document.getElementById("editTitle").value = title;
+        document.getElementById("editTripStart").value = start;
+        document.getElementById("editTripEnd").value = end;
+
+        document.getElementById("editModal").classList.remove("hidden");
+    });
+});
+
+document.getElementById("editModalClose").addEventListener("click", function () {
+    document.getElementById("editModal").classList.add("hidden");
+});
+
+document.querySelectorAll(".edit-schedule-btn").forEach(function (button) {
+    button.addEventListener("click", function () {
+        const scheduleId = this.dataset.scheduleId;
+        const title = this.dataset.title;
+        const start = this.dataset.start;
+        const end = this.dataset.end;
+
+        document.getElementById("editScheduleId").value = scheduleId;
+        document.getElementById("editTitle").value = title;
+        document.getElementById("editTripStart").value = start;
+        document.getElementById("editTripEnd").value = end;
+
+        const startInput = document.getElementById("editTripStart");
+        const endInput = document.getElementById("editTripEnd");
+
+        startInput.readOnly = true;
+        startInput.style.backgroundColor = "#f0f0f0";
+        endInput.readOnly = true;
+        endInput.style.backgroundColor = "#f0f0f0";
+
+        document.getElementById("editModal").classList.remove("hidden");
+    });
+});
+
+document.querySelectorAll(".delete-schedule-btn").forEach(button => {
+    button.addEventListener("click", () => {
+        const scheduleId = button.dataset.scheduleId;
+        document.getElementById("deleteScheduleId").value = scheduleId;
+        document.getElementById("deleteModal").classList.remove("hidden");
+    });
+});
+
+const deleteModalCloseBtn = document.getElementById("deleteModalClose");
+if (deleteModalCloseBtn) {
+    deleteModalCloseBtn.addEventListener("click", () => {
+        document.getElementById("deleteModal").classList.add("hidden");
+    });
+}
+
+const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+if (cancelDeleteBtn) {
+    cancelDeleteBtn.addEventListener("click", () => {
+        document.getElementById("deleteModal").classList.add("hidden");
+    });
+}
+
 
         let lastScrollTop = 0;
         const footer = document.querySelector('.footer-nav');

@@ -360,6 +360,55 @@
 .kebab-menu {
     font-size: 18px;
     color: #555;
+    position: relative;
+    display: inline-block;
+}
+
+.kebab-menu i {
+    cursor: pointer;
+}
+
+.kebab-dropdown{
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid#ccc;
+    padding: 5px 0;
+    width: 120px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.kebab-dropdown.hidden {
+    display: none;
+}
+
+.kebab-dropdown button {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.kebab-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid#ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    padding: 5px;
+    border-radius: 5px;
+    min-width: 120px;
+}
+
+.hidden {
+    display: none;
 }
 
 /*予定表詳細画面*/
