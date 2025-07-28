@@ -35,9 +35,10 @@ def register_view(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
+            user.username = form.cleaned_data['username']
             user.set_password(form.cleaned_data['password'])
             user.save()
-            return redirect('/app/login/') #()の中は仮
+            return redirect('/app/login/')
     else:
         form = RegisterForm()
     return render(request, 'app/register.html', {'form': form})
@@ -132,7 +133,7 @@ def home_view(request):
     else:
         form = ScheduleForm()
     
-    schedules = Schedule.objects.all().order_by('-created_at')
+    schedules = Schedule.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'app/home.html', {
         'form': form,
         'schedules': schedules
