@@ -66,7 +66,7 @@ class Plan(models.Model):
         blank=True,
         related_name='plans'
     )
-    name = models.CharField(max_length=24)
+    name = models.CharField(max_length=24, blank=True, null=True)
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
     memo = models.TextField(blank=True, null=True)

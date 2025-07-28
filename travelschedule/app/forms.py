@@ -222,6 +222,16 @@ class PlanForm(forms.ModelForm):
     def __init__(self, *args, trip_dates=None, **kwargs):
         super().__init__(*args, **kwargs)
         
+        date_choices = trip_dates or []
+        
+        self.fields['name'].required = False
+        self.fields['start_date'].widget = forms.Select(choices=date_choices)
+        self.fields['end_date'].widget = forms.Select(choices=date_choices)
+        
+        if self.data.get('action_category') == 'meal':
+            self.fields['end_date'].required = False
+        
+        
         if trip_dates:
             date_choices = [(date, date.strftime('%Y-%m-%d')) for date in trip_dates]
             self.fields['start_date'].widget = forms.Select(choices=date_choices)
@@ -233,6 +243,9 @@ class PlanForm(forms.ModelForm):
         
         action_category = cleaned_data.get('action_category')
         name = cleaned_data.get('name')
+        if action_category in ["sightseeing", "stay", 'meal']:
+            if not name:
+                self.add_error("name", "名称を入力してください")
         memo = cleaned_data.get('memo')
         departure = cleaned_data.get('departure_location')
         arrival = cleaned_data.get('arrival_location')
@@ -240,7 +253,25 @@ class PlanForm(forms.ModelForm):
         start_date = cleaned_data.get('start_date')
         start_time = cleaned_data.get('start_time')
         end_date = cleaned_data.get('end_date')
+        if action_category == 'meal':
+            if not end_date:
+                end_date = start_date
+                cleaned_data['end_date'] = start_date
+        elif not end_date:
+            self.add_error('end_date', '終了日を入力してください')
         end_time = cleaned_data.get('end_time')
+        
+        print("[forms.py - clean()] 入力内容:")
+        print("category:", action_category)
+        print("name:", name)
+        print("memo:", memo)
+        print("departure_location:", departure)
+        print("arrival_location:", arrival)
+        print("start_date:", start_date)
+        print("start_time:", start_time)
+        print("end_date:", end_date)
+        print("end_time:", end_time)
+        
         
         start_datetime = None
         end_datetime = None

@@ -179,9 +179,17 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         link_formset = LinkFormSet(request.POST, request.FILES, prefix='links')
         picture_formset = PictureFormSet(request.POST, request.FILES, prefix='pictures')
         
+        print("form.is_valid():", form.is_valid())
+        print("link_formset.is_valid():", link_formset.is_valid())
+        print("picture_formset.is_valid():", picture_formset.is_valid())
+        
+        print("form.errors:", form.errors)
+        print("link_formset.errors:", link_formset.errors)
+        print("picture_formset.errors:", picture_formset.errors)
+        
         if form.is_valid() and link_formset.is_valid() and picture_formset.is_valid():
             print('フォームバリア:', form.is_valid())
-            print('クリーン:', form.cleaned_data())
+            print('クリーン:', form.cleaned_data)
             print('このフォームは有効')
             print('cleaned_dataの中身:')
             for key, value in form.cleaned_data.items():
@@ -196,6 +204,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             print("start_datetime:", plan_instance.start_datetime)
             print("end_datetime:", plan_instance.end_datetime)
             print("action_category:", plan_instance.action_category)
+            
             
             plan_instance.schedule = schedule
             
@@ -254,6 +263,17 @@ def schedule_detail_view(request, schedule_id):
     plans = Plan.objects.filter(schedule_id=schedule_id,).order_by('start_datetime')
     print("取得されたplan一覧：", plans)
     for plan in plans:
+        print("----")
+        print("id:", plan.id)
+        print("category:", plan.action_category)
+        print("name:", plan.name)
+        print("start_datetime:", plan.start_datetime)
+        print("end_datetime:", plan.end_datetime)
+        print("transportation:", plan.transportation)
+        print("departure_location:", plan.departure_location)
+        print("arrival_location:", plan.arrival_location)
+        print("memo:", plan.memo)
+        
         print("plan.schedule_id:", plan.schedule_id, "start:", plan.start_datetime)
     
     plans_by_date = {}
