@@ -25,30 +25,38 @@
 
 
     {% for schedule in schedules %}
-        <div class="schedule-card">
-            <div class="schedule-header"> 
-                <strong>{{ schedule.title }}</strong>
-                <div class="kebab-menu">
-                    <i class="fas fa-ellipsis-v"></i>
-                    <div class="kebab-dropdown hidden">
-                        <button class="edit-schedule-btn edit-button" 
-                                data-schedule-id="{{ schedule.id }}"
-                                data-title="{{ schedule.title }}"
-                                data-start="{{ schedule.trip_start_date }}"
-                                data-end="{{ schedule.trip_end_date }}">
-                            タイトルの変更
-                        </button>
-                        <button class="delete-schedule-btn" 
-                                data-schedule-id="{{ schedule.id }}">
-                            予定表を削除
-                        </button>
-                    </div>
+        <div class="schedule-card-wrapper" style="position: relative;">
+
+            <div class="kebab-menu">
+                <i class="fas fa-ellipsis-v kebab-icon"></i>
+                <div class="kebab-dropdown hidden">
+
+                    <button class="edit-schedule-btn edit-button" 
+                            data-schedule-id="{{ schedule.id }}"
+                            data-title="{{ schedule.title }}"
+                            data-start="{{ schedule.trip_start_date }}"
+                            data-end="{{ schedule.trip_end_date }}">
+                        タイトルの変更
+                    </button>
+
+                    <button class="delete-schedule-btn" 
+                            data-schedule-id="{{ schedule.id }}">
+                        予定表を削除
+                    </button>
                 </div>
             </div>
+            
 
-            <p>{{ schedule.trip_start_date }} ～ {{ schedule.trip_end_date }}</p>
-            <a href="{% url 'app:schedule_detail' schedule.id %}" class="schedule-link">
-            </a>
+            <div class="schedule-card">
+                <div class="schedule-header">
+                    <strong>
+                        <a href="{% url 'app:schedule_detail' schedule.id %}" class="schedule-link">
+                            {{ schedule.title }}
+                        </a>
+                    </strong>
+                </div>
+                <p>{{ schedule.trip_start_date }} ～ {{ schedule.trip_end_date }}</p>
+            </div>
         </div>
     {% endfor %}
 
@@ -128,20 +136,22 @@
         </div>
     </div>
 
-    <div id="deleteModel" class="modal hidden">
-        <div class="modal-content">
-            <span class="close" id="deleteModelClose">&times;</span>
-            <p>予定表を削除してよろしいですか？</p>
-            <form method="POST" action="{% url 'app:delete_schedule' %}">
-                {% csrf_token %}
-                <input type="hidden" name="schedule_id" id="deleteScheduleId">
-                <div style="text-align: right; margin-top: 10px;">
-                    <button type="submit">はい</button>
-                    <button type="button" id="cancelDeleteBtn">いいえ</button>
-                </div>
-            </form>
+    {% for schedule in schedules %}
+        <div id="deleteModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close" id="deleteModelClose">&times;</span>
+                <p>予定表を削除してよろしいですか？</p>
+                <form method="POST" action="{% url 'app:delete_schedule' schedule.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="schedule_id" id="deleteScheduleId">
+                    <div style="text-align: right; margin-top: 10px;">
+                        <button type="submit">はい</button>
+                        <button type="button" id="cancelDeleteBtn">いいえ</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+    {% endfor %}
 
 
 
@@ -174,22 +184,44 @@
             }
         });
 
+/*ケバブメニュー開閉*/
+document.querySelectorAll(".schedule-card-wrapper").forEach(wrapper => {
+    const icon = wrapper.querySelector(".kebab-icon");
+    const dropdown = wrapper.querySelector(".kebab-dropdown");
 
-document.querySelectorAll(".kebab-menu").forEach(menu => {
-    const icon = menu.querySelector("i");
-    const dropdown = menu.querySelector(".kebab-dropdown");
+    if(icon && dropdown) {
+        icon.addEventListener("click", (e) => {
+            e.stopPropagation();
+            document.querySelectorAll(".kebab-dropdown").forEach(menu => {
+                menu.classList.add("hidden");
+            });
+            dropdown.classList.toggle("hidden");
+        });
 
-    icon.addEventListener("click", (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle("hidden");
+        dropdown.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+        });
+        });
+    }
+});
+
+document.addEventListener("click", () => {
+    document.querySelectorAll('.kebab-dropdown').forEach(menu => {
+        menu.classList.add("hidden");
     });
+});
 
-    document.addEventListener("click", (e) => {
-        if (!menu.contains(e.target)) {
-            dropdown.classList.add("hidden");
+
+document.querySelectorAll(".schedule-link").forEach(link => {
+    link.addEventListener("click", (e) => {
+        if (e.target.closest("kebab-menu")) {
+            e.preventDefault();
         }
     });
 });
+
+
 
 document.querySelectorAll(".edit-button").forEach(button => {
     button.addEventListener("click", function () {
@@ -234,6 +266,8 @@ document.querySelectorAll(".edit-schedule-btn").forEach(function (button) {
         document.getElementById("editModal").classList.remove("hidden");
     });
 });
+
+/*消去モーダル*/
 
 document.querySelectorAll(".delete-schedule-btn").forEach(button => {
     button.addEventListener("click", () => {

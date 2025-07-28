@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
-
 #ユーザーテーブル
 class UserManager(BaseUserManager):
     def create_user(self, email, name, password=None, **extra_fields):
@@ -35,6 +34,7 @@ class User(AbstractUser, PermissionsMixin):
         
 #予定表テーブル
 class Schedule(models.Model):
+    user = models.ForeignKey('app.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     trip_start_date = models.DateField()
     trip_end_date = models.DateField()

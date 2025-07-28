@@ -19,5 +19,5 @@ urlpatterns = [
     path('mypage/email/', views.change_email_view, name='change_email'),
     path('mypage/password/', views.change_password_view, name='change_password'),
     path('edit_schedule_title/', views.edit_schedule_title, name='edit_schedule_title'),
-    path('delete_schedule/', views.delete_schedule, name='delete_schedule'),
+    path('delete_schedule/<int:schedule_id>/', views.delete_schedule, name='delete_schedule'),
 ]

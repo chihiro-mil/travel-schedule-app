@@ -125,7 +125,9 @@ def home_view(request):
     if request.method == 'POST':
         form = ScheduleForm(request.POST)
         if form.is_valid():
-            form.save()
+            schedule = form.save(commit=False)
+            schedule.user = request.user
+            schedule.save()
             return redirect('app:home')
     else:
         form = ScheduleForm()
@@ -147,11 +149,13 @@ def edit_schedule_title(request):
     return redirect('app:home')
 
 #予定表の削除モーダル
-def delete_schedule(request):
+@login_required
+def delete_schedule(request, schedule_id):
     if request.method == 'POST':
         schedule_id = request.POST.get('schedule_id')
         schedule = get_object_or_404(Schedule, id=schedule_id, user=request.user)
         schedule.delete()
+        return redirect('app:home')
     return redirect('app:home')
 
 #予定追加・編集画面
@@ -242,7 +246,7 @@ def generate_trip_date_choices(schedule):
     
     return [start + timedelta(days=i) for i in range(delta + 1)]
 
-#予定表画面
+#予定詳細画面
 @login_required
 def schedule_detail_view(request, schedule_id):
     schedule = get_object_or_404(Schedule, id=schedule_id)
