@@ -57,6 +57,9 @@
                                 </div>
                             {% endfor %}
                             </div>
+                            {% if fom.transportation.errors %}
+                                <div class="error-message">{{ fom.transportation.errors.0 }}</div>
+                            {% endif %}
                             <input type="hidden" name="transportation" id="transportation-hidden-input">
                         </div>
                     </div>
@@ -64,31 +67,49 @@
                 <div class="form-group" id="move-start-date" >
                     <label id="move-start-date-label">出発日</label>
                     {{ form.start_date }}
+                    {% if form.start_date.errors %}
+                        <div class="error-message">{{ fom.start_date.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="move-start-time">
                     <label id="move-start-time-label">出発時刻</label>
                     {{ form.start_time }}
+                    {% if form.start_time.errors %}
+                        <div class="error-message">{{ fom.start_time.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="move-departure-location">
                     <label id="move-departure-location-label">出発地</label>
-                {{ form.departure_location }}
+                    {{ form.departure_location }}
+                    {% if form.departure_location.errors %}
+                        <div class="error-message">{{ fom.departure_location.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="move-end-date">
                     <label id="move-end-date-label">到着日</label>
                     {{ form.end_date }}
+                    {% if form.end_date.errors %}
+                        <div class="error-message">{{ fom.end_date.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="move-end-time">
                     <label id="move-end-time-label">終了時刻</label>
                     {{ form.end_time }}
+                    {% if form.end_time.errors %}
+                        <div class="error-message">{{ fom.end_time.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="move-arrival-location">
                     <label id="move-arrival-location-label">到着地</label>
                     {{ form.arrival_location }}
+                    {% if form.arrival_location.errors %}
+                        <div class="error-message">{{ fom.arrival_location.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="move-memo">
@@ -132,26 +153,41 @@
                 <div class="form-group" id="sightseeing-name">
                     <label id="sightseeing-name-label">観光地名</label>
                     {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="error-message">{{ fom.name.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="sightseeing-start-date">
                     <label id="sightseeing-start-date-label">滞在開始日</label>
                     {{ form.start_date }}
+                    {% if form.start_date.errors %}
+                        <div class="error-message">{{ fom.start_date.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="sightseeing-start-time">
                     <label id="sightseeing-start-time-label">滞在開始時刻</label>
                     {{ form.start_time }}
+                    {% if form.start_time.errors %}
+                        <div class="error-message">{{ fom.start_time.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="sightseeing-end-date">
                     <label id="sightseeing-end-date-label">滞在終了日</label>
                     {{ form.end_date }}
+                    {% if form.end_date.errors %}
+                        <div class="error-message">{{ fom.end_date.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="sightseeing-end-time">
                     <label id="sightseeing-end-time-label">滞在終了時刻</label>
                     {{ form.end_time }}
+                    {% if form.end_time.errors %}
+                        <div class="error-message">{{ fom.end_time.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="sightseeing-memo">
@@ -195,21 +231,33 @@
                 <div class="form-group" id="meal-name">
                     <label id="meal-name-label">店名</label>
                     {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="error-message">{{ fom.name.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="meal-start-date">
                     <label id="meal-start-date-label">食事日</label>
                     {{ form.start_date }}
+                    {% if form.start_date.errors %}
+                        <div class="error-message">{{ fom.start_date.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="meal-start-time">
                     <label id="meal-start-time-label">食事開始時刻</label>
                     {{ form.start_time }}
+                    {% if form.start_time.errors %}
+                        <div class="error-message">{{ fom.start_time.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="meal-end-time">
                     <label id="meal-end-time-label">食事終了時刻</label>
                     {{ form.end_time }}
+                    {% if form.end_time.errors %}
+                        <div class="error-message">{{ fom.end_time.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="meal-memo">
@@ -253,16 +301,31 @@
                 <div class="form-group" id="stay-name">
                     <label id="stay-name-label">宿泊施設名</label>
                     {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="error-message">{{ fom.name.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="stay-start-date">
                     <label id="stay-date-label">滞在日</label>
                     {{ form.start_date }}～{{ form.end_date }}
+                    {% if form.start_date.errors %}
+                        <div class="error-message">{{ fom.start_date.errors.0 }}</div>
+                    {% endif %}
+                    {% if form.end_date.errors %}
+                        <div class="error-message">{{ fom.end_date.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="stay-start-time">
                     <label id="stay-time-label">滞在時間</label>
                     {{ form.start_time }}～{{ form.end_time }}
+                    {% if form.start_time.errors %}
+                        <div class="error-message">{{ fom.start_time.errors.0 }}</div>
+                    {% endif %}
+                    {% if form.end_time.errors %}
+                        <div class="error-message">{{ fom.end_time.errors.0 }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group" id="stay-memo">
