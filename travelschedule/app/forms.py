@@ -343,7 +343,7 @@ class LinkForm(forms.ModelForm):
                 'placeholder': '例：https://example.com'
             }),
         }
-LinkFormSet = modelformset_factory(Link, form=LinkForm, extra=1, can_delete=True)
+LinkFormSet = modelformset_factory(Link, form=LinkForm, extra=5, max_num=5, can_delete=True)
 
 #写真フォーム用
 class PictureForm(forms.ModelForm):
@@ -355,4 +355,4 @@ class PictureForm(forms.ModelForm):
                 'class': 'form-control-file'
             }),
         }
-PictureFormSet = modelformset_factory(Picture, form=PictureForm, extra=1, can_delete=True)
+PictureFormSet = modelformset_factory(Picture, form=PictureForm, extra=10, max_num=10, can_delete=False)
