@@ -6,65 +6,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>予定表詳細</title>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!--<link rel="stylesheet" href="{% static "css/style.css" %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">-->
 </head>
 <body>
-    <!--<div class="schedule-detail-container">-->
     <h2>{{ schedule.title }} 予定表</h2>
 
-        <!--<div id="day-tabs" class="day-tabs">-->
-    {% for date, plans in plans_by_date.items %}
-            <!--<button class="day-tab {% if forloop.first %}active{% endif %}" data-day="day{{ forloop.counter }}">-->
-        <h3>{{ forloop.counter }}日目 {{ date|date:"n/j (D)" }}</h3>
-            <!--</button>-->
-    <!--</div>-->
-        
-        {% for plan in plans %}
-            <div class="plan-card">
-                <p>
-                    {% if plan.action_category == "move" %}
-
-                    {% elif plan.action_category == "sightseeing" %}
-
-                    {% elif plan.action_category == "meal" %}
-
-                    {% elif plan.action_category == "stay" %}
-
-                    {% endif %}
-
-                    {{ plan.action_category }}
-                </p>
-
-                <p>{{ plan.start_datetime|date:"H:i" }} ～ {{ plan.end_datetime|date:"H:i" }}</p>
-
-                {% if plan.action_category == "move" %}
-                    <p>出発地： {{ plan.departure_location }}</p>
-                    <p>到着地： {{ plan.arrival_location }}</p>
-
-                    {% if plan.transportation %}
-                        <p>
-                            移動手段：
-                            <i class="fa-solid{{ transportation_icon_map|get_item:plan.transportation.transportation}}"></i>
-                            {{ plan.transportation }}
-                        </p>
-                    {% else %}
-                        <p>移動手段：未設定</p>
-                    {% endif %}
-
-                {% elif plan.action_category == "sightseeing" %}
-                    <p>観光地名：{{ plan.name }}</p>
-                {% elif plan.action_category == "meal" %}
-                    <p>店名：{{ plan.name }}</p>
-                {% elif plan.action_category == "stay" %}
-                    <p>宿泊施設名：{{ plan.name }}</p>
-                {% endif %}
-
-                {% if plan.memo %}
-                    <p>メモ：{{ plan.memo}}</p>
-                {% endif %}
-            </div>
+    <div class="day-tabs">
+        {% for date in sorted_dates %}
+            <button class="day-tab {% if forloop.first %}active{% endif %}" data-day="{{ forloop.counter }}">
+                {{ forloop.counter }}日目<br>{{ date|date:"n/j" }}({{ date|date:"D" }})
+            </button>
         {% endfor %}
+    </div>
+
+    {% for date in sorted_dates %}
+        <div class="day-block{% if forloop.first %}active{% endif %}" data-day="{{ forloop.counter }}">
+            <h3>{{ forloop.counter }}日目<br>{{ date|date:"n/j" }}({{ date|date:"D" }})</h3>
+
+            {% for plan in plans_by_date|get_item:date %}
+                {% if plan.action_category == "move" %}
+                    <di class="plan-card move">
+                {% elif plan.action_category == "sightseeing" %}
+                    <div class="plan-card sightseeing">
+                {% elif plan.action_category == "meal" %}
+                    <div class="plan-card meal">
+                {% elif plan.action_category == "stay" %}
+                    <div class="plan-card stay">
+                {% else %}
+                    <div class="plan-card">
+                {% endif %}
+
+                    <p>{{ plan.start_datetime|date:"H:i" }} ～ {{ plan.end_datetime|date:"H:i" }}</p>
+
+                    {% if plan.action_category == "move" %}
+                        <p>出発地： {{ plan.departure_location }}</p>
+                        <p>到着地： {{ plan.arrival_location }}</p>
+                        {% if plan.transportation %}
+                            <p>
+                                <i class="fa-solid{{ transportation_icon_map|get_item:plan.transportation.transportation}}"></i>
+                                {{ plan.transportation }}
+                            </p>
+                        {% else %}
+                            <p>移動手段：未設定</p>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if plan.name %}
+                        {% if plan.action_category == "sightseeing" %}
+                            <p>観光地名：{{ plan.name }}</p>
+                        {% elif plan.action_category == "meal" %}
+                            <p>店名：{{ plan.name }}</p>
+                        {% elif plan.action_category == "stay" %}
+                            <p>宿泊施設名：{{ plan.name }}</p>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if plan.memo %}
+                        <p>メモ：{{ plan.memo}}</p>
+                    {% endif %}
+
+                    {% if plan.links.all %}
+                        </div class="plan-links">
+                            <p><strog>ＵＲＬ：</strog></p>
+                            <ul>
+                                {% for link in plan.links.all %}
+                                    {% if link.url %}
+                                        <li><a href="{{ link.url }}" target="_blank">{{ link.url }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {% if plan.pictures.all %}
+                        </div class="plan-pictures">
+                            <p><strog>写真：</strog></p>
+                            <div class="picture-grid">
+                                {% for picture in plan.pictures.all %}
+                                    {% if picture.image %}
+                                        <img src="{{ picture.image.url }}" alt="plan image" class="plan-image">
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                </div>
+            {% endfor %}
+            </div>
     {% endfor %}
     
     <footer class="footer-nav">
@@ -134,24 +167,34 @@
         </div>
 
     </div>
-</div>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const tabs = document.querySelectorAll(".day-tab");
-    const contents = document.querySelectorAll(".day-content");
+</div>-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
 
-    tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-            tabs.forEach(t => t.classList.remove("active"));
-            contents.forEach(c => c.classList.add("hidden"));
 
-            tab.classList.add("active");
-            const targetId = tab.dataset.day;
-            document.getElementById(targetId).classList.remove("hidden");
+
+
+
+
+
+
+
+
+            let lastScrollTop = 0;
+            const footer = document.querySelector('.footer-nav');
+
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (scrollTop > lastScrollTop) {
+                    footer.style.transform = 'translateY(100%)';
+                } else {
+                    footer.style.transform = 'translateY(0)';
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 :scrollTop;
+            });
         });
-    });
-});
-</script>-->
+    </script>
 
 </body>
 </html>
