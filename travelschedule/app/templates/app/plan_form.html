@@ -27,21 +27,26 @@
             
             <div class="category-radio"> 
 
-                <input type="radio" name="action_category" value="move" id="category-move">
+                <input type="radio" name="action_category" value="move" id="category-move"
+                    {% if selected_category == "move" %}checked{% endif %}>
                 <label for="category-move" class="label-move">移動</label>
 
-                <input type="radio" name="action_category" value="sightseeing" id="category-sightseeing">
+                <input type="radio" name="action_category" value="sightseeing" id="category-sightseeing"
+                    {% if selected_category == "sightseeing" %}checked{% endif %}>
                 <label for="category-sightseeing" class="label-sightseeing">観光地</label>
 
-                <input type="radio" name="action_category" value="meal" id="category-meal">
+                <input type="radio" name="action_category" value="meal" id="category-meal"
+                    {% if selected_category == "meal" %}checked{% endif %}>
                 <label for="category-meal" class="label-meal">食事</label>
 
-                <input type="radio" name="action_category" value="stay" id="category-stay">
+                <input type="radio" name="action_category" value="stay" id="category-stay"
+                    {% if selected_category == "stay" %}checked{% endif %}>
                 <label for="category-stay" class="label-stay">宿泊</label>
             </div>
 
             <!--移動カテゴリ-->
-            <div class="category-fields" data-category="move" style="display: none;">
+            <div class="category-fields" data-category="move" 
+                {% if selected_category == "move" %}style="display: block;"{% else %}style="display: none;"{% endif %}>
                 <div class="transportation-row">
                     <label class-"transportation-title">移動手段</label>
                     <div class="custom-select-box">
@@ -57,8 +62,8 @@
                                 </div>
                             {% endfor %}
                             </div>
-                            {% if fom.transportation.errors %}
-                                <div class="error-message">{{ fom.transportation.errors.0 }}</div>
+                            {% if form.transportation.errors %}
+                                <div class="error-message">{{ form.transportation.errors.0 }}</div>
                             {% endif %}
                             <input type="hidden" name="transportation" id="transportation-hidden-input">
                         </div>
@@ -68,7 +73,7 @@
                     <label id="move-start-date-label">出発日</label>
                     {{ form.start_date }}
                     {% if form.start_date.errors %}
-                        <div class="error-message">{{ fom.start_date.errors.0 }}</div>
+                        <div class="error-message">{{ form.start_date.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -76,7 +81,7 @@
                     <label id="move-start-time-label">出発時刻</label>
                     {{ form.start_time }}
                     {% if form.start_time.errors %}
-                        <div class="error-message">{{ fom.start_time.errors.0 }}</div>
+                        <div class="error-message">{{ form.start_time.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -84,7 +89,7 @@
                     <label id="move-departure-location-label">出発地</label>
                     {{ form.departure_location }}
                     {% if form.departure_location.errors %}
-                        <div class="error-message">{{ fom.departure_location.errors.0 }}</div>
+                        <div class="error-message">{{ form.departure_location.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -92,7 +97,7 @@
                     <label id="move-end-date-label">到着日</label>
                     {{ form.end_date }}
                     {% if form.end_date.errors %}
-                        <div class="error-message">{{ fom.end_date.errors.0 }}</div>
+                        <div class="error-message">{{ form.end_date.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -100,7 +105,7 @@
                     <label id="move-end-time-label">終了時刻</label>
                     {{ form.end_time }}
                     {% if form.end_time.errors %}
-                        <div class="error-message">{{ fom.end_time.errors.0 }}</div>
+                        <div class="error-message">{{ form.end_time.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -108,7 +113,7 @@
                     <label id="move-arrival-location-label">到着地</label>
                     {{ form.arrival_location }}
                     {% if form.arrival_location.errors %}
-                        <div class="error-message">{{ fom.arrival_location.errors.0 }}</div>
+                        <div class="error-message">{{ form.arrival_location.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -149,12 +154,13 @@
 
             <!--観光地カテゴリ-->
 
-            <div class="category-fields" data-category="sightseeing" style="display: none;">
+            <div class="category-fields" data-category="sightseeing"
+                {% if selected_category == "sightseeing" %}style="display: block;"{% else %}style="display: none;"{% endif %}>
                 <div class="form-group" id="sightseeing-name">
                     <label id="sightseeing-name-label">観光地名</label>
                     {{ form.name }}
                     {% if form.name.errors %}
-                        <div class="error-message">{{ fom.name.errors.0 }}</div>
+                        <div class="error-message">{{ form.name.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -162,7 +168,7 @@
                     <label id="sightseeing-start-date-label">滞在開始日</label>
                     {{ form.start_date }}
                     {% if form.start_date.errors %}
-                        <div class="error-message">{{ fom.start_date.errors.0 }}</div>
+                        <div class="error-message">{{ form.start_date.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -170,7 +176,7 @@
                     <label id="sightseeing-start-time-label">滞在開始時刻</label>
                     {{ form.start_time }}
                     {% if form.start_time.errors %}
-                        <div class="error-message">{{ fom.start_time.errors.0 }}</div>
+                        <div class="error-message">{{ form.start_time.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -178,7 +184,7 @@
                     <label id="sightseeing-end-date-label">滞在終了日</label>
                     {{ form.end_date }}
                     {% if form.end_date.errors %}
-                        <div class="error-message">{{ fom.end_date.errors.0 }}</div>
+                        <div class="error-message">{{ form.end_date.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -186,7 +192,7 @@
                     <label id="sightseeing-end-time-label">滞在終了時刻</label>
                     {{ form.end_time }}
                     {% if form.end_time.errors %}
-                        <div class="error-message">{{ fom.end_time.errors.0 }}</div>
+                        <div class="error-message">{{ form.end_time.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -227,12 +233,13 @@
 
 
             <!--食事カテゴリ-->
-            <div class="category-fields" data-category="meal" style="display: none;">
+            <div class="category-fields" data-category="meal"
+                {% if selected_category == "meal" %}style="display: block;"{% else %}style="display: none;"{% endif %}>
                 <div class="form-group" id="meal-name">
                     <label id="meal-name-label">店名</label>
                     {{ form.name }}
                     {% if form.name.errors %}
-                        <div class="error-message">{{ fom.name.errors.0 }}</div>
+                        <div class="error-message">{{ form.name.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -240,7 +247,7 @@
                     <label id="meal-start-date-label">食事日</label>
                     {{ form.start_date }}
                     {% if form.start_date.errors %}
-                        <div class="error-message">{{ fom.start_date.errors.0 }}</div>
+                        <div class="error-message">{{ form.start_date.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -248,7 +255,7 @@
                     <label id="meal-start-time-label">食事開始時刻</label>
                     {{ form.start_time }}
                     {% if form.start_time.errors %}
-                        <div class="error-message">{{ fom.start_time.errors.0 }}</div>
+                        <div class="error-message">{{ form.start_time.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -256,7 +263,7 @@
                     <label id="meal-end-time-label">食事終了時刻</label>
                     {{ form.end_time }}
                     {% if form.end_time.errors %}
-                        <div class="error-message">{{ fom.end_time.errors.0 }}</div>
+                        <div class="error-message">{{ form.end_time.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -297,12 +304,13 @@
 
             <!--宿泊カテゴリ-->
 
-            <div class="category-fields" data-category="stay" style="display: none;">
+            <div class="category-fields" data-category="stay"
+                {% if selected_category == "stay" %}style="display: block;"{% else %}style="display: none;"{% endif %}>
                 <div class="form-group" id="stay-name">
                     <label id="stay-name-label">宿泊施設名</label>
                     {{ form.name }}
                     {% if form.name.errors %}
-                        <div class="error-message">{{ fom.name.errors.0 }}</div>
+                        <div class="error-message">{{ form.name.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -310,10 +318,10 @@
                     <label id="stay-date-label">滞在日</label>
                     {{ form.start_date }}～{{ form.end_date }}
                     {% if form.start_date.errors %}
-                        <div class="error-message">{{ fom.start_date.errors.0 }}</div>
+                        <div class="error-message">{{ form.start_date.errors.0 }}</div>
                     {% endif %}
                     {% if form.end_date.errors %}
-                        <div class="error-message">{{ fom.end_date.errors.0 }}</div>
+                        <div class="error-message">{{ form.end_date.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -321,10 +329,10 @@
                     <label id="stay-time-label">滞在時間</label>
                     {{ form.start_time }}～{{ form.end_time }}
                     {% if form.start_time.errors %}
-                        <div class="error-message">{{ fom.start_time.errors.0 }}</div>
+                        <div class="error-message">{{ form.start_time.errors.0 }}</div>
                     {% endif %}
                     {% if form.end_time.errors %}
-                        <div class="error-message">{{ fom.end_time.errors.0 }}</div>
+                        <div class="error-message">{{ form.end_time.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -401,6 +409,27 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            /*バリエーションエラーメッセージ表示*/
+            document.querySelectorAll('.category-fields').forEach(block => {
+                block.style.display = 'none';
+            });
+
+            const errorFields = document.querySelectorAll('.error-message');
+            errorFields.forEach((error) => {
+                const parentCategory = error.closest('.category-fields');
+                if (parentCategory) {
+                    parentCategory.style.display = 'block';
+                }
+            });
+
+            const selectedCategory = '{{ selected_category|escapejs }}';
+            console.log("selectedCategory:", selectedCategory);
+
+            const target = document.querySelector(`.category-fields[data-category='${selectedCategory}']`);
+            if (target) {
+                target.style.display = 'block';
+            }
+
             const categoryRadios = document.querySelectorAll('input[name="action_category"]');
             const allCategoryForms = document.querySelectorAll('[data-category]');
             const selectedOption = document.getElementById('selected-option');
@@ -459,7 +488,10 @@
                     optionsList.style.display = 'none';
                 }
             });
+    
 
+
+            /*フッタースクロール機能*/
             let lastScrollTop = 0;
             const footer = document.querySelector('.footer-nav');
 

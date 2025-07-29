@@ -179,6 +179,10 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         link_formset = LinkFormSet(request.POST, request.FILES, prefix='links')
         picture_formset = PictureFormSet(request.POST, request.FILES, prefix='pictures')
         
+        selected_category = request.POST.get('action_category') or ''
+        print("selected_category from POST:", selected_category)
+        
+                
         print("form.is_valid():", form.is_valid())
         print("link_formset.is_valid():", link_formset.is_valid())
         print("picture_formset.is_valid():", picture_formset.is_valid())
@@ -230,14 +234,17 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 'form_title': '予定編集' if plan else '予定追加',
                 'schedule_id': schedule_id,
                 'transportation_methods': TransportationMethod.objects.all(),
+                'selected_category': selected_category,
             })
     else:
         form = PlanForm(instance=plan, trip_dates=trip_choices)
         link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')
         picture_formset = PictureFormSet(queryset=Picture.objects.none(), prefix='pictures')
+        selected_category = ''
         print("PlanForm errors:", form.errors)
         print("LinkFormSet errors:", link_formset.errors)
         print("PictureFormSet errors:" , picture_formset.errors)
+        print("selected_category from PORT:", selected_category)
         
         return render(request, 'app/plan_form.html', {
             'form': form, 
@@ -247,6 +254,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             'form_title': '予定編集' if plan else '予定追加',
             'schedule_id': schedule_id,
             'transportation_methods': TransportationMethod.objects.all(),
+            'selected_category': selected_category,
         })
     
 def generate_trip_date_choices(schedule):
