@@ -29,7 +29,7 @@
 
             {% for plan in plans_by_date|get_item:date %}
                 {% if plan.action_category == "move" %}
-                    <di class="plan-card move">
+                    <div class="plan-card move">
                 {% elif plan.action_category == "sightseeing" %}
                     <div class="plan-card sightseeing">
                 {% elif plan.action_category == "meal" %}
@@ -40,64 +40,87 @@
                     <div class="plan-card">
                 {% endif %}
 
-                    <p>{{ plan.start_datetime|date:"H:i" }} ～ {{ plan.end_datetime|date:"H:i" }}</p>
+                    <div class="transportation-row">
+                        <div class="time-label">
+                            {% if plan.action_category == "move" %}
+                                <span>発：</span>{{ plan.start_datetime|date:"H:i" }}
+                            {% elif plan.action_category == "sightseeing" or plan.action_category == "meal" %}
+                                <span>開始：</span>{{ plan.start_datetime|date:"H:i" }}
+                            {% elif plan.action_category == "stay" %}
+                                <span>着：</span>{{ plan.start_datetime|date:"H:i" }}
+                            {% else %}
+                                <span>開始：</span>{{ plan.start_datetime|date:"H:i" }}
+                            {% endif %}
+                        </div>
 
-                    {% if plan.action_category == "move" %}
-                        <p>出発地： {{ plan.departure_location }}</p>
-                        <p>到着地： {{ plan.arrival_location }}</p>
-                        {% if plan.transportation %}
-                            <p>
+                        <div class="transportation-icon">
+                            {% if plan.transportation %}
                                 <i class="fa-solid{{ transportation_icon_map|get_item:plan.transportation.transportation}}"></i>
-                                {{ plan.transportation }}
-                            </p>
-                        {% else %}
-                            <p>移動手段：未設定</p>
-                        {% endif %}
-                    {% endif %}
-
-                    {% if plan.name %}
-                        {% if plan.action_category == "sightseeing" %}
-                            <p>観光地名：{{ plan.name }}</p>
-                        {% elif plan.action_category == "meal" %}
-                            <p>店名：{{ plan.name }}</p>
-                        {% elif plan.action_category == "stay" %}
-                            <p>宿泊施設名：{{ plan.name }}</p>
-                        {% endif %}
-                    {% endif %}
-
-                    {% if plan.memo %}
-                        <p>メモ：{{ plan.memo}}</p>
-                    {% endif %}
-
-                    {% if plan.links.all %}
-                        </div class="plan-links">
-                            <p><strog>ＵＲＬ：</strog></p>
-                            <ul>
-                                {% for link in plan.links.all %}
-                                    {% if link.url %}
-                                        <li><a href="{{ link.url }}" target="_blank">{{ link.url }}</a></li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
+                                {% if plan.transportation %}
+                            {% else %}
+                                移動手段：未設定
+                            {% endif %}
                         </div>
-                    {% endif %}
 
-                    {% if plan.pictures.all %}
-                        </div class="plan-pictures">
-                            <p><strog>写真：</strog></p>
-                            <div class="picture-grid">
-                                {% for picture in plan.pictures.all %}
-                                    {% if picture.image %}
-                                        <img src="{{ picture.image.url }}" alt="plan image" class="plan-image">
-                                    {% endif %}
-                                {% endfor %}
+                        <div class="time-label">
+                            {% if plan.action_category == "move" %}
+                                <span>着：</span>{{ plan.end_datetime|date:"H:i" }}
+                            {% elif plan.action_category in "sightseeing,meal" %}
+                                <span>終了：</span>{{ plan.end_datetime|date:"H:i" }}
+                            {% elif plan.action_category == "stay" %}
+                                <span>発：</span>{{ plan.end_datetime|date:"H:i" }}
+                            {% else %}
+                                <span>終了：</span>{{ plan.end_datetime|date:"H:i" }}
+                            {% endif %}
+                        </div>
+
+                        {% if plan.name %}
+                            <div class="plan-name">
+                                {% if plan.action_category == "sightseeing" %}
+                                    <p>{{ plan.name }}</p>
+                                {% elif plan.action_category == "meal" %}
+                                    <p>{{ plan.name }}</p>
+                                {% elif plan.action_category == "stay" %}
+                                    <p>{{ plan.name }}</p>
+                                {% endif %}
                             </div>
-                        </div>
-                    {% endif %}
-                    
+                        {% endif %}
+
+                        {% if plan.memo %}
+                            <div class="plan-memo">
+                                <p>メモ：{{ plan.memo}}</p>
+                            </div>
+                        {% endif %}
+
+                        {% if plan.links.all %}
+                            <div class="plan-links">
+                                <p><strog>ＵＲＬ：</strog></p>
+                                <ul>
+                                    {% for link in plan.links.all %}
+                                        {% if link.url %}
+                                            <li><a href="{{ link.url }}" target="_blank">{{ link.url }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        {% if plan.pictures.all %}
+                            <div class="plan-pictures">
+                                <p><strog>写真：</strog></p>
+                                <div class="picture-grid">
+                                    {% for picture in plan.pictures.all %}
+                                        {% if picture.image %}
+                                            <img src="{{ picture.image.url }}" alt="plan image" class="plan-image">
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             {% endfor %}
-            </div>
+        </div>
     {% endfor %}
     
     <footer class="footer-nav">
