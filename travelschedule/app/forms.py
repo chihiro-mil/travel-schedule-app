@@ -371,7 +371,9 @@ class LinkForm(forms.ModelForm):
                 'placeholder': '例：https://example.com'
             }),
         }
+
 LinkFormSet = modelformset_factory(Link, form=LinkForm, extra=5, max_num=5, can_delete=True)
+
 
 #写真フォーム用
 class PictureForm(forms.ModelForm):

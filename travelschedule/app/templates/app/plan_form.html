@@ -67,7 +67,9 @@
                             {% endif %}
                             <input type="hidden" name="transportation" id="transportation-hidden-input">
                         </div>
+                            <input type="hidden" name="transportation" id="transportation-hidden-input">
                     </div>
+                </div>
 
                 <div class="form-group" id="move-start-date" >
                     <label id="move-start-date-label">出発日</label>
@@ -140,6 +142,31 @@
                         </div>
                     {% endif %}
                 </div>
+
+                <div class="form-group" id="move-memo">
+                    <label id="move-memo-label">メモ</label>
+                    {{ form.memo }}
+                </div>
+
+                <div class="link-form-container" data-category="move">
+                    <button type="button" class="add-link-button" data-category="move">リンクを追加</button>
+                </div>
+
+                <div id="move-picture-formset-container">
+                    {{ picture_formset.management_form }}
+                    <!--{% for form in picture_formset %}-->
+                    <div class="move-picture-form">
+                        {{ picture_formset.0.image }}
+                            <!--<div class="image-preview-wrapper">
+                                <img src="#" class="image-preview">
+                                <span class="remove-picture" title="削除">&times;</span>
+                            </div>-->
+                    </div>
+                    <!--{% endfor %}-->
+                </div>
+                <!--<button type="button" id="move-add-picture">＋画像を追加</button>-->
+
+                <button type="submit" class="btn-primary">保存</button>
             </div>
 
             <!--観光地カテゴリ-->
@@ -198,6 +225,32 @@
                         </div>
                     {% endif %}
                 </div>
+
+                <div class="form-group" id="sightseeing-memo">
+                    <label id="sightseeing-memo-label">メモ</label>
+                    {{ form.memo }}
+                </div>
+
+                <div class="link-form-container" data-category="sightseeing">
+                    <button type="button" class="add-link-button" data-category="sightseeing">リンクを追加</button>
+                </div>
+
+
+                <div id="sightseeing-picture-formset-container">
+                    {{ picture_formset.management_form }}
+                    <!--{% for form in picture_formset %}-->
+                    <div class="picture-form">
+                        {{ picture_formset.0.image }}
+                            <!--<div class="image-preview-wrapper">
+                                <img src="#" class="image-preview">
+                                <span class="remove-picture" title="削除">&times;</span>
+                            </div>-->
+                    </div>
+                    <!--{% endfor %}-->
+                </div>
+                <!--<button type="button" id="sightseeing-add-picture">＋画像を追加</button>-->
+
+                <button type="submit" class="btn-primary">保存</button>
             </div>
 
 
@@ -251,6 +304,31 @@
                         </div>
                     {% endif %}
                 </div>
+
+                <div class="form-group" id="meal-memo">
+                    <label id="meal-memo-label">メモ</label>
+                    {{ form.memo }}
+                </div>
+
+                <div class="link-form-container" data-category="meal">
+                    <button type="button" class="add-link-button" data-category="meal">リンクを追加</button>
+                </div>
+
+                <div id="meal-picture-formset-container">
+                    {{ picture_formset.management_form }}
+                    <!--{% for form in picture_formset %}-->
+                    <div class="picture-form">
+                        {{ picture_formset.0.image }}
+                            <!--<div class="image-preview-wrapper">
+                                <img src="#" class="image-preview">
+                                <span class="remove-picture" title="削除">&times;</span>
+                            </div>-->
+                    </div>
+                    <!--{% endfor %}-->
+                </div>
+                <!--<button type="button" id="meal-add-picture">＋画像を追加</button>-->
+
+                <button type="submit" class="btn-primary">保存</button>
             </div>
 
             <!--宿泊カテゴリ-->
@@ -332,7 +410,6 @@
 
 
             </div>
-                
         </form>
     </div>
 
@@ -412,8 +489,6 @@
             const hiddenInput = document.getElementById('transportation-hidden-input');
             const selectedIcon = document.getElementById('selected-icon');
             const selectedLabel = document.getElementById('selected-label');
-
-
 
             allCategoryForms.forEach(function (block) {
                 block.style.display = "none";

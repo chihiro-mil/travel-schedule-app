@@ -199,6 +199,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             print('cleaned_dataの中身:')
             for key, value in form.cleaned_data.items():
                 print(f' {key} : {value}')
+            print("form.instanceの中身：")
+            print(f'action_category: {form.instance.action_category}')
             print('start_datetime:', form.cleaned_data.get('start_datetime'))
             print('end_datetime:', form.cleaned_data.get('end_datetime'))
             
@@ -218,6 +220,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             
             for link in link_formset.save(commit=False):
                 link.plan = plan_instance
+                link.action_category = plan_instance.action_category
                 link.save()
                 
             for picture in picture_formset.save(commit=False):
