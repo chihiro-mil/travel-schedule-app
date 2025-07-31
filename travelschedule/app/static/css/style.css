@@ -834,6 +834,12 @@ input[type="radio"]:checked + label.label {
 
 /*予定詳細画面*/
 
+h2 {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
 .day-block {
     display: none;
 }
@@ -844,7 +850,7 @@ input[type="radio"]:checked + label.label {
 
 .day-tabs {
     display: flex;
-    overflow: auto;
+    justify-content: center;
     gap: 10px;
     padding: 10px 0;
     border-bottom: 1px solid#ccc;

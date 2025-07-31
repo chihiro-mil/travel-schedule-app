@@ -38,6 +38,14 @@
                     <div class="plan-card">
                 {% endif %}
 
+                <div class="kebab-menu">
+                    <i class="fas fa-ellipsis-v kebab-icon"></i>
+                    <div class="kebab-dropdown hidden">
+                        <a href="{% url 'app:plan_edit' schedule.id plan.id %}" class="edit-plan-btn">編集</a>
+                        <button class="delete-plan-btn" data-plan-id="{{ plan.id }}">削除</button>
+                    </div>
+                </div>
+
                     <div class="transportation-row">
                         <div class="transportation-icon">
                             {% if plan.action_category == "move" and plan.transportation %}
@@ -236,6 +244,31 @@
                         targetBlock.classList.add('active');
                     }
                 });
+            });
+
+            /*ケバブメニュー開閉*/
+            const kebabIcons = document.querySelectorAll('.kebab-icon');
+
+            kebabIcons.forEach(icon => {
+                icon.addEventListener('click', () => {
+                    const dropdown =icon.nextElementSibling;
+
+                    document.querySelectorAll('.kebab-dropdown').forEach(menu => {
+                        if (menu !== dropdown) {
+                            menu.classList.add('hidden');
+                        }
+                    });
+
+                    dropdown.classList.toggle('hidden');
+                });
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!event.target.closest('.kebab-menu')) {
+                    document.querySelectorAll('.kebab-dropdown').forEach(menu => {
+                        menu.classList.add('hidden');
+                    });
+                }
             });
 
 
