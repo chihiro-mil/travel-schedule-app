@@ -832,6 +832,14 @@ input[type="radio"]:checked + label.label {
 
 /*予定詳細画面*/
 
+.day-block {
+    display: none;
+}
+
+.day-block.active {
+    display: block;
+}
+
 .day-tabs {
     display: flex;
     overflow: auto;

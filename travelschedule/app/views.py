@@ -282,8 +282,14 @@ def schedule_detail_view(request, schedule_id):
             if date not in plans_by_date:
                 plans_by_date[date] = []
             plans_by_date[date].append(plan)
+            
+    date_list = []
+    current_date = schedule.trip_start_date
+    while current_date <= schedule.trip_end_date:
+        date_list.append(current_date)
+        current_date += timedelta(days=1)
         
-    sorted_dates = sorted(plans_by_date.keys())
+    sorted_dates = date_list
     
     transportation_icon_map = {
         'walk': 'fa-person-walking',

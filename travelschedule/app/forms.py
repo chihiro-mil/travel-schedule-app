@@ -245,7 +245,7 @@ class PlanForm(forms.ModelForm):
         name = cleaned_data.get('name')
         if action_category in ["sightseeing", "stay", 'meal']:
             if not name:
-                self.add_error("name", "名称を入力してください")
+                self.add_error('name', '')
         memo = cleaned_data.get('memo')
         departure = cleaned_data.get('departure_location')
         arrival = cleaned_data.get('arrival_location')
@@ -258,7 +258,7 @@ class PlanForm(forms.ModelForm):
                 end_date = start_date
                 cleaned_data['end_date'] = start_date
         elif not end_date:
-            self.add_error('end_date', '終了日を入力してください')
+            self.add_error('end_date', '')
         end_time = cleaned_data.get('end_time')
         
         print("[forms.py - clean()] 入力内容:")
@@ -278,17 +278,9 @@ class PlanForm(forms.ModelForm):
         
         if start_date and start_time:
             start_datetime = datetime.datetime.combine(start_date, start_time)
-        elif start_date and not start_time:
-            self.add_error('start_time', '開始時刻を入力してください。')
-        elif start_time and not start_date:
-            self.add_error('start_date', '開始日を入力してください。')
             
         if end_date and end_time:
             end_datetime = datetime.datetime.combine(end_date, end_time)
-        elif end_date and not end_time:
-            self.add_error('end_time', '終了時刻を入力してください。')
-        elif end_time and not end_date:
-            self.add_error('end_date', '終了日を入力してください。')
         
         
         if action_category == 'move':
@@ -296,26 +288,62 @@ class PlanForm(forms.ModelForm):
                 self.add_error('departure_location', '出発地を入力してください。')
             if not arrival:
                 self.add_error('arrival_location', '到着地を入力してください。')
-            if start_datetime and end_datetime and start_datetime > end_datetime:
-                raise ValidationError('出発日時は到着日より前にしてください。')
             
         elif action_category == 'sightseeing':
             if not name:
                 self.add_error('name', '観光地名を入力してください。')
-            if start_datetime and end_datetime and start_datetime > end_datetime:
-                raise ValidationError('滞在開始日時は終了日時より前にしてください。')
             
         elif action_category == 'meal':
             if not name:
                 self.add_error('name', '店名を入力してください。')
-            if start_datetime and end_datetime and start_datetime > end_datetime:
-                raise ValidationError('食事の開始時刻は終了時刻より前にしてください。')
             
         elif action_category == 'stay':
             if not name:
                 self.add_error('name', '宿泊施設を入力してください。')
-            if start_datetime and end_datetime and start_datetime > end_datetime:
-                raise ValidationError('宿泊の開始時刻は終了時刻より前にしてください。')
+            
+        if action_category != 'meal':
+            if start_date and end_date and start_date > end_date:
+                    if action_category =='move':
+                        self.add_error('start_date', '出発日は到着日より前にしてください。')
+                    elif action_category =='sightseeing':
+                        self.add_error('start_date', '滞在開始日は終了日より前にしてください。')
+                    elif action_category =='stay':
+                        self.add_error('start_date', '宿泊の開始日は終了日より前にしてください。')
+                
+            
+        if start_datetime and end_datetime and start_datetime > end_datetime:
+                if action_category =='move':
+                    self.add_error('start_time', '出発時刻は到着時刻より前にしてください。')
+                elif action_category =='sightseeing':
+                    self.add_error('start_time', '滞在開始時刻は滞在終了時刻より前にしてください。')
+                elif action_category =='meal':
+                    self.add_error('start_time', '開始時刻は終了時刻より前にしてください。')
+                elif action_category =='stay':
+                    self.add_error('start_time', '滞在開始時刻は滞在終了時刻より前にしてください。')
+                    
+        if start_date and not start_time:
+            if action_category == 'move':
+                self.add_error('start_time', '出発時刻を入力してください。')
+            elif action_category =='sightseeing':
+                self.add_error('start_time', '滞在開始時刻を入力してください。')
+            elif action_category =='meal':
+                self.add_error('start_time', '食事開始時刻を入力してください。')
+            elif action_category =='stay':
+                self.add_error('start_time', '滞在開始時刻を入力してください。')
+                
+        if end_date and not end_time:
+            if action_category == 'move':
+                self.add_error('end_time', '到着時刻を入力してください。')
+            elif action_category =='sightseeing':
+                self.add_error('end_time', '滞在終了時刻を入力してください。')
+            elif action_category =='meal':
+                self.add_error('end_time', '食事終了時刻を入力してください。')
+            elif action_category =='stay':
+                self.add_error('end_time', '滞在終了時刻を入力してください。')
+                    
+            
+            
+            
             
         cleaned_data['start_datetime'] = start_datetime
         cleaned_data['end_datetime'] = end_datetime

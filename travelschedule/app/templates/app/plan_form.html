@@ -73,7 +73,11 @@
                     <label id="move-start-date-label">出発日</label>
                     {{ form.start_date }}
                     {% if form.start_date.errors %}
-                        <div class="error-message">{{ form.start_date.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.start_date.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -81,7 +85,11 @@
                     <label id="move-start-time-label">出発時刻</label>
                     {{ form.start_time }}
                     {% if form.start_time.errors %}
-                        <div class="error-message">{{ form.start_time.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.start_time.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -89,7 +97,11 @@
                     <label id="move-departure-location-label">出発地</label>
                     {{ form.departure_location }}
                     {% if form.departure_location.errors %}
-                        <div class="error-message">{{ form.departure_location.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.departure_location.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -97,15 +109,23 @@
                     <label id="move-end-date-label">到着日</label>
                     {{ form.end_date }}
                     {% if form.end_date.errors %}
-                        <div class="error-message">{{ form.end_date.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.end_date.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
                 <div class="form-group" id="move-end-time">
-                    <label id="move-end-time-label">終了時刻</label>
+                    <label id="move-end-time-label">到着時刻</label>
                     {{ form.end_time }}
                     {% if form.end_time.errors %}
-                        <div class="error-message">{{ form.end_time.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.end_time.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -113,7 +133,11 @@
                     <label id="move-arrival-location-label">到着地</label>
                     {{ form.arrival_location }}
                     {% if form.arrival_location.errors %}
-                        <div class="error-message">{{ form.arrival_location.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.arrival_location.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -126,7 +150,11 @@
                     <label id="sightseeing-name-label">観光地名</label>
                     {{ form.name }}
                     {% if form.name.errors %}
-                        <div class="error-message">{{ form.name.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.name.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -134,7 +162,11 @@
                     <label id="sightseeing-start-date-label">滞在開始日</label>
                     {{ form.start_date }}
                     {% if form.start_date.errors %}
-                        <div class="error-message">{{ form.start_date.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.start_date.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -142,23 +174,28 @@
                     <label id="sightseeing-start-time-label">滞在開始時刻</label>
                     {{ form.start_time }}
                     {% if form.start_time.errors %}
-                        <div class="error-message">{{ form.start_time.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.start_time.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
                 <div class="form-group" id="sightseeing-end-date">
                     <label id="sightseeing-end-date-label">滞在終了日</label>
                     {{ form.end_date }}
-                    {% if form.end_date.errors %}
-                        <div class="error-message">{{ form.end_date.errors.0 }}</div>
-                    {% endif %}
                 </div>
 
                 <div class="form-group" id="sightseeing-end-time">
                     <label id="sightseeing-end-time-label">滞在終了時刻</label>
                     {{ form.end_time }}
                     {% if form.end_time.errors %}
-                        <div class="error-message">{{ form.end_time.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.end_time.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -171,7 +208,11 @@
                     <label id="meal-name-label">店名</label>
                     {{ form.name }}
                     {% if form.name.errors %}
-                        <div class="error-message">{{ form.name.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.name.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -179,7 +220,11 @@
                     <label id="meal-start-date-label">食事日</label>
                     {{ form.start_date }}
                     {% if form.start_date.errors %}
-                        <div class="error-message">{{ form.start_date.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.start_date.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -187,7 +232,11 @@
                     <label id="meal-start-time-label">食事開始時刻</label>
                     {{ form.start_time }}
                     {% if form.start_time.errors %}
-                        <div class="error-message">{{ form.start_time.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.start_time.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -195,7 +244,11 @@
                     <label id="meal-end-time-label">食事終了時刻</label>
                     {{ form.end_time }}
                     {% if form.end_time.errors %}
-                        <div class="error-message">{{ form.end_time.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.end_time.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -208,7 +261,11 @@
                     <label id="stay-name-label">宿泊施設名</label>
                     {{ form.name }}
                     {% if form.name.errors %}
-                        <div class="error-message">{{ form.name.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.name.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -216,10 +273,11 @@
                     <label id="stay-date-label">滞在日</label>
                     {{ form.start_date }}～{{ form.end_date }}
                     {% if form.start_date.errors %}
-                        <div class="error-message">{{ form.start_date.errors.0 }}</div>
-                    {% endif %}
-                    {% if form.end_date.errors %}
-                        <div class="error-message">{{ form.end_date.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.start_date.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -227,10 +285,11 @@
                     <label id="stay-time-label">滞在時間</label>
                     {{ form.start_time }}～{{ form.end_time }}
                     {% if form.start_time.errors %}
-                        <div class="error-message">{{ form.start_time.errors.0 }}</div>
-                    {% endif %}
-                    {% if form.end_time.errors %}
-                        <div class="error-message">{{ form.end_time.errors.0 }}</div>
+                        <div class="error-message">
+                            {% for error in form.start_time.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -310,18 +369,32 @@
         </ul>
 
     <script>
+
+        /*エラーメッセージを他のカテゴリに反映させない設定（保留）*/
+        /*function updateCategoryDisplay(selectedCategory) {
+            document.querySelectorAll('.category-fields').forEach(block => {
+                block.style.display = 'none';
+
+                block.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
+
+                block.querySelectorAll('.error-message').forEach(errorEl => {
+                    errorEl.style.display = 'none';
+                });
+            });
+
+            const activeBlock = document.querySelector(`.category-fields[data-category="${selectedCategory}"]`);
+            if (activeBlock) {
+                activeBlock.style.display = 'block';
+                activeBlock.querySelectorAll('input, select, textarea').forEach(el => el.disabled = false);
+                activeBlock.querySelectorAll('.error-message').forEach(errorEl => {
+                    errorEl.style.display = 'block';
+                });
+            }
+        }*/
         document.addEventListener('DOMContentLoaded', function () {
             /*バリエーションエラーメッセージ表示*/
             document.querySelectorAll('.category-fields').forEach(block => {
                 block.style.display = 'none';
-            });
-
-            const errorFields = document.querySelectorAll('.error-message');
-            errorFields.forEach((error) => {
-                const parentCategory = error.closest('.category-fields');
-                if (parentCategory) {
-                    parentCategory.style.display = 'block';
-                }
             });
 
             const selectedCategory = '{{ selected_category|escapejs }}';
@@ -360,10 +433,14 @@
                             block.querySelectorAll("input, select, textarea").forEach(el => el.disabled = true);
                         }
                     });
+
+                    /*updateCategoryDisplay(selected);*/
                 });
             });
             const checkedRadio = document.querySelector('input[name="action_category"]:checked');
             if (checkedRadio) {
+                const selected = checkedRadio.value;
+                /*updateCategoryDisplay(selected);*/
                 checkedRadio.dispatchEvent(new Event("change"));
             }
 

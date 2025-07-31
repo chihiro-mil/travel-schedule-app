@@ -23,7 +23,7 @@
         {% endfor %}
     </div>
     {% for date in sorted_dates %}
-        <div class="day-block{% if forloop.first %}active{% endif %}" data-day="{{ forloop.counter }}">
+        <div class="day-block {% if forloop.first %}active{% endif %}" data-day="{{ forloop.counter }}">
 
             {% for plan in plans_by_date|get_item:date %}
                 {% if plan.action_category == "move" %}
@@ -218,11 +218,25 @@
 </div>-->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            /*日付のボタン機能*/
+            const tabs = document.querySelectorAll('.day-tab');
+            const blocks = document.querySelectorAll('.day-block');
 
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    const selectedDay = this.getAttribute('data-day');
 
+                    tabs.forEach(t => t.classList.remove('active'));
 
+                    blocks.forEach(b => b.classList.remove('active'));
 
-
+                    this.classList.add('active');
+                    const targetBlock = document.querySelector(`.day-block[data-day="${selectedDay}"]`);
+                    if (targetBlock) {
+                        targetBlock.classList.add('active');
+                    }
+                });
+            });
 
 
 
