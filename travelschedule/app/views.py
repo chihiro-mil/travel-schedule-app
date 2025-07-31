@@ -4,6 +4,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Prefetch
+from django.http import JsonResponse,HttpResponseNotAllowed
+from django.views.decorators.http import require_POST
 
 
 from .forms import (
@@ -312,3 +314,13 @@ def schedule_detail_view(request, schedule_id):
         'schedule': schedule,
     }
     return render(request, 'app/schedule_detail.html', context)
+
+#予定削除モーダル
+@require_POST
+def plan_delete_view(request, plan_id):
+    try:
+        plan = Plan.objects.get(id=plan_id)
+        plan.delete()
+        return JsonResponse({'success': True})
+    except Plan.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Plan not found'}, status=404)

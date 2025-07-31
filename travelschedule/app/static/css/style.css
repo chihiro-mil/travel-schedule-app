@@ -957,3 +957,8 @@ h2 {
 .time-label .location {
     margin-left: 10px;
 }
+
+/*予定消去モーダル*/
+.modal {
+    display: none;
+}
