@@ -859,10 +859,6 @@ input[type="radio"]:checked + label.label {
     border-color: #007bff;
 }
 
-.day- block {
-    margin-bottom: 20px;
-}
-
 .plan-card {
     position: relative;
     width: 90%;
@@ -891,23 +887,14 @@ input[type="radio"]:checked + label.label {
     background-color: #90ee90;
 }
 
-.transportation-info {
-    margin-top: 4px 0;
-    font-weight: bold;
-}
-
 .transportation-row {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 12px 0;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
 }
-
-.departure-time,
-.arrival-time {
-    font-size: 14px;
-}
-
 
 .plan-name {
     margin-top: 8px;
@@ -926,3 +913,31 @@ input[type="radio"]:checked + label.label {
     padding-left: 18px;
 }
 
+.transportation-icon {
+    width: 60px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.category-label {
+    font-size: 13px;
+    clear: #444;
+    display: block;
+}
+
+.time-block {
+    flex-grow: 1;
+}
+
+.time-label {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.time-label .label {
+    margin-left: 10px;
+}
+
+.time-label .location {
+    margin-left: 10px;
+}
