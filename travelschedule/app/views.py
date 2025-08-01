@@ -7,6 +7,7 @@ from django.db.models import Prefetch
 from django.views.decorators.http import require_POST
 from django.utils.timezone import localtime
 from django.forms import inlineformset_factory
+from app.models import Plan
 
 
 
@@ -29,6 +30,7 @@ from .forms import (
 from .models import User, Schedule, Plan, Link, Picture, TransportationMethod
 
 from datetime import timedelta
+from datetime import datetime
 
 from collections import defaultdict
 
@@ -154,8 +156,32 @@ def edit_schedule_title(request):
         schedule_id = request.POST.get('schedule_id')
         new_title = request.POST.get('title')
         schedule = get_object_or_404(Schedule, id=schedule_id)
+        
+        #未使用
+        old_start = schedule.start_date
+        old_end = schedule.end_date
+        
+        new_start_str = request.POST.get('start_date')
+        new_end_str = request.POST.get('end_date')
+        
+        if new_start_str and new_end_str:
+            new_start = datetime.strptime(new_start_str, '%Y-%m-%d').date()
+            new_end = datetime.strptime(new_end_str, '%Y-%m-%d').date()
+        
         schedule.title = new_title
+        schedule.start_date = new_start
+        schedule.end_date = new_end        
         schedule.save()
+        
+        Plan.objects.filter(
+            schedule=schedule,
+            start_datetime__date__lt=new_start
+        ).delete()
+        Plan.objects.filter(
+            schedule=schedule,
+            end_datetime__date__gt=new_end
+        ).delete()
+        
     return redirect('app:home')
 
 #予定表の削除モーダル
@@ -231,11 +257,15 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             print("end_datetime:", plan_instance.end_datetime)
             print("action_category:", plan_instance.action_category)
             
-            
             plan_instance.schedule = schedule
+            
+            print(">>>保存直前のスケジュールid:", plan_instance.schedule_id)
+            print(">>>保存直前のスケジュールオブジェクト:", plan_instance.schedule)
+            
             
             plan_instance.save()
             print("保存直後 一覧:", Plan.objects.all())
+            print(">>>保存ごのスケジュールid:", plan_instance.schedule_id)
             
             for link in link_formset.save(commit=False):
                 link.plan = plan_instance
