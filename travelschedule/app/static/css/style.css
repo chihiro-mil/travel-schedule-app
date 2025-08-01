@@ -566,6 +566,19 @@
     margin-right: 5px;
 }
 
+.trip-warning {
+    color: #ff0000;
+    font-weight: bold;
+    font-size: 0.95em;
+    margin-top: 10px;
+}
+
+.trip-warning-example {
+    font-weight: normal;
+    font-size: 0.9em;
+    color: #ff0000;
+}
+
 /*予定表追加モーダル PC用*/
 @media screen and (min-width: 600px) {
     .modal-content {

@@ -127,9 +127,14 @@
                 <input type="text" name="title" id="editTitle" required>
 
                 <label>旅行期間</label>
-                <input type="text" id="editTripStart" readonly>
+                <input type="text" id="editTripStart" readonly data-original="{{ schedule.start_date }}">
                 <span>～</span>
-                <input type="text" id="editTripEnd" readonly>
+                <input type="text" id="editTripEnd" readonly data-original="{{ schedule.end_date }}">
+                <p class="trip-warning">
+                    ※旅行期間を短く変更すると、期間外の予定は自動的に削除されます。削除された予定は元に戻せません。
+                    <br>
+                    <span class="trip-warning-example">（例：旅行期間を8/1～8/3に変更すると、8/4以降の予定は削除されます。）</span>
+                </p>
 
                 <button type="submit">保存</button>
             </form>
@@ -156,6 +161,48 @@
 
 
     <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        /*flatpickr初期化*/
+        const editTripStartCalendar = flatpickr("#editTripStart", {
+            dateFormat: "Y-m-d",
+            locale: "ja",
+            onChange: function(selectedDates, dateStr, instance) {
+                editTripEndCalendar.set("minDate", dateStr);
+            }
+        });
+
+        const editTripEndCalendar = flatpickr("#editTripEnd", {
+            dateFormat: "Y-m-d",
+            locale: "ja",
+            onChange: function(selectedDates, dateStr, instance) {
+                editTripStartCalendar.set("maxDate", dateStr);
+            }
+        });
+
+        /*予定期間変更警告モーダル*/
+        const saveBtn = document.querySelector("#editModal button[type='submit']");
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function (e) {
+                    const startInput = document.getElementById('editTripStart');
+                    const endInput = document.getElementById('editTripEnd');
+
+                    const originalStart = startInput.dataset.original;
+                    const originalEnd = endInput.dataset.original;
+
+                    console.log("現在の終了日：", endInput.value);
+                    console.log("元の終了日：", originalEnd);
+                    console.log("比較結果：", newEnd < oldEnd);
+
+                    if (originalEnd && endInput.value < originalEnd) {
+                        const confirmed = confirm("旅行期間を短くすると、期間外の予定は削除されます。よろしいですか？");
+                        if (!confirmed) {
+                            e.preventDefault();
+                        }
+                    }
+                });
+            }
+
         const modal = document.getElementById("modal");
         const openBtn = document.getElementById("openModalBtn");
         const closeBtn = document.getElementById("closeModalBtn");
@@ -184,7 +231,7 @@
             }
         });
 
-/*ケバブメニュー開閉*/
+        /*ケバブメニュー開閉*/
         document.querySelectorAll(".schedule-card-wrapper").forEach(wrapper => {
             const icon = wrapper.querySelector(".kebab-icon");
             const dropdown = wrapper.querySelector(".kebab-dropdown");
@@ -256,12 +303,15 @@
                 document.getElementById("editTripStart").value = start;
                 document.getElementById("editTripEnd").value = end;
 
+                document.getElementById("editTripStart").setAttribute("data-original", start);
+                document.getElementById("editTripEnd").setAttribute("data-original", end);
+
                 const startInput = document.getElementById("editTripStart");
                 const endInput = document.getElementById("editTripEnd");
 
-                startInput.readOnly = true;
+                startInput.readOnly = false;
                 startInput.style.backgroundColor = "#f0f0f0";
-                endInput.readOnly = true;
+                endInput.readOnly = false;
                 endInput.style.backgroundColor = "#f0f0f0";
 
                 document.getElementById("editModal").classList.remove("hidden");
@@ -296,6 +346,7 @@
         let lastScrollTop = 0;
         const footer = document.querySelector('.footer-nav');
 
+
         window.addEventListener('scroll', function() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
@@ -306,6 +357,7 @@
             }
             lastScrollTop = scrollTop <= 0 ? 0 :scrollTop;
         });
+    });
     </script>
 </body>
 </html>
