@@ -315,9 +315,10 @@ def schedule_detail_view(request, schedule_id):
     return render(request, 'app/schedule_detail.html', context)
 
 #予定削除モーダル
-@require_POST
+@login_required
 def plan_delete_view(request, plan_id):
+    if request.method == 'POST':
         plan = get_object_or_404(Plan, id=plan_id)
         schedule_id = plan.schedule.id
         plan.delete()
-        return redirect('schedule_detail', schedule_id =  schedule_id)
+        return redirect('app:schedule_detail', schedule_id =  schedule_id)
