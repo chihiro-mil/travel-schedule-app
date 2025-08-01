@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.db.models import Prefetch
 from django.views.decorators.http import require_POST
 from django.utils.timezone import localtime
+from django.forms import inlineformset_factory
+
 
 
 from .forms import (
@@ -18,6 +20,10 @@ from .forms import (
     ChangeUsernameForm, 
     ChangeEmailForm,
     CustomPasswordChangeForm,
+    BasePictureFormSet,
+    BaseLinkFormSet,
+    PictureForm,
+    LinkForm,
 )
 
 from .models import User, Schedule, Plan, Link, Picture, TransportationMethod
@@ -162,6 +168,16 @@ def delete_schedule(request, schedule_id):
         return redirect('app:home')
     return redirect('app:home')
 
+
+PictureFormSet = inlineformset_factory(
+    Plan, Picture, form=PictureForm, formset=BasePictureFormSet,
+    extra=10, can_delete=True
+)
+LinkFormSet = inlineformset_factory(
+    Plan, Link, form=LinkForm, formset=BaseLinkFormSet,
+    extra=5, can_delete=True
+)
+
 #予定追加・編集画面
 @login_required
 def plan_create_or_edit_view(request, schedule_id, plan_id=None):
@@ -180,8 +196,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             trip_dates=trip_choices
         )
         
-        link_formset = LinkFormSet(request.POST, request.FILES, prefix='links')
-        picture_formset = PictureFormSet(request.POST, request.FILES, prefix='pictures')
+        link_formset = LinkFormSet(request.POST, request.FILES, instance=plan, prefix='links')
+        picture_formset = PictureFormSet(request.POST, request.FILES, instance=plan, prefix='pictures')
         
         selected_category = request.POST.get('action_category') or ''
         print("selected_category from POST:", selected_category)
@@ -258,8 +274,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             form = PlanForm(instance=plan, trip_dates=trip_choices, initial=initial)
 
             
-            link_formset = LinkFormSet(queryset=Link.objects.filter(plan=plan), prefix='links')
-            picture_formset = PictureFormSet(queryset=Picture.objects.filter(plan=plan), prefix='pictures')
+            link_formset = LinkFormSet(instance=plan, prefix='links')
+            picture_formset = PictureFormSet(instance=plan, prefix='pictures')
         else:
             form = PlanForm(trip_dates=trip_choices)
             link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')

@@ -11,6 +11,7 @@ from django.forms import modelformset_factory
 from django.utils import timezone
 from django.contrib.auth.forms import PasswordChangeForm
 import datetime
+from django.forms import BaseInlineFormSet
 
 
 
@@ -386,3 +387,15 @@ class PictureForm(forms.ModelForm):
             }),
         }
 PictureFormSet = modelformset_factory(Picture, form=PictureForm, extra=10, max_num=10, can_delete=False)
+
+class BasePictureFormSet(BaseInlineFormSet):
+    def _construct_form(self, i, **kwargs):
+        form = super()._construct_form(i, **kwargs)
+        form.empty_permitted = True
+        return form
+
+class BaseLinkFormSet(BaseInlineFormSet):
+    def _construct_form(self, i, **kwargs):
+        form = super()._construct_form(i, **kwargs)
+        form.empty_permitted = True
+        return form
