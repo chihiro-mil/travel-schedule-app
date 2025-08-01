@@ -242,10 +242,10 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 'selected_category': selected_category,
             })
     else:
+        selected_category = plan.action_category if plan else ''
         form = PlanForm(instance=plan, trip_dates=trip_choices)
         link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')
         picture_formset = PictureFormSet(queryset=Picture.objects.none(), prefix='pictures')
-        selected_category = ''
         print("PlanForm errors:", form.errors)
         print("LinkFormSet errors:", link_formset.errors)
         print("PictureFormSet errors:" , picture_formset.errors)

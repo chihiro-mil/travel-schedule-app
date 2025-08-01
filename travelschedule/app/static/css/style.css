@@ -972,3 +972,9 @@ h2 {
     height: auto;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
+
+.delete-modal .delete-modal-content {
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+}
