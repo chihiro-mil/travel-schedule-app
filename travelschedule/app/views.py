@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Prefetch
 from django.views.decorators.http import require_POST
+from django.utils.timezone import localtime
 
 
 from .forms import (
@@ -243,7 +244,20 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             })
     else:
         selected_category = plan.action_category if plan else ''
-        form = PlanForm(instance=plan, trip_dates=trip_choices)
+        if plan:
+            initial = {}
+            if plan.start_datetime:
+                local_start = localtime(plan.start_datetime)
+                initial['start_date'] = local_start.date()
+                initial['start_time'] = local_start.time()
+            if plan.end_datetime:
+                local_end = localtime(plan.end_datetime)
+                initial['end_date'] = local_end.date()
+                initial['end_time'] = local_end.time()
+            form = PlanForm(instance=plan, trip_dates=trip_choices, initial=initial)
+        else:
+            form = PlanForm(trip_dates=trip_choices)
+            
         link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')
         picture_formset = PictureFormSet(queryset=Picture.objects.none(), prefix='pictures')
         print("PlanForm errors:", form.errors)
