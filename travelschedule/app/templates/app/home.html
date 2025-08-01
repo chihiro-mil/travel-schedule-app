@@ -164,14 +164,6 @@
     document.addEventListener("DOMContentLoaded", function () {
 
         /*flatpickr初期化*/
-        const editTripStartCalendar = flatpickr("#editTripStart", {
-            dateFormat: "Y-m-d",
-            locale: "ja",
-            onChange: function(selectedDates, dateStr, instance) {
-                editTripEndCalendar.set("minDate", dateStr);
-            }
-        });
-
         const editTripEndCalendar = flatpickr("#editTripEnd", {
             dateFormat: "Y-m-d",
             locale: "ja",
@@ -180,15 +172,27 @@
             }
         });
 
+        const editTripStartCalendar = flatpickr("#editTripStart", {
+            dateFormat: "Y-m-d",
+            locale: "ja",
+            onChange: function(selectedDates, dateStr, instance) {
+                editTripEndCalendar.set("minDate", dateStr);
+            }
+        });
+
         /*予定期間変更警告モーダル*/
-        const saveBtn = document.querySelector("#editModal button[type='submit']");
+        const saveBtn = document.querySelector("#editModal form");
             if (saveBtn) {
-                saveBtn.addEventListener('click', function (e) {
+                saveBtn.addEventListener('submit', function (e) {
                     const startInput = document.getElementById('editTripStart');
                     const endInput = document.getElementById('editTripEnd');
 
                     const originalStart = startInput.dataset.original;
                     const originalEnd = endInput.dataset.original;
+
+                    const newEnd = new Date(endInput.value);
+                    const oldEnd = new Date(originalEnd);
+
 
                     console.log("現在の終了日：", endInput.value);
                     console.log("元の終了日：", originalEnd);
