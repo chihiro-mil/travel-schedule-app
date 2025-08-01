@@ -318,10 +318,17 @@
                     {{ picture_formset.management_form }}
                     {% for form in picture_formset %}
                         <div class="picture-form">
-                            <div class="image-preview-wrapper">
-                                {{ form.image }}
-                                <span class="remove-picture" title="消去">&times;</span>
-                            </div>
+                            {% if form.instance.pk and form.instance.image %}
+                                <div class="image-preview-wrapper">
+                                    {{ form.image }}
+                                    <span class="remove-picture" title="消去">&times;</span>
+                                </div>
+                            {% endif%}
+                            {{ form.image.as_widget }}
+
+                            {% if form.DELETE %}
+                                <label style="margin-lift: 10px;">削除 {{ form.DELETE }}</label>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>

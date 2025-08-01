@@ -179,6 +179,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             instance=plan,
             trip_dates=trip_choices
         )
+        
         link_formset = LinkFormSet(request.POST, request.FILES, prefix='links')
         picture_formset = PictureFormSet(request.POST, request.FILES, prefix='pictures')
         
@@ -255,11 +256,14 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 initial['end_date'] = local_end.date()
                 initial['end_time'] = local_end.time()
             form = PlanForm(instance=plan, trip_dates=trip_choices, initial=initial)
+
+            
+            link_formset = LinkFormSet(queryset=Link.objects.filter(plan=plan), prefix='links')
+            picture_formset = PictureFormSet(queryset=Picture.objects.filter(plan=plan), prefix='pictures')
         else:
             form = PlanForm(trip_dates=trip_choices)
-            
-        link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')
-        picture_formset = PictureFormSet(queryset=Picture.objects.none(), prefix='pictures')
+            link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')
+            picture_formset = PictureFormSet(queryset=Picture.objects.none(), prefix='pictures')
         print("PlanForm errors:", form.errors)
         print("LinkFormSet errors:", link_formset.errors)
         print("PictureFormSet errors:" , picture_formset.errors)
