@@ -185,111 +185,113 @@
         });
 
 /*ケバブメニュー開閉*/
-document.querySelectorAll(".schedule-card-wrapper").forEach(wrapper => {
-    const icon = wrapper.querySelector(".kebab-icon");
-    const dropdown = wrapper.querySelector(".kebab-dropdown");
+        document.querySelectorAll(".schedule-card-wrapper").forEach(wrapper => {
+            const icon = wrapper.querySelector(".kebab-icon");
+            const dropdown = wrapper.querySelector(".kebab-dropdown");
 
-    if(icon && dropdown) {
-        icon.addEventListener("click", (e) => {
-            e.stopPropagation();
-            document.querySelectorAll(".kebab-dropdown").forEach(menu => {
+            if(icon && dropdown) {
+                icon.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll(".kebab-dropdown").forEach(menu => {
+                        menu.classList.add("hidden");
+                    });
+                    dropdown.classList.toggle("hidden");
+                });
+
+                dropdown.querySelectorAll("button").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                });
+                });
+            }
+        });
+
+        document.addEventListener("click", () => {
+            document.querySelectorAll('.kebab-dropdown').forEach(menu => {
                 menu.classList.add("hidden");
             });
-            dropdown.classList.toggle("hidden");
         });
 
-        dropdown.querySelectorAll("button").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            e.stopPropagation();
+
+        document.querySelectorAll(".schedule-link").forEach(link => {
+            link.addEventListener("click", (e) => {
+                if (e.target.closest("kebab-menu")) {
+                    e.preventDefault();
+                }
+            });
         });
+
+
+
+        document.querySelectorAll(".edit-button").forEach(button => {
+            button.addEventListener("click", function () {
+                const scheduleId = this.dataset.scheduleId;
+                const title = this.dataset.title;
+                const start = this.dataset.start;
+                const end = this.dataset.end;
+
+                document.getElementById("editScheduleId").value = scheduleId;
+                document.getElementById("editTitle").value = title;
+                document.getElementById("editTripStart").value = start;
+                document.getElementById("editTripEnd").value = end;
+
+                document.getElementById("editModal").classList.remove("hidden");
+            });
         });
-    }
-});
 
-document.addEventListener("click", () => {
-    document.querySelectorAll('.kebab-dropdown').forEach(menu => {
-        menu.classList.add("hidden");
-    });
-});
+        document.getElementById("editModalClose").addEventListener("click", function () {
+            document.getElementById("editModal").classList.add("hidden");
+        });
 
+        document.querySelectorAll(".edit-schedule-btn").forEach(function (button) {
+            button.addEventListener("click", function () {
+                console.log("タイトル編集");
+                const scheduleId = this.dataset.scheduleId;
+                const title = this.dataset.title;
+                const start = this.dataset.start;
+                const end = this.dataset.end;
 
-document.querySelectorAll(".schedule-link").forEach(link => {
-    link.addEventListener("click", (e) => {
-        if (e.target.closest("kebab-menu")) {
-            e.preventDefault();
+                document.getElementById("editScheduleId").value = scheduleId;
+                document.getElementById("editTitle").value = title;
+                document.getElementById("editTripStart").value = start;
+                document.getElementById("editTripEnd").value = end;
+
+                const startInput = document.getElementById("editTripStart");
+                const endInput = document.getElementById("editTripEnd");
+
+                startInput.readOnly = true;
+                startInput.style.backgroundColor = "#f0f0f0";
+                endInput.readOnly = true;
+                endInput.style.backgroundColor = "#f0f0f0";
+
+                document.getElementById("editModal").classList.remove("hidden");
+            });
+        });
+
+        /*消去モーダル*/
+
+        document.querySelectorAll(".delete-schedule-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const scheduleId = button.dataset.scheduleId;
+                document.getElementById("deleteScheduleId").value = scheduleId;
+                document.getElementById("deleteModal").classList.remove("hidden");
+            });
+        });
+
+        const deleteModalCloseBtn = document.getElementById("deleteModalClose");
+        if (deleteModalCloseBtn) {
+            deleteModalCloseBtn.addEventListener("click", () => {
+                console.log("ボタン");
+                document.getElementById("deleteModal").classList.add("hidden");
+            });
         }
-    });
-});
 
-
-
-document.querySelectorAll(".edit-button").forEach(button => {
-    button.addEventListener("click", function () {
-        const scheduleId = this.dataset.scheduleId;
-        const title = this.dataset.title;
-        const start = this.dataset.start;
-        const end = this.dataset.end;
-
-        document.getElementById("editScheduleId").value = scheduleId;
-        document.getElementById("editTitle").value = title;
-        document.getElementById("editTripStart").value = start;
-        document.getElementById("editTripEnd").value = end;
-
-        document.getElementById("editModal").classList.remove("hidden");
-    });
-});
-
-document.getElementById("editModalClose").addEventListener("click", function () {
-    document.getElementById("editModal").classList.add("hidden");
-});
-
-document.querySelectorAll(".edit-schedule-btn").forEach(function (button) {
-    button.addEventListener("click", function () {
-        const scheduleId = this.dataset.scheduleId;
-        const title = this.dataset.title;
-        const start = this.dataset.start;
-        const end = this.dataset.end;
-
-        document.getElementById("editScheduleId").value = scheduleId;
-        document.getElementById("editTitle").value = title;
-        document.getElementById("editTripStart").value = start;
-        document.getElementById("editTripEnd").value = end;
-
-        const startInput = document.getElementById("editTripStart");
-        const endInput = document.getElementById("editTripEnd");
-
-        startInput.readOnly = true;
-        startInput.style.backgroundColor = "#f0f0f0";
-        endInput.readOnly = true;
-        endInput.style.backgroundColor = "#f0f0f0";
-
-        document.getElementById("editModal").classList.remove("hidden");
-    });
-});
-
-/*消去モーダル*/
-
-document.querySelectorAll(".delete-schedule-btn").forEach(button => {
-    button.addEventListener("click", () => {
-        const scheduleId = button.dataset.scheduleId;
-        document.getElementById("deleteScheduleId").value = scheduleId;
-        document.getElementById("deleteModal").classList.remove("hidden");
-    });
-});
-
-const deleteModalCloseBtn = document.getElementById("deleteModalClose");
-if (deleteModalCloseBtn) {
-    deleteModalCloseBtn.addEventListener("click", () => {
-        document.getElementById("deleteModal").classList.add("hidden");
-    });
-}
-
-const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
-if (cancelDeleteBtn) {
-    cancelDeleteBtn.addEventListener("click", () => {
-        document.getElementById("deleteModal").classList.add("hidden");
-    });
-}
+        const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+        if (cancelDeleteBtn) {
+            cancelDeleteBtn.addEventListener("click", () => {
+                document.getElementById("deleteModal").classList.add("hidden");
+            });
+        }
 
 
         let lastScrollTop = 0;

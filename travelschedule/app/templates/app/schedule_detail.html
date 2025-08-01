@@ -155,14 +155,15 @@
         </div>
     {% endfor %}
 
-    <div id="deleteModal" class="modal">
+    <div id="deleteModal" class="delete-modal hidden">
         <div class="modal-content">
-            <form method="POST" action="" id="deleteForm">
+            <p>この予定を削除してよろしいですか？</p>
+            <form method="POST" id="deleteForm" action="{% url 'app:plan_delete_view' 0 %}">
                 {% csrf_token %}
-                <p>この予定を削除してよろしいですか？</p>
+                <input type="hidden" name="plan_id" id="deletePlanIdInput">
                 <div class="modal-buttons">
-                    <button id="confirmDelete">はい</button>
-                    <button id="cancelDelete">いいえ</button>
+                    <button type="submit" id="confirmDelete">はい</button>
+                    <button type="button" id="cancelDelete">いいえ</button>
                 </div>
             </form>
         </div>
@@ -282,58 +283,34 @@
             });
 
             /*消去モーダル*/
+            const deleteModal = document.getElementById('deleteModal');
+            const deleteForm = document.getElementById('deleteForm');
+            const deleteInput = document.getElementById('deletePlanIdInput');
+            const cancelDeleteBtn = document.getElementById('cancelDelete');
 
-            let targetPlanId = null;
-            let selectedPlanId = null;
-            let selectedCard = null;
 
-            document.querySelectorAll('.delete-button').forEach(button => {
-                button.addEventListener('click', function () {
-                    selectedPlanId = this.dataset.planId;
-                    selectedCard = this.closest('.plan-card');
+            console.log(deleteModal, deleteForm, deleteInput, cancelDeleteBtn);
 
-                    const deleteForm = document.getElementById('deleteForm');
-                    deleteForm.action = `/plan/${selectedPlanId}/delete/`;
-                    
-                    document.getElementById('deleteModal').style.display = 'block';
+            document.querySelectorAll(".delete-plan-btn").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const planId = button.dataset.planId;
+                    console.log('消去対象のplanId:', planId);
+
+                    deleteInput.value = planId;
+
+                    const baseAction = deleteForm.getAttribute('action').replace(/\/\d+\/delete\/$/, '');
+                    deleteForm.setAttribute('action',`${baseAction}/${planId}/delete/`);
+
+                    console.log("モーダルを表示:");
+                    deleteModal.classList.remove('hidden');
+                    console.log("現在のクラス：", deleteModal.className);
                 });
             });
 
-            document.getElementById('cancelDelete').addEventListener('click', function () {
-                document.getElementById('deleteModal').style.display = 'none';
-                selectedPlanId = null;
-            });
-
-            document.getElementById('confirmDelete').addEventListener('click',function () {
-                if (!selectedPlanId) return;
-
-                fetch(`/plan/${selectedPlanId}/delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': getCookie('csrftoken'),
-                    }
-                })
-                .then(res => {
-                    if (res.ok) {
-                        if (selectedCard) selectedCard.remove();
-                        document.getElementById ('deleteModal').style.display = 'none';
-                    } else {
-                        alert("削除に失敗しました");
-                    }
-                })
-                .catch(error => {
-                    alert("通信エラーが発生しました");
-                });
-            });
-
-            function getCookie(name) {
-                const cookieValue = document.cookie
-                    .split('; ')
-                    .find(row => row.startsWith(name + "="))
-                    ?.split('=')[1];
-                return cookieValue || '';
-            }
-
+            cancelDeleteBtn.addEventListener('click', () => {
+                deleteModal.classList.add('hidden');
+                deleteInput.value = ''
+            })
 
 
             let lastScrollTop = 0;

@@ -959,6 +959,16 @@ h2 {
 }
 
 /*予定消去モーダル*/
-.modal {
-    display: none;
+.delete-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 2px solid black;
+    z-index: 9999;
+    width: 300px;
+    height: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }

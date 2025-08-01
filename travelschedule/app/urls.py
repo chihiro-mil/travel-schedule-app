@@ -20,5 +20,5 @@ urlpatterns = [
     path('mypage/password/', views.change_password_view, name='change_password'),
     path('edit_schedule_title/', views.edit_schedule_title, name='edit_schedule_title'),
     path('delete_schedule/<int:schedule_id>/', views.delete_schedule, name='delete_schedule'),
-    path('plan/<int:plan_id>/delete/', views.plan_delete_view, name='plan_delete'),
+    path('plan/<int:plan_id>/delete/', views.plan_delete_view, name='plan_delete_view'),
 ]
