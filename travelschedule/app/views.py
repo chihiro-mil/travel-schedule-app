@@ -249,6 +249,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         print("picture_formset.errors:", picture_formset.errors)
         
         if form.is_valid() and link_formset.is_valid() and picture_formset.is_valid():
+            print("フォームから受けとったスタート日", form.cleaned_data.get("start_date"))
+            print("フォームから受けとったスタート時間", form.cleaned_data.get("start_time"))
             print('フォームバリア:', form.is_valid())
             print('クリーン:', form.cleaned_data)
             print('このフォームは有効')
@@ -260,7 +262,14 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             print('start_datetime:', form.cleaned_data.get('start_datetime'))
             print('end_datetime:', form.cleaned_data.get('end_datetime'))
             
+            print(">>> form.instance.start_datetime(保存前のフォームインスタンス：)", form.instance.start_datetime)
+            print(">>> form.instance.end_datetime(保存前のフォームインスタンス：)", form.instance.end_datetime)
+            
             plan_instance = form.save(commit=False)
+            
+            print(">>> plan_instance.start_datetime(save(commit=False) 直後)", plan_instance.start_datetime)
+            print(">>> plan_instance.end_datetime(保存前のフォームインスタンス：)", plan_instance.end_datetime)
+            
             
             print("保存直前の plan_instans:")
             print("schedule_id:", plan_instance.schedule_id)
@@ -277,6 +286,10 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             plan_instance.save()
             print("保存直後 一覧:", Plan.objects.all())
             print(">>>保存ごのスケジュールid:", plan_instance.schedule_id)
+            
+            latest_plan = Plan.objects.get(pk=plan_instance.pk)
+            print("保存直後のDB上のstart_datetime", latest_plan.start_datetime)
+            print("保存直後のDB上のend_datetime", latest_plan.end_datetime)
             
             for link in link_formset.save(commit=False):
                 link.plan = plan_instance
@@ -356,12 +369,26 @@ def schedule_detail_view(request, schedule_id):
     
     plans_by_date = {}
     for plan in plans:
-        if plan.start_datetime:
-            date = plan.start_datetime.date()
-            if date not in plans_by_date:
-                plans_by_date[date] = []
-            plans_by_date[date].append(plan)
+        print(f"Plan ID: {plan.id}, start: {plan.start_datetime}, end: {plan.end_datetime}")
+        if plan.start_datetime and plan.end_datetime:
+            current_date = plan.start_datetime.date()
+            end_date = plan.end_datetime.date()
+            print("start_day", plan.start_datetime)
+            print("current_date", current_date)
+            print("end_date", end_date)
             
+            if current_date >end_date:
+                continue
+            
+            while current_date <= end_date:
+                print(f"name={plan.name or 'None'}, category={plan.action_category}, date={current_date}")
+
+                if current_date not in plans_by_date:
+                    plans_by_date[current_date] = []
+                plans_by_date[current_date].append(plan)
+                current_date += timedelta(days=1)
+
+
     date_list = []
     current_date = schedule.trip_start_date
     while current_date <= schedule.trip_end_date:

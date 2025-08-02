@@ -6,11 +6,9 @@ from django.contrib.auth import authenticate, get_user_model
 from .models import Schedule
 from .models import Plan, Link, Picture, TransportationMethod
 from datetime import datetime
-from datetime import date
 from django.forms import modelformset_factory
 from django.utils import timezone
 from django.contrib.auth.forms import PasswordChangeForm
-import datetime
 from django.forms import BaseInlineFormSet
 
 
@@ -278,10 +276,10 @@ class PlanForm(forms.ModelForm):
         end_datetime = None
         
         if start_date and start_time:
-            start_datetime = datetime.datetime.combine(start_date, start_time)
+            start_datetime = datetime.combine(start_date, start_time)
             
         if end_date and end_time:
-            end_datetime = datetime.datetime.combine(end_date, end_time)
+            end_datetime = datetime.combine(end_date, end_time)
         
         
         if action_category == 'move':
@@ -342,22 +340,29 @@ class PlanForm(forms.ModelForm):
             elif action_category =='stay':
                 self.add_error('end_time', '滞在終了時刻を入力してください。')
                     
+        if start_date and start_time:
+            cleaned_data['start_datetime'] = timezone.make_aware(datetime.combine(start_date, start_time))
+        else:
+            cleaned_data['start_datetime'] =  None
             
-            
-            
-            
-        cleaned_data['start_datetime'] = start_datetime
-        cleaned_data['end_datetime'] = end_datetime
+        if end_date and end_time:
+            cleaned_data['end_datetime'] = timezone.make_aware(datetime.combine(end_date, end_time))
+        else:
+            cleaned_data['end_datetime'] = None
             
         return cleaned_data
         
     
     def save(self, commit=True):
         instance = super().save(commit=False)
+        print("保存前 start_datetime:", self.cleaned_data.get('start_datetime'))
+        print("保存前 end_datetime:", self.cleaned_data.get('end_datetime'))
+        
         instance.start_datetime = self.cleaned_data.get('start_datetime')
         instance.end_datetime = self.cleaned_data.get('end_datetime')
         if commit:
             instance.save()
+            print("保存完了 instance:", instance.start_datetime, instance.end_datetime)
         return instance
     
     

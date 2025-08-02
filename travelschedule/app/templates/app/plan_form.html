@@ -398,6 +398,7 @@
                 });
             }
         }*/
+
         document.addEventListener('DOMContentLoaded', function () {
             /*バリエーションエラーメッセージ表示*/
             document.querySelectorAll('.category-fields').forEach(block => {
@@ -446,6 +447,7 @@
                     /*updateCategoryDisplay(selected);*/
                 });
             });
+            
             const checkedRadio = document.querySelector('input[name="action_category"]:checked');
             if (checkedRadio) {
                 const selected = checkedRadio.value;
