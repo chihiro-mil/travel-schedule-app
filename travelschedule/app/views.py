@@ -134,6 +134,17 @@ def logout_view(request):
 #ホーム画面（予定表一覧画面）
 @login_required
 def home_view(request):
+    sort = request.GET.get('sort', 'date')
+    
+    if sort == 'updated':
+        schedules = Schedule.objects.filter(user=request.user).order_by('-updated_at')
+        sort_label ='予定日降順に並び替え'
+        next_sort = 'date'
+    else:
+        schedules = Schedule.objects.filter(user=request.user).order_by('-trip_start_date')
+        sort_label = '更新順に並び替え'
+        next_sort = 'updated'
+        
     if request.method == 'POST':
         form = ScheduleForm(request.POST)
         if form.is_valid():
@@ -144,10 +155,11 @@ def home_view(request):
     else:
         form = ScheduleForm()
     
-    schedules = Schedule.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'app/home.html', {
         'form': form,
-        'schedules': schedules
+        'schedules': schedules,
+        'sort_label': sort_label,
+        'next_sort': next_sort,
     })
     
 #予定表のタイトル編集ケバブ

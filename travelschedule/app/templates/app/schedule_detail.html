@@ -39,10 +39,10 @@
                     <div class="plan-card">
                 {% endif %}
 
-                <div class="kebab-menu">
-                    <i class="fas fa-ellipsis-v kebab-icon"></i>
-                    <div class="kebab-dropdown hidden">
-                        <a href="{% url 'app:plan_edit' schedule.id plan.id %}" class="edit-plan-btn">編集</a>
+                <div class="plan-kebab-menu">
+                    <i class="fas fa-ellipsis-v plan-kebab-icon"></i>
+                    <div class="plan-kebab-dropdown hidden">
+                        <a href="{% url 'app:plan_edit' schedule.id plan.id %}" class="kebab-plan-btn">編集</a>
                         <button class="delete-plan-btn" data-plan-id="{{ plan.id }}">削除</button>
                     </div>
                 </div>
@@ -169,6 +169,10 @@
             </form>
         </div>
     </div>
+    <div id="imageModal" class="image-modal hidden">
+        <span id="closeImageModal" class="plan-close">&times;</span>
+        <img class="plan-modal-content" id="modalImage" src="">
+    </div>
     
     
     <footer class="footer-nav">
@@ -262,13 +266,13 @@
             });
 
             /*ケバブメニュー開閉*/
-            const kebabIcons = document.querySelectorAll('.kebab-icon');
+            const kebabIcons = document.querySelectorAll('.plan-kebab-icon');
 
             kebabIcons.forEach(icon => {
                 icon.addEventListener('click', () => {
                     const dropdown =icon.nextElementSibling;
 
-                    document.querySelectorAll('.kebab-dropdown').forEach(menu => {
+                    document.querySelectorAll('.plan-kebab-dropdown').forEach(menu => {
                         if (menu !== dropdown) menu.classList.add('hidden');
                     });
                     dropdown.classList.toggle('hidden');
@@ -276,8 +280,8 @@
             });
 
             document.addEventListener('click', (event) => {
-                if (!event.target.closest('.kebab-menu')) {
-                    document.querySelectorAll('.kebab-dropdown').forEach(menu => {
+                if (!event.target.closest('.plan-kebab-menu')) {
+                    document.querySelectorAll('.plan-kebab-dropdown').forEach(menu => {
                         menu.classList.add('hidden');
                     });
                 }
@@ -319,6 +323,32 @@
                     footer.style.transform = 'translateY(0)';
                 }
                 lastScrollTop = scrollTop <= 0 ? 0 :scrollTop;
+            });
+
+            const thumbnails = document.querySelectorAll('.plan-image');
+            const modal =document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const closeModal = document.getElementById('closeImageModal');
+
+            console.log("サムネイルのクリック処理準備ok");
+            console.log("画像の画素数", thumbnails.length);
+            
+            thumbnails.forEach(thumbnail => {
+                thumbnail.addEventListener('click', () => {
+                    console.log("画像がクリックされました：", thumbnail.src);
+                    console.log("表示画像:", modalImage.src)
+                    modalImage.src = thumbnail.src;
+                    modal.classList.remove('hidden');
+                });
+            });
+            closeModal.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                }
             });
         });
     </script>

@@ -20,34 +20,35 @@
             <i class="fas fa-house"></i>
             <span class="home-title">予定表一覧</span>
         </div>
-        <button class="sort-button">並び替え<br>（更新順）</button>
+        <a href="?sort={{ next_sort }}" class="sort-button">
+            並び替え<br>({{ sort_label }})
+        </a>
     </div>
 
 
     {% for schedule in schedules %}
         <div class="schedule-card-wrapper" style="position: relative;">
 
-            <div class="kebab-menu">
-                <i class="fas fa-ellipsis-v kebab-icon"></i>
-                <div class="kebab-dropdown hidden">
-
-                    <button class="edit-schedule-btn edit-button" 
-                            data-schedule-id="{{ schedule.id }}"
-                            data-title="{{ schedule.title }}"
-                            data-start="{{ schedule.trip_start_date }}"
-                            data-end="{{ schedule.trip_end_date }}">
-                        タイトルの変更
-                    </button>
-
-                    <button class="delete-schedule-btn" 
-                            data-schedule-id="{{ schedule.id }}">
-                        予定表を削除
-                    </button>
-                </div>
-            </div>
-            
-
             <div class="schedule-card">
+                <div class="kebab-menu">
+                    <i class="fas fa-ellipsis-v kebab-icon"></i>
+                    <div class="kebab-dropdown hidden">
+
+                        <button class="edit-schedule-btn edit-button" 
+                                data-schedule-id="{{ schedule.id }}"
+                                data-title="{{ schedule.title }}"
+                                data-start="{{ schedule.trip_start_date }}"
+                                data-end="{{ schedule.trip_end_date }}">
+                            タイトルの変更
+                        </button>
+
+                        <button class="delete-schedule-btn" 
+                                data-schedule-id="{{ schedule.id }}">
+                            予定表を削除
+                        </button>
+                    </div>
+                </div>
+
                 <div class="schedule-header">
                     <strong>
                         <a href="{% url 'app:schedule_detail' schedule.id %}" class="schedule-link">
