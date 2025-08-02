@@ -371,8 +371,8 @@ def schedule_detail_view(request, schedule_id):
     for plan in plans:
         print(f"Plan ID: {plan.id}, start: {plan.start_datetime}, end: {plan.end_datetime}")
         if plan.start_datetime and plan.end_datetime:
-            current_date = plan.start_datetime.date()
-            end_date = plan.end_datetime.date()
+            current_date = localtime(plan.start_datetime).date()
+            end_date = localtime(plan.end_datetime).date()
             print("start_day", plan.start_datetime)
             print("current_date", current_date)
             print("end_date", end_date)
