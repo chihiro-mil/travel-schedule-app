@@ -168,6 +168,17 @@ def edit_schedule_title(request):
             new_start = datetime.strptime(new_start_str, '%Y-%m-%d').date()
             new_end = datetime.strptime(new_end_str, '%Y-%m-%d').date()
             
+            delta = (new_start - old_start).days
+            
+            if delta != 0:
+                plans = Plan.objects.filter(schedule=schedule)
+                for plan in plans:
+                    if plan.start_datetime:
+                        plan.start_datetime += timedelta(days=delta)
+                    if plan.end_datetime:
+                        plan.end_datetime += timedelta(days=delta)
+                    plan.save()
+            
             Plan.objects.filter(
                 schedule=schedule,
                 start_datetime__date__lt=new_start
