@@ -119,7 +119,7 @@
     <div id="editModal" class="modal hidden">
         <div class="modal-content">
             <span class="close" id="editModalClose">&times;</span>
-            <form method="post" action="{% url 'app:edit_schedule_title' %}">
+            <form method="POST" action="{% url 'app:edit_schedule_title' %}">
                 {% csrf_token %}
                 <input type="hidden" name="schedule_id" id="editScheduleId">
 
@@ -127,9 +127,9 @@
                 <input type="text" name="title" id="editTitle" required>
 
                 <label>旅行期間</label>
-                <input type="text" id="editTripStart" readonly data-original="{{ schedule.start_date }}">
+                <input type="text" id="editTripStart" name="start_date" readonly data-original="{{ schedule.start_date }}">
                 <span>～</span>
-                <input type="text" id="editTripEnd" readonly data-original="{{ schedule.end_date }}">
+                <input type="text" id="editTripEnd" name="end_date" readonly data-original="{{ schedule.end_date }}">
                 <p class="trip-warning">
                     ※旅行期間を短く変更すると、期間外の予定は自動的に削除されます。削除された予定は元に戻せません。
                     <br>
@@ -187,18 +187,22 @@
                     const startInput = document.getElementById('editTripStart');
                     const endInput = document.getElementById('editTripEnd');
 
-                    const originalStart = startInput.dataset.original;
-                    const originalEnd = endInput.dataset.original;
+                    const originalStartStr = startInput.dataset.original.trim();
+                    const originalEndStr = endInput.dataset.original.trim();
+                    const newStartStr = startInput.value.trim();
+                    const newEndStr = endInput.value.trim();
 
-                    const newEnd = new Date(endInput.value);
-                    const oldEnd = new Date(originalEnd);
+                    const originalStart = new Date(originalStartStr);
+                    const originalEnd = new Date(originalEndStr);
+                    const newStart = new Date(newStartStr);
+                    const newEnd = new Date(newEndStr);
 
 
                     console.log("現在の終了日：", endInput.value);
                     console.log("元の終了日：", originalEnd);
                     console.log("比較結果：", newEnd < oldEnd);
 
-                    if (originalEnd && endInput.value < originalEnd) {
+                    if ((newStart < originalStart || newEnd < originalEnd)) {
                         const confirmed = confirm("旅行期間を短くすると、期間外の予定は削除されます。よろしいですか？");
                         if (!confirmed) {
                             e.preventDefault();

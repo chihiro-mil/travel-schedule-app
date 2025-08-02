@@ -158,8 +158,8 @@ def edit_schedule_title(request):
         schedule = get_object_or_404(Schedule, id=schedule_id)
         
         #未使用
-        old_start = schedule.start_date
-        old_end = schedule.end_date
+        old_start = schedule.trip_start_date
+        old_end = schedule.trip_end_date
         
         new_start_str = request.POST.get('start_date')
         new_end_str = request.POST.get('end_date')
@@ -167,20 +167,20 @@ def edit_schedule_title(request):
         if new_start_str and new_end_str:
             new_start = datetime.strptime(new_start_str, '%Y-%m-%d').date()
             new_end = datetime.strptime(new_end_str, '%Y-%m-%d').date()
+            
+            Plan.objects.filter(
+                schedule=schedule,
+                start_datetime__date__lt=new_start
+            ).delete()
+            Plan.objects.filter(
+                schedule=schedule,
+                end_datetime__date__gt=new_end
+            ).delete()
         
-        schedule.title = new_title
-        schedule.start_date = new_start
-        schedule.end_date = new_end        
-        schedule.save()
-        
-        Plan.objects.filter(
-            schedule=schedule,
-            start_datetime__date__lt=new_start
-        ).delete()
-        Plan.objects.filter(
-            schedule=schedule,
-            end_datetime__date__gt=new_end
-        ).delete()
+            schedule.title = new_title
+            schedule.trip_start_date = new_start
+            schedule.trip_end_date = new_end        
+            schedule.save()
         
     return redirect('app:home')
 
