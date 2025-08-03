@@ -847,12 +847,6 @@ input[type="radio"]:checked + label.label {
 
 /*予定詳細画面*/
 
-.plan-card.nested {
-    margin-right: 20px;
-    border: 5px solid red;
-    border-right: 3px solid #888;
-    background-color: #f9f9f9;
-}
 
 h2 {
     text-align: center;
@@ -904,22 +898,41 @@ h2 {
     border-radius: 8px;
     padding: 16px 60px 16px 60px;
     margin-bottom: 16px;
-    background-color: #c0c0c0;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 .plan-card.move {
+    background-color: #add8e6;
+}
+.plan-card.move.nest-1 {
+    transform: translateX(25px) !important;
+    border: 2px solid #000 !important;
     background-color: #add8e6;
 }
 
 .plan-card.sightseeing {
     background-color: #f0e68c;
 }
+.plan-card.sightseeing.nest-1 {
+    transform: translateX(25px) !important;
+    border: 2px solid #000 !important;
+    background-color: #f0e68c;
+}
 
 .plan-card.meal {
     background-color: #f08080;
 }
+.plan-card.meal.nest-1 {
+    transform: translateX(25px) !important;
+    border: 2px solid #000 !important;
+    background-color: #f08080;
+}
 
 .plan-card.stay {
+    background-color: #90ee90;
+}
+.plan-card.stay.nest-1 {
+    transform: translateX(25px) !important;
+    border: 2px solid #000 !important;
     background-color: #90ee90;
 }
 

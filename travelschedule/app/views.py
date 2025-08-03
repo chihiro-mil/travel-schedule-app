@@ -372,33 +372,46 @@ def generate_trip_date_choices(schedule):
 #予定詳細画面
 @login_required
 def schedule_detail_view(request, schedule_id):
-    schedule = get_object_or_404(Schedule, id=schedule_id)
+    schedule = get_object_or_404(Schedule, id=schedule_id, user=request.user)
     plans = Plan.objects.filter(schedule_id=schedule_id,).prefetch_related(
         Prefetch('links'),
         Prefetch('pictures'),
     ).order_by('start_datetime')
 
     
-    plans_by_date = {}
+    plans_by_date = defaultdict(list)
+    print(type(plans_by_date))
+    
     for plan in plans:
         print(f"Plan ID: {plan.id}, start: {plan.start_datetime}, end: {plan.end_datetime}")
         if plan.start_datetime and plan.end_datetime:
+            print(f"[VALID] Plan ID: {plan.id}, start:{plan.start_datetime}, end:{plan.end_datetime}")
             current_date = localtime(plan.start_datetime).date()
             end_date = localtime(plan.end_datetime).date()
             print("start_day", plan.start_datetime)
             print("current_date", current_date)
             print("end_date", end_date)
             
-            if current_date >end_date:
-                continue
-            
             while current_date <= end_date:
                 print(f"name={plan.name or 'None'}, category={plan.action_category}, date={current_date}")
-
-                if current_date not in plans_by_date:
-                    plans_by_date[current_date] = []
                 plans_by_date[current_date].append(plan)
                 current_date += timedelta(days=1)
+        
+        for date, day_plans in plans_by_date.items():
+            sorted_day_plans = sorted(day_plans, key=lambda p: p.start_datetime)
+            
+            for plan in sorted_day_plans:
+                print(f"{plan.name}: {plan.start_datetime}")
+            
+            active_ends = []
+            for plan in sorted_day_plans:
+                plan.nest_level = 0
+                for end in active_ends:
+                    if plan.start_datetime < end:
+                        plan.nest_level += 1
+                active_ends.append(plan.end_datetime)
+                
+            plans_by_date[date] = sorted_day_plans
 
 
     date_list = []
@@ -425,6 +438,7 @@ def schedule_detail_view(request, schedule_id):
         'sorted_dates': sorted_dates,
         'transportation_icon_map': transportation_icon_map,
         'schedule': schedule,
+        'sorted_dates': sorted(plans_by_date.keys()),
     }
     return render(request, 'app/schedule_detail.html', context)
 
