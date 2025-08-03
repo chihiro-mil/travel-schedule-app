@@ -1,4 +1,5 @@
 {% load static %}
+{% load tz %}
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -95,7 +96,7 @@
         </ul>
     </footer>
 
-    <div id="modal" class="modal hidden">
+    <div id="modal" class="modal schedule-add-modal-hidden">
         <div class="modal-content">
             <span id="closeModalBtn" class="close">&times;</span>
             <h2>予定表追加</h2>
@@ -117,10 +118,10 @@
         </div>
     </div>
 
-    <div id="editModal" class="modal hidden">
+    <div id="editModal" class="modal schedule-edit-modal-hidden">
         <div class="modal-content">
             <span class="close" id="editModalClose">&times;</span>
-            <form method="POST" action="{% url 'app:edit_schedule_title' %}">
+            <form id="editModalForm" method="POST" action="{% url 'app:edit_schedule_title' %}">
                 {% csrf_token %}
                 <input type="hidden" name="schedule_id" id="editScheduleId">
 
@@ -128,9 +129,9 @@
                 <input type="text" name="title" id="editTitle" required>
 
                 <label>旅行期間</label>
-                <input type="text" id="editTripStart" name="start_date" readonly data-original="{{ schedule.start_date }}">
+                <input type="text" id="editTripStart" name="start_date" readonly data-original="{{ schedule.trip_start_date|date:'Y-m-d' }}">
                 <span>～</span>
-                <input type="text" id="editTripEnd" name="end_date" readonly data-original="{{ schedule.end_date }}">
+                <input type="text" id="editTripEnd" name="end_date" readonly data-original="{{ schedule.trip_end_date|date:'Y-m-d' }}">
                 <p class="trip-warning">
                     ※旅行期間を短く変更すると、期間外の予定は自動的に削除されます。削除された予定は元に戻せません。
                     <br>
@@ -143,9 +144,8 @@
     </div>
 
     {% for schedule in schedules %}
-        <div id="deleteModal" class="modal hidden">
+        <div id="deleteModal" class="modal schedule-delete-modal-hidden">
             <div class="modal-content">
-                <span class="close" id="deleteModelClose">&times;</span>
                 <p>予定表を削除してよろしいですか？</p>
                 <form method="POST" action="{% url 'app:delete_schedule' schedule.id %}">
                     {% csrf_token %}
@@ -162,211 +162,261 @@
 
 
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-
-        /*flatpickr初期化*/
-        const editTripEndCalendar = flatpickr("#editTripEnd", {
-            dateFormat: "Y-m-d",
-            locale: "ja",
-            onChange: function(selectedDates, dateStr, instance) {
-                editTripStartCalendar.set("maxDate", dateStr);
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("js");
+            const deleteModal = document.getElementById("deleteModal");
+            
+            if (deleteModal) {
+                deleteModal.classList.add("schedule-delete-modal-hidden");
             }
-        });
+            /*flatpickr初期化*/
+            const editTripEndCalendar = flatpickr("#editTripEnd", {
+                dateFormat: "Y-m-d",
+                locale: "ja",
+                onChange: function(selectedDates, dateStr, instance) {
+                    editTripStartCalendar.set("maxDate", dateStr);
+                }
+            });
 
-        const editTripStartCalendar = flatpickr("#editTripStart", {
-            dateFormat: "Y-m-d",
-            locale: "ja",
-            onChange: function(selectedDates, dateStr, instance) {
-                editTripEndCalendar.set("minDate", dateStr);
-            }
-        });
+            const editTripStartCalendar = flatpickr("#editTripStart", {
+                dateFormat: "Y-m-d",
+                locale: "ja",
+                onChange: function(selectedDates, dateStr, instance) {
+                    editTripEndCalendar.set("minDate", dateStr);
+                }
+            });
 
-        /*予定期間変更警告モーダル*/
-        const saveBtn = document.querySelector("#editModal form");
-            if (saveBtn) {
-                saveBtn.addEventListener('submit', function (e) {
-                    const startInput = document.getElementById('editTripStart');
-                    const endInput = document.getElementById('editTripEnd');
+            /*予定期間変更警告モーダル*/
+            /*const saveBtn = document.querySelector("#editModalForm");
+                if (saveBtn) {
+                    console.log("saveBtn取得");
+                    saveBtn.addEventListener('submit', function (e) {
+                        e.preventDefault();
+                        console.log("submit発火");
+                        const startInput = document.getElementById('input[name="start_date"]');
+                        const endInput = document.getElementById('input[name="end_date"]');
+                        console.log("startInput", startInput);
+                        console.log("endInput", endInput);
 
-                    const originalStartStr = startInput.dataset.original.trim();
-                    const originalEndStr = endInput.dataset.original.trim();
-                    const newStartStr = startInput.value.trim();
-                    const newEndStr = endInput.value.trim();
-
-                    const originalStart = new Date(originalStartStr);
-                    const originalEnd = new Date(originalEndStr);
-                    const newStart = new Date(newStartStr);
-                    const newEnd = new Date(newEndStr);
+                        const originalStartStr = startInput.dataset.original;
+                        const originalEndStr = endInput.dataset.original;
+                        const newStartStr = startInput.value.trim();
+                        const newEndStr = endInput.value.trim();
 
 
-                    console.log("現在の終了日：", endInput.value);
-                    console.log("元の終了日：", originalEnd);
-                    console.log("比較結果：", newEnd < oldEnd);
+                        console.log("originalStartStr:", originalStartStr);
+                        console.log("originalEndStr:", originalEndStr);
+                        console.log("newStartStr", newStartStr);
+                        console.log("newEndStr", newEndStr);
 
-                    if ((newStart < originalStart || newEnd < originalEnd)) {
-                        const confirmed = confirm("旅行期間を短くすると、期間外の予定は削除されます。よろしいですか？");
-                        if (!confirmed) {
-                            e.preventDefault();
+                        const originalStart = new Date(originalStartStr);
+                        const originalEnd = new Date(originalEndStr);
+                        const newStart = new Date(newStartStr);
+                        const newEnd = new Date(newEndStr);
+
+                        console.log("originalStart", originalStart);
+                        console.log("originalEnd", originalEnd);
+                        console.log("newStart", newStart);
+                        console.log("newEnd", newEnd);
+
+
+                        console.log("現在の終了日：", endInput.value);
+                        console.log("元の終了日：", originalEnd);
+                        console.log("比較結果：", newEnd < originalnd);
+
+                        if ((newStart < originalStart || newEnd < originalEnd)) {
+                            const confirmed = confirm("旅行期間を短くすると、期間外の予定は削除されます。よろしいですか？");
+                            if (!confirmed) {
+                                e.preventDefault();
+                            }
                         }
+                    });
+                }
+
+            const modal = document.getElementById("modal");
+            const openBtn = document.getElementById("openModalBtn");
+            const closeBtn = document.getElementById("closeModalBtn");
+
+            if (openBtn && closeBtn && modal) {
+                openBtn.onclick = function (e) {
+                    e.preventDefault();
+                    modal.classList.remove("hidden");
+                };
+
+                const startInput = document.querySelector('input[name="start_date"]');
+                const endInput = document.querySelector('input[name="end_date"]');
+
+                console.log("startInput", startInput);
+                console.log("endInput", endInput);
+
+
+                if (startInput && endInput) {
+                    const originalStart = startInput.dataset.original;
+                    const originalEnd = endInput.dataset.original;
+
+                    console.log('originalStart', originalStart);
+                    console.log('originalEnd', originalEnd);
+                }
+
+                closeBtn.onclick = function () {
+                    modal.classList.add("hidden");
+                };
+            }*/
+
+            let fp = flatpickr("#dateRange", {
+                mode: "range",
+                dateFormat: "Y-m-d",
+                locale: "ja",
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length === 2){
+                        const start = selectedDates[0];
+                        const end = selectedDates[1];
+                        document.querySelector('input[name="trip_start_date"]').value = instance.formatDate(start, "Y-m-d");
+                        document.querySelector('input[name="trip_end_date"]').value = instance.formatDate(end, "Y-m-d");
+                    }
+                }
+            });
+
+            /*ケバブメニュー開閉*/
+            document.querySelectorAll(".schedule-card-wrapper").forEach(wrapper => {
+                const icon = wrapper.querySelector(".kebab-icon");
+                const dropdown = wrapper.querySelector(".kebab-dropdown");
+
+                if(icon && dropdown) {
+                    icon.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        document.querySelectorAll(".kebab-dropdown").forEach(menu => {
+                            menu.classList.add("hidden");
+                        });
+                        dropdown.classList.toggle("hidden");
+                    });
+
+                    dropdown.querySelectorAll("button").forEach(btn => {
+                    btn.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                    });
+                    });
+                }
+            });
+
+            document.addEventListener("click", () => {
+                document.querySelectorAll('.kebab-dropdown').forEach(menu => {
+                    menu.classList.add("hidden");
+                });
+            });
+
+
+            document.querySelectorAll(".schedule-link").forEach(link => {
+                link.addEventListener("click", (e) => {
+                    if (e.target.closest("kebab-menu")) {
+                        e.preventDefault();
                     }
                 });
+            });
+
+
+
+            document.querySelectorAll(".edit-button").forEach(button => {
+                button.addEventListener("click", function () {
+                    const scheduleId = this.dataset.scheduleId;
+                    const title = this.dataset.title;
+                    const start = this.dataset.start;
+                    const end = this.dataset.end;
+
+                    document.getElementById("editScheduleId").value = scheduleId;
+                    document.getElementById("editTitle").value = title;
+                    document.getElementById("editTripStart").value = start;
+                    document.getElementById("editTripEnd").value = end;
+
+                    document.getElementById("editModal").classList.remove("schedule-edit-modal-hidden");
+                });
+            });
+
+            const editModalCloseBtn = document.getElementById("editModalClose");
+            if (editModalCloseBtn) {
+                editModalCloseBtn.addEventListener("click", function () {
+                    document.getElementById("editModal").classList.add("schedule-edit-modal-hidden");
+                });
             }
 
-        const modal = document.getElementById("modal");
-        const openBtn = document.getElementById("openModalBtn");
-        const closeBtn = document.getElementById("closeModalBtn");
+            document.querySelectorAll(".edit-schedule-btn").forEach(function (button) {
+                button.addEventListener("click", function () {
+                    console.log("タイトル編集");
+                    const scheduleId = this.dataset.scheduleId;
+                    const title = this.dataset.title;
+                    const start = this.dataset.start;
+                    const end = this.dataset.end;
 
-        if (openBtn && closeBtn && modal) {
-            openBtn.onclick = function (e) {
-                e.preventDefault();
-                modal.classList.remove("hidden");
-            };
-            closeBtn.onclick = function () {
-                modal.classList.add("hidden");
-            };
-        }
+                    document.getElementById("editScheduleId").value = scheduleId;
+                    document.getElementById("editTitle").value = title;
+                    document.getElementById("editTripStart").value = start;
+                    document.getElementById("editTripEnd").value = end;
 
-        let fp = flatpickr("#dateRange", {
-            mode: "range",
-            dateFormat: "Y-m-d",
-            locale: "ja",
-            onChange: function(selectedDates, dateStr, instance) {
-                if (selectedDates.length === 2){
-                    const start = selectedDates[0];
-                    const end = selectedDates[1];
-                    document.querySelector('input[name="trip_start_date"]').value = instance.formatDate(start, "Y-m-d");
-                    document.querySelector('input[name="trip_end_date"]').value = instance.formatDate(end, "Y-m-d");
+                    document.getElementById("editTripStart").setAttribute("data-original", start);
+                    document.getElementById("editTripEnd").setAttribute("data-original", end);
+
+                    const startInput = document.getElementById("editTripStart");
+                    const endInput = document.getElementById("editTripEnd");
+
+                    startInput.readOnly = false;
+                    startInput.style.backgroundColor = "#f0f0f0";
+                    endInput.readOnly = false;
+                    endInput.style.backgroundColor = "#f0f0f0";
+
+                    document.getElementById("editModal").classList.remove("schedule-edit-modal-hidden");
+                });
+            });
+
+            /*消去モーダル*/
+
+            document.querySelectorAll(".delete-schedule-btn").forEach(button => {
+                button.addEventListener("click", () => {
+                    const scheduleId = button.dataset.scheduleId;
+                    document.getElementById("deleteScheduleId").value = scheduleId;
+                    document.getElementById("deleteModal").classList.remove("schedule-delete-modal-hidden");
+                });
+            });
+
+            const deleteModalCloseBtn = document.getElementById("deleteModalClose");
+            if (deleteModalCloseBtn) {
+                deleteModalCloseBtn.addEventListener("click", () => {
+                    document.getElementById("deleteModal").classList.add("schedule-delete-modal-hidden");
+                });
+            }
+
+            const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+            if (cancelDeleteBtn) {
+                cancelDeleteBtn.addEventListener("click", () => {
+                    document.getElementById("deleteModal").classList.add("schedule-delete-modal-hidden");
+                });
+            }
+
+            /*予定追加モーダルキャンセルボタン*/
+            const addModal = document.getElementById("modal");
+            const closeAddModalBtn = document.getElementById("closeAddModalBtn");
+
+            if (addModal && closeAddModalBtn) {
+                closeAddModalBtn.addEventListener("click", function () {
+                    addModal.classList.add("schedule-add-modal-hidden");
+                });
+            }
+
+
+            let lastScrollTop = 0;
+            const footer = document.querySelector('.footer-nav');
+
+
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (scrollTop > lastScrollTop) {
+                    footer.style.transform = 'translateY(100%)';
+                } else {
+                    footer.style.transform = 'translateY(0)';
                 }
-            }
-        });
-
-        /*ケバブメニュー開閉*/
-        document.querySelectorAll(".schedule-card-wrapper").forEach(wrapper => {
-            const icon = wrapper.querySelector(".kebab-icon");
-            const dropdown = wrapper.querySelector(".kebab-dropdown");
-
-            if(icon && dropdown) {
-                icon.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    document.querySelectorAll(".kebab-dropdown").forEach(menu => {
-                        menu.classList.add("hidden");
-                    });
-                    dropdown.classList.toggle("hidden");
-                });
-
-                dropdown.querySelectorAll("button").forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                });
-                });
-            }
-        });
-
-        document.addEventListener("click", () => {
-            document.querySelectorAll('.kebab-dropdown').forEach(menu => {
-                menu.classList.add("hidden");
+                lastScrollTop = scrollTop <= 0 ? 0 :scrollTop;
             });
         });
-
-
-        document.querySelectorAll(".schedule-link").forEach(link => {
-            link.addEventListener("click", (e) => {
-                if (e.target.closest("kebab-menu")) {
-                    e.preventDefault();
-                }
-            });
-        });
-
-
-
-        document.querySelectorAll(".edit-button").forEach(button => {
-            button.addEventListener("click", function () {
-                const scheduleId = this.dataset.scheduleId;
-                const title = this.dataset.title;
-                const start = this.dataset.start;
-                const end = this.dataset.end;
-
-                document.getElementById("editScheduleId").value = scheduleId;
-                document.getElementById("editTitle").value = title;
-                document.getElementById("editTripStart").value = start;
-                document.getElementById("editTripEnd").value = end;
-
-                document.getElementById("editModal").classList.remove("hidden");
-            });
-        });
-
-        document.getElementById("editModalClose").addEventListener("click", function () {
-            document.getElementById("editModal").classList.add("hidden");
-        });
-
-        document.querySelectorAll(".edit-schedule-btn").forEach(function (button) {
-            button.addEventListener("click", function () {
-                console.log("タイトル編集");
-                const scheduleId = this.dataset.scheduleId;
-                const title = this.dataset.title;
-                const start = this.dataset.start;
-                const end = this.dataset.end;
-
-                document.getElementById("editScheduleId").value = scheduleId;
-                document.getElementById("editTitle").value = title;
-                document.getElementById("editTripStart").value = start;
-                document.getElementById("editTripEnd").value = end;
-
-                document.getElementById("editTripStart").setAttribute("data-original", start);
-                document.getElementById("editTripEnd").setAttribute("data-original", end);
-
-                const startInput = document.getElementById("editTripStart");
-                const endInput = document.getElementById("editTripEnd");
-
-                startInput.readOnly = false;
-                startInput.style.backgroundColor = "#f0f0f0";
-                endInput.readOnly = false;
-                endInput.style.backgroundColor = "#f0f0f0";
-
-                document.getElementById("editModal").classList.remove("hidden");
-            });
-        });
-
-        /*消去モーダル*/
-
-        document.querySelectorAll(".delete-schedule-btn").forEach(button => {
-            button.addEventListener("click", () => {
-                const scheduleId = button.dataset.scheduleId;
-                document.getElementById("deleteScheduleId").value = scheduleId;
-                document.getElementById("deleteModal").classList.remove("hidden");
-            });
-        });
-
-        const deleteModalCloseBtn = document.getElementById("deleteModalClose");
-        if (deleteModalCloseBtn) {
-            deleteModalCloseBtn.addEventListener("click", () => {
-                document.getElementById("deleteModal").classList.add("hidden");
-            });
-        }
-
-        const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
-        if (cancelDeleteBtn) {
-            cancelDeleteBtn.addEventListener("click", () => {
-                document.getElementById("deleteModal").classList.add("hidden");
-            });
-        }
-
-
-        let lastScrollTop = 0;
-        const footer = document.querySelector('.footer-nav');
-
-
-        window.addEventListener('scroll', function() {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-            if (scrollTop > lastScrollTop) {
-                footer.style.transform = 'translateY(100%)';
-            } else {
-                footer.style.transform = 'translateY(0)';
-            }
-            lastScrollTop = scrollTop <= 0 ? 0 :scrollTop;
-        });
-    });
     </script>
 </body>
 </html>

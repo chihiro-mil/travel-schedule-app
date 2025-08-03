@@ -142,9 +142,9 @@
                                     <p><strog>写真：</strog></p>
                                     <div class="picture-grid">
                                         {% for picture in plan.pictures.all %}
-                                            {% if picture.image %}
+                                            <a href="{{ picture.image.url }}" class="thumbnail" data-image-url="{{ picture.image.url}}">
                                                 <img src="{{ picture.image.url }}" alt="plan image" class="plan-image">
-                                            {% endif %}
+                                            </a>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -156,7 +156,7 @@
         </div>
     {% endfor %}
 
-    <div id="deleteModal" class="delete-modal hidden">
+    <div id="deleteModal" class="delete-modal delete-modal-hidden">
         <div class="delete-modal-content">
             <p>この予定を削除してよろしいですか？</p>
             <form method="POST" id="deleteForm" action="">
@@ -169,7 +169,7 @@
             </form>
         </div>
     </div>
-    <div id="imageModal" class="image-modal hidden">
+    <div id="imageModal" class="image-modal modal-hidden">
         <span id="closeImageModal" class="plan-close">&times;</span>
         <img class="plan-modal-content" id="modalImage" src="">
     </div>
@@ -207,44 +207,23 @@
             </li>
         </ul>
 
-    <!--<div id="day-contents">
-        {% for date, plans in plans_by_date.items %}
-            <div class="day-content {% if not forloop.first %}hidden{% endif %}" id="day{{ forloop.counter }}">
-                {% for plans in plans %}
-                    <div class="plan-card">
-                        {% if plan.action_category != "移動" %}
-                            <i class="fa-solid
-                            {% if plan.action_category == "観光地" %}
-                                fa-location-dot
-                            {% elif plan.action_category == "食事" %}
-                                fa-utensils
-                            {% elif plan.action_category == "宿泊" %}
-                                fa-bed
-                            {% endif %}
-                            "></i>
-                        {% endif %}
-                        <p>{{ plan.name }}({{ plan.action_category }})</p>
-                        <p>{{ plan.start_datetime|date:"H:i" }} ～ {{ plan.end_datetime|date:"H:i" }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endfor %}
-    </div>
-
-    {% if plan.action_category == "移動" %}
-        {% with icon_class=icon_class_map|get_item:plan.id %}
-            <div class="transportation-icon">
-                <i class="fas {{ icon_class }}"</i>
-            </div>
-        {% endwith %}
-    {% endif %}
-
-        </div>
-
-    </div>
-</div>-->
+    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+            const deleteModal = document.getElementById('deleteModal');
+            const deleteInput = document.getElementById('deletePlanIdInput');
+            const deleteForm = document.getElementById('deleteForm');
+            const cancelDeleteBtn = document.getElementById('cancelDelete');
+
+            if (deleteModal) {
+                deleteModal.classList.add('delete-modal-hidden');
+                console.log('モーダルを強制');
+            }
+            if (deleteInput) {
+                deleteInput.value = '';
+            }
+
             /*日付のボタン機能*/
             const tabs = document.querySelectorAll('.day-tab');
             const blocks = document.querySelectorAll('.day-block');
@@ -288,10 +267,6 @@
             });
 
             /*消去モーダル*/
-            const deleteModal = document.getElementById('deleteModal');
-            const deleteForm = document.getElementById('deleteForm');
-            const deleteInput = document.getElementById('deletePlanIdInput');
-            const cancelDeleteBtn = document.getElementById('cancelDelete');
 
             document.querySelectorAll(".delete-plan-btn").forEach((button) => {
                 button.addEventListener("click", () => {
@@ -301,12 +276,12 @@
                     deleteForm.setAttribute('action', deleteUrl);
                     deleteInput.value = planId;
 
-                    deleteModal.classList.remove('hidden');
+                    deleteModal.classList.remove('delete-modal-hidden');
                 });
             });
 
             cancelDeleteBtn.addEventListener('click', () => {
-                deleteModal.classList.add('hidden');
+                deleteModal.classList.add('delete-modal-hidden');
                 deleteInput.value = ''
             });
 
@@ -325,33 +300,31 @@
                 lastScrollTop = scrollTop <= 0 ? 0 :scrollTop;
             });
 
-            const thumbnails = document.querySelectorAll('.plan-image');
+
+            /*写真拡大表示*/
+            const thumbnails = document.querySelectorAll('.thumbnail');
             const modal =document.getElementById('imageModal');
             const modalImage = document.getElementById('modalImage');
-            const closeModal = document.getElementById('closeImageModal');
+            const closeBtn = document.getElementById('closeImageModal');
 
             console.log("サムネイルのクリック処理準備ok");
             console.log("画像の画素数", thumbnails.length);
             
             thumbnails.forEach(thumbnail => {
-                thumbnail.addEventListener('click', () => {
-                    console.log("画像がクリックされました：", thumbnail.src);
-                    console.log("表示画像:", modalImage.src)
-                    modalImage.src = thumbnail.src;
-                    modal.classList.remove('hidden');
+                thumbnail.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const imageUrl = this.getAttribute('data-image-url');
+                    modalImage.src = imageUrl;
+                    modal.classList.remove('modal-hidden');
                 });
             });
-            closeModal.addEventListener('click', () => {
-                modal.classList.add('hidden');
-            });
-
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.add('hidden');
-                }
+            console.log(closeBtn);
+            closeBtn.addEventListener('click', function () {
+                console.log("クリックされた");
+                modal.classList.add('modal-hidden');
+                modalImage.src = '';
             });
         });
     </script>
-
 </body>
 </html>
