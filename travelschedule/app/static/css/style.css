@@ -403,10 +403,14 @@
     z-index: 10;
 }
 
-.kebab-dropdown.hidden {
-    display: none;
+.hidden {
+    display: none !important;
 }
 
+/*.kebab-dropdown.hidden {
+    display: none;
+}
+*/
 .kebab-dropdown button {
     display: block;
     width: 100%;
@@ -417,7 +421,7 @@
     cursor: pointer;
 }
 
-.kebab-dropdown {
+/*.kebab-dropdown {
     position: absolute;
     top: 100%;
     right: 0;
@@ -428,19 +432,19 @@
     padding: 5px;
     border-radius: 5px;
     min-width: 120px;
-}
+}*/
 
-.schedule-delete-modal-hidden {
+/*.schedule-delete-modal-hidden {
+    display: none;
+}*/
+
+/*.schedule-edit-modal-hidden {
     display: none !important;
 }
-
-.schedule-edit-modal-hidden {
+*/
+/*.schedule-add-modal-hidden {
     display: none !important;
-}
-
-.schedule-add-modal-hidden {
-    display: none !important;
-}
+}*/
 
 /*予定表詳細画面*/
 
@@ -1060,7 +1064,7 @@ position: absolute;
 }
 
 .delete-modal-hidden {
-    display: none !important;
+    display: none;
 }
 
 /*予定詳細　写真*/

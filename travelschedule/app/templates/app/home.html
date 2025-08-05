@@ -96,7 +96,7 @@
         </ul>
     </footer>
 
-    <div id="modal" class="modal schedule-add-modal-hidden">
+    <div id="modal" class="modal schedule-add-modal hidden">
         <div class="modal-content">
             <span id="closeModalBtn" class="close">&times;</span>
             <h2>予定表追加</h2>
@@ -118,7 +118,7 @@
         </div>
     </div>
 
-    <div id="editModal" class="modal schedule-edit-modal-hidden">
+    <div id="editModal" class="modal schedule-edit-modal hidden">
         <div class="modal-content">
             <span class="close" id="editModalClose">&times;</span>
             <form id="editModalForm" method="POST" action="{% url 'app:edit_schedule_title' %}">
@@ -144,7 +144,7 @@
     </div>
 
     {% for schedule in schedules %}
-        <div id="deleteModal" class="modal schedule-delete-modal-hidden">
+        <div id="deleteModal" class="modal schedule-delete-modal hidden">
             <div class="modal-content">
                 <p>予定表を削除してよろしいですか？</p>
                 <form method="POST" action="{% url 'app:delete_schedule' schedule.id %}">
@@ -163,11 +163,9 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            console.log("js");
             const deleteModal = document.getElementById("deleteModal");
-            
-            if (deleteModal) {
-                deleteModal.classList.add("schedule-delete-modal-hidden");
+            if (deleteModal && !deleteModal.classList.contains("schedule-delete-modal", "hidden")) {
+                deleteModal.classList.add("schedule-delete-modal", "hidden");
             }
             /*flatpickr初期化*/
             const editTripEndCalendar = flatpickr("#editTripEnd", {
@@ -328,14 +326,14 @@
                     document.getElementById("editTripStart").value = start;
                     document.getElementById("editTripEnd").value = end;
 
-                    document.getElementById("editModal").classList.remove("schedule-edit-modal-hidden");
+                    document.getElementById("editModal").classList.remove("schedule-edit-modal", "hidden");
                 });
             });
 
             const editModalCloseBtn = document.getElementById("editModalClose");
             if (editModalCloseBtn) {
                 editModalCloseBtn.addEventListener("click", function () {
-                    document.getElementById("editModal").classList.add("schedule-edit-modal-hidden");
+                    document.getElementById("editModal").classList.add("schedule-edit-modal", "hidden");
                 });
             }
 
@@ -363,7 +361,7 @@
                     endInput.readOnly = false;
                     endInput.style.backgroundColor = "#f0f0f0";
 
-                    document.getElementById("editModal").classList.remove("schedule-edit-modal-hidden");
+                    document.getElementById("editModal").classList.remove("schedule-edit-modal", "hidden");
                 });
             });
 
@@ -373,21 +371,21 @@
                 button.addEventListener("click", () => {
                     const scheduleId = button.dataset.scheduleId;
                     document.getElementById("deleteScheduleId").value = scheduleId;
-                    document.getElementById("deleteModal").classList.remove("schedule-delete-modal-hidden");
+                    document.getElementById("deleteModal").classList.remove("hidden");
                 });
             });
 
             const deleteModalCloseBtn = document.getElementById("deleteModalClose");
             if (deleteModalCloseBtn) {
                 deleteModalCloseBtn.addEventListener("click", () => {
-                    document.getElementById("deleteModal").classList.add("schedule-delete-modal-hidden");
+                    document.getElementById("deleteModal").classList.add("hidden");
                 });
             }
 
             const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
             if (cancelDeleteBtn) {
                 cancelDeleteBtn.addEventListener("click", () => {
-                    document.getElementById("deleteModal").classList.add("schedule-delete-modal-hidden");
+                    document.getElementById("deleteModal").classList.add("schedule-delete-modal", "hidden");
                 });
             }
 
@@ -397,7 +395,7 @@
 
             if (addModal && closeAddModalBtn) {
                 closeAddModalBtn.addEventListener("click", function () {
-                    addModal.classList.add("schedule-add-modal-hidden");
+                    addModal.classList.add("schedule-add-modal", "hidden");
                 });
             }
 
