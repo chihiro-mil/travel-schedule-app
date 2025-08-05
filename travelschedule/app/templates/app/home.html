@@ -40,7 +40,7 @@
                                 data-title="{{ schedule.title }}"
                                 data-start="{{ schedule.trip_start_date }}"
                                 data-end="{{ schedule.trip_end_date }}">
-                            タイトルの変更
+                            タイトル・旅行期間の変更
                         </button>
 
                         <button class="delete-schedule-btn" 
@@ -229,7 +229,7 @@
                             }
                         }
                     });
-                }
+                }*/
 
             const modal = document.getElementById("modal");
             const openBtn = document.getElementById("openModalBtn");
@@ -259,7 +259,7 @@
                 closeBtn.onclick = function () {
                     modal.classList.add("hidden");
                 };
-            }*/
+            }
 
             let fp = flatpickr("#dateRange", {
                 mode: "range",

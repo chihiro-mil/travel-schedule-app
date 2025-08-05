@@ -151,7 +151,7 @@ def home_view(request):
             schedule = form.save(commit=False)
             schedule.user = request.user
             schedule.save()
-            return redirect('app:home')
+            return redirect('app:plan_create_or_edit', schedule_id=schedule.id)
     else:
         form = ScheduleForm()
     

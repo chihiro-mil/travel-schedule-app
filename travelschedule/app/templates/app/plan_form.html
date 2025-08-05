@@ -316,7 +316,7 @@
                 <div class="form-group picture-formset-container">
                     {{ picture_formset.management_form }}
                     {% for form in picture_formset %}
-                        <div class="picture-form">
+                        <div class="picture-form" data-index="{{ forloop.counter0 }}" {% if not form.instance.pk and forloop.counter0 > 0 %}style="display: none;"{% endif %}>
                             {% if form.instance.pk and form.instance.image %}
                                 <div class="image-preview-wrapper">
                                     {{ form.image }}
@@ -326,7 +326,7 @@
                             {{ form.image.as_widget }}
 
                             {% if form.DELETE %}
-                                <label style="margin-lift: 10px;">削除 {{ form.DELETE }}</label>
+                                <label class="delete-checkbox" style="margin-lift: 10px;">削除 {{ form.DELETE }}</label>
                             {% endif %}
                         </div>
                     {% endfor %}
@@ -530,6 +530,23 @@
             if (checked) {
                 checked.dispatchEvent(new Event('change'));
             }
+
+            /*写真追加*/
+            const pictureForms = document.querySelectorAll('.picture-form');
+
+            pictureForms.forEach((form, index) => {
+                const input = form.querySelector('input[type="file"]');
+
+                input.addEventListener('change', () => {
+                    const nextIndex = index + 1;
+                    if (nextIndex < pictureForms.length) {
+                        const nextForm = pictureForms[nextIndex];
+                        if (nextForm && nextForm.style.display === 'none') {
+                            nextForm.style.display = 'block';
+                        }
+                    }
+                });
+            });
         });
         
     </script>
