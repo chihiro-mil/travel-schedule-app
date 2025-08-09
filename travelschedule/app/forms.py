@@ -97,7 +97,7 @@ class LoginForm(forms.Form):
         if email and password:
             self.user = authenticate(email=email, password=password)
             if self.user is None:
-                return forms.ValidationError("メールアドレスまたはパスワードが正しくありません")
+                raise forms.ValidationError("メールアドレスまたはパスワードが\n正しくありません")
         return self.cleaned_data
     
     def get_user(self):

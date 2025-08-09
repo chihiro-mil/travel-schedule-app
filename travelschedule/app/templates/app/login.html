@@ -15,16 +15,36 @@
             <form method="post" action="{% url 'app:login' %}">
                 {% csrf_token %}
 
+                {% if form.non_field_errors %}
+                    <div class="error">
+                        {% for error in form.non_field_errors %}
+                            <p class="login-error-message">{{ error|linebreaksbr }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <div class="form-group">
                     <label for="{{ form.email.id_for_label }}">メールアドレス</label>
                     <div class="form-input">{{ form.email }}</div>
-                    {{ form.email.errors }}
+                    {% if form.email.errors %}
+                        <div class="email-error">
+                            {% for error in form.email.errors %}
+                                <p>{{ error }},</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
 
                 <div class="form-group">
                     <label for="{{ form.password.id_for_label }}">パスワード</label>
                     <div class="form-input">{{ form.password }}</div>
-                    {{ form.password.errors }}
+                    {% if form.password.errors %}
+                        <div class="password-error">
+                            {% for error in form.password.errors %}
+                                <p>{{ error }},</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
 
             <button type="submit" class="login-button">ログイン</button>

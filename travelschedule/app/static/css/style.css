@@ -181,6 +181,18 @@
     color: #808080;
 }
 
+.login-error-message {
+    color: #ff0000;
+}
+
+.email-error {
+    color: #ff0000;
+}
+
+.password-error {
+    color: #ff0000;
+}
+
 /*マイページ設定*/
 
 .change-container {
@@ -303,9 +315,8 @@
 
 /*home画面*/
 .home-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    position: relative;
+    text-align: center;
     padding: 12px 16px;
     background-color: #ffffff;
     border-bottom: 1px solid #ccc;
@@ -320,11 +331,6 @@
     font-weight: bold;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
 
 .home-title {
     font-weight: bold;
@@ -332,7 +338,15 @@
     font-size: 20px;
 }
 
+.sort-button-wrapper{
+    text-align: center;
+    margin: 8px 0;
+}
 .sort-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: calc(50% + 200px);
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     padding: 6px 10px;
@@ -363,6 +377,8 @@
 
 .schedule-card-wrapper {
     position: relative;
+    display: flex;
+    justify-content: center;
 }
 
 .schedule-link {
