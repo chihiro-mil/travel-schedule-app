@@ -79,6 +79,8 @@ def edit_profile_view(request):
 #マイページ設定画面
 @login_required
 def mypage_view(request):
+    request.user.refresh_from_db()
+    
     referer = request.META.get('HTTP_REFERER')
     return render(request, 'app/mypage.html', {
         'user': request.user,
@@ -92,6 +94,7 @@ def change_username_view(request):
         form = ChangeUsernameForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
+            request.user.refresh_from_db()
             messages.success(request, 'ユーザー名を変更しました')
             return redirect('app:mypage')
     else:
@@ -105,6 +108,7 @@ def change_email_view(request):
         form = ChangeEmailForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
+            request.user.refresh_from_db()
             messages.success(request, 'メールアドレスを変更しました')
             return redirect('app:mypage')
     else:
@@ -118,6 +122,7 @@ def change_password_view(request):
         form = CustomPasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
             user = form.save()
+            request.user.refresh_from_db()
             update_session_auth_hash(request, user)
             messages.success(request, 'パスワードを変更しました')
             return redirect('app:mypage')
@@ -137,11 +142,11 @@ def home_view(request):
     
     if sort == 'updated':
         schedules = Schedule.objects.filter(user=request.user).order_by('-updated_at')
-        sort_label ='予定日降順に並び替え'
+        sort_label ='予定日降順'
         next_sort = 'date'
     else:
         schedules = Schedule.objects.filter(user=request.user).order_by('-trip_start_date')
-        sort_label = '更新順に並び替え'
+        sort_label = '更新順'
         next_sort = 'updated'
         
     if request.method == 'POST':
