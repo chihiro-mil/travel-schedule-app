@@ -37,7 +37,7 @@
                                 data-title="{{ schedule.title }}"
                                 data-start="{{ schedule.trip_start_date }}"
                                 data-end="{{ schedule.trip_end_date }}">
-                            タイトル・旅行期間の変更
+                            タイトル<br>旅行期間の変更
                         </button>
 
                         <button class="delete-schedule-btn" 
@@ -93,12 +93,14 @@
         </ul>
     </footer>
 
-    <div id="modal" class="modal schedule-add-modal hidden">
+    <div id="modal" class="modal schedule-add-modal {% if show_add_modal %}{% else %}hidden{% endif %}">
         <div class="modal-content">
             <span id="closeModalBtn" class="close">&times;</span>
             <h2>予定表追加</h2>
             <form method="POST" action="{% url 'app:home' %}">
                 {% csrf_token %}
+
+                
                 <label>旅行タイトル</label><br>
                 <input type="text" name="title" maxlength="50" required><br><br>
 
@@ -110,7 +112,11 @@
                     <input type="hidden" name="trip_end_date">
                 </div><br>
 
-                <button type="submit">保存</button>
+                {% if form.trip_start_date.errors %}
+                    <p class="home-error-message">{{ form.trip_start_date.errors.0 }}</p>
+                {% endif %}
+
+                <button type="submit" class="save-btn">保存</button>
             </form>
         </div>
     </div>
@@ -237,6 +243,10 @@
                     e.preventDefault();
                     modal.classList.remove("hidden");
                 };
+
+                if (typeof showAddModal !== "undefined" && showAddModal) {
+                    modal.classList.remove("hidden");
+                }
 
                 const startInput = document.querySelector('input[name="start_date"]');
                 const endInput = document.querySelector('input[name="end_date"]');

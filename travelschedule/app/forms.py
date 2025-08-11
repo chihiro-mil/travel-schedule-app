@@ -143,6 +143,16 @@ class ScheduleForm(forms.ModelForm):
             raise forms.ValidationError("タイトルは50文字以内で入力してください。")
         return title
     
+    def clean(self):
+        cleaned_data = super().clean()
+        trip_start_date = cleaned_data.get('trip_start_date')
+        trip_end_date = cleaned_data.get('trip_end_date')
+        
+        if not trip_start_date or not trip_end_date:
+            self.add_error('trip_start_date', '旅行期間を入力してください')
+        
+        return cleaned_data
+    
 #予定本体フォーム用
 
 

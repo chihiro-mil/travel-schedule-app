@@ -156,15 +156,23 @@ def home_view(request):
             schedule.user = request.user
             schedule.save()
             return redirect('app:plan_create_or_edit', schedule_id=schedule.id)
+        else:
+            return render(request, 'app/home.html', {
+                'form': form,
+                'schedules': schedules,
+                'sort_label': sort_label,
+                'next_sort': next_sort,
+                'show_add_modal': True
+            })
     else:
         form = ScheduleForm()
-    
-    return render(request, 'app/home.html', {
-        'form': form,
-        'schedules': schedules,
-        'sort_label': sort_label,
-        'next_sort': next_sort,
-    })
+        return render(request, 'app/home.html', {
+            'form': form,
+            'schedules': schedules,
+            'sort_label': sort_label,
+            'next_sort': next_sort,
+            'show_add_modal': False
+        })
     
 #予定表のタイトル編集ケバブ
 def edit_schedule_title(request):
