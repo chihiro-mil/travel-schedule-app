@@ -175,12 +175,37 @@ class PlanForm(forms.ModelForm):
         widget=forms.Select(attrs={'style': 'display:none;'}),
         empty_label=None
     )
+    departure_location = forms.CharField(
+        required=False,
+        max_length=24,
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'style': 'width: 8em; white-space: pre-wrap; word-break: break-all;'
+        })
+    )
+    arrival_location = forms.CharField(
+        required=False,
+        max_length=24,
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'style': 'width: 8em; white-space: pre-wrap; word-break: break-all;'
+        })
+    )
+    name = forms.CharField(
+        required=False,
+        max_length=24,
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'style': 'width: 8em; white-space: pre-wrap; word-break: break-all;'
+        })
+    )
     memo = forms.CharField(
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
-            'rows': 3,
-            'placeholder': 'メモを入力'
+            'rows': 5,
+            'placeholder': 'メモを入力',
+            'style': 'width: 15em; white-space: pre-wrap; word-break: break-all;'
         })
     )
     start_date = forms.DateField()

@@ -625,6 +625,13 @@
     font-size: 16px;
 }
 
+.location {
+    display: inline-block;
+    width: 8em;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
 /*予定表追加モーダル*/
 .modal {
     display: flex;
@@ -1096,6 +1103,9 @@ h2 {
 .plan-memo {
     margin-top: 6px;
     color: #333;
+    white-space: pre-wrap;
+    word-break: break-all;
+    width: 15em;
 }
 
 .plan-links {
