@@ -1,5 +1,6 @@
 {% load static %}
 {% load tz %}
+{% load custom_filters %}
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -50,7 +51,7 @@
                 <div class="schedule-header">
                     <strong>
                         <a href="{% url 'app:schedule_detail' schedule.id %}" class="schedule-link">
-                            {{ schedule.title }}
+                            {{ schedule.title|break_every|safe }}
                         </a>
                     </strong>
                 </div>
@@ -128,20 +129,25 @@
                 {% csrf_token %}
                 <input type="hidden" name="schedule_id" id="editScheduleId">
 
-                <label for="editTitle">旅行タイトル</label>
-                <input type="text" name="title" id="editTitle" required>
+                <div class="schedule-form-group">
+                    <label for="editTitle">旅行タイトル</label>
+                    <input type="text" name="title" id="editTitle" required>
+                </div>
 
-                <label>旅行期間</label>
-                <input type="text" id="editTripStart" name="start_date" readonly data-original="{{ schedule.trip_start_date|date:'Y-m-d' }}">
-                <span>～</span>
-                <input type="text" id="editTripEnd" name="end_date" readonly data-original="{{ schedule.trip_end_date|date:'Y-m-d' }}">
+                <div class="schedule-form-group">
+                    <label for="editTripRange">旅行期間</label>
+                    <input type="text" id="editTripRange" placeholder="旅行期間を選択" readonly>
+                    
+                    <input type="hidden" name="start_date" id="trip_start_date">
+                    <input type="hidden" name="end_date" id="trip_end_date">
+                </div>
                 <p class="trip-warning">
-                    ※旅行期間を短く変更すると、期間外の予定は自動的に削除されます。削除された予定は元に戻せません。
+                    ※旅行期間を短く変更すると、期間外の予定は自動的に削除されます。<br>削除された予定は元に戻せません。
                     <br>
                     <span class="trip-warning-example">（例：旅行期間を8/1～8/3に変更すると、8/4以降の予定は削除されます。）</span>
                 </p>
 
-                <button type="submit">保存</button>
+                <button type="submit" class="schedule-edit-save">保存</button>
             </form>
         </div>
     </div>
@@ -170,22 +176,36 @@
             if (deleteModal && !deleteModal.classList.contains("schedule-delete-modal", "hidden")) {
                 deleteModal.classList.add("schedule-delete-modal", "hidden");
             }
-            /*flatpickr初期化*/
-            const editTripEndCalendar = flatpickr("#editTripEnd", {
-                dateFormat: "Y-m-d",
-                locale: "ja",
-                onChange: function(selectedDates, dateStr, instance) {
-                    editTripStartCalendar.set("maxDate", dateStr);
-                }
-            });
 
-            const editTripStartCalendar = flatpickr("#editTripStart", {
-                dateFormat: "Y-m-d",
-                locale: "ja",
-                onChange: function(selectedDates, dateStr, instance) {
-                    editTripEndCalendar.set("minDate", dateStr);
-                }
-            });
+            /*旅行期間編集用flatpickr*/
+            const rangeInput = document.getElementById("editTripRange");
+            const hiddenStart = document.getElementById("trip_start_date");
+            const hiddenEnd = document.getElementById("trip_end_date");
+
+            if (rangeInput && hiddenStart && hiddenEnd) {
+                flatpickr(rangeInput, {
+                    mode: "range",
+                    dateFormat: "Y-m-d",
+                    altInput: true,
+                    altFormat: "Y年n月j日",
+                    locale: "ja",
+
+                    defaultDate: [
+                        hiddenStart.value || rangeInput.dataset.start || null,
+                        hiddenEnd.value || rangeInput.dataset.end || null
+                    ].filter(Boolean),
+
+                    onChange(selectedDates, _str, instance) {
+                        if (selectedDates.length === 2) {
+                            hiddenStart.value = instance.formatDate(selectedDates[0], "Y-m-d");
+                            hiddenEnd.value = instance.formatDate(selectedDates[1], "Y-m-d");
+                        } else {
+                            hiddenStart.value = "";
+                            hiddenEnd.value = "";
+                        }
+                    }
+                });
+            }
 
             /*予定期間変更警告モーダル*/
             /*const saveBtn = document.querySelector("#editModalForm");
@@ -234,7 +254,8 @@
                     });
                 }*/
 
-            const modal = document.getElementById("modal");
+            /*予定表追加モーダル用カレンダー*/
+                const modal = document.getElementById("modal");
             const openBtn = document.getElementById("openModalBtn");
             const closeBtn = document.getElementById("closeModalBtn");
 
@@ -330,8 +351,13 @@
 
                     document.getElementById("editScheduleId").value = scheduleId;
                     document.getElementById("editTitle").value = title;
-                    document.getElementById("editTripStart").value = start;
-                    document.getElementById("editTripEnd").value = end;
+                    document.getElementById("trip_start_date").value = start;
+                    document.getElementById("trip_end_date").value = end;
+
+                    const rangeInput = document.getElementById("editTripRange");
+                    if (rangeInput && start && end) {
+                        rangeInput._flatpickr.setDate([start, end], true);
+                    }
 
                     document.getElementById("editModal").classList.remove("schedule-edit-modal", "hidden");
                 });
@@ -354,23 +380,37 @@
 
                     document.getElementById("editScheduleId").value = scheduleId;
                     document.getElementById("editTitle").value = title;
-                    document.getElementById("editTripStart").value = start;
-                    document.getElementById("editTripEnd").value = end;
 
-                    document.getElementById("editTripStart").setAttribute("data-original", start);
-                    document.getElementById("editTripEnd").setAttribute("data-original", end);
+                    const hiddenStart = document.getElementById("trip_start_date");
+                    const hiddenEnd = document.getElementById("trip_end_date");
+                    hiddenStart.value = start;
+                    hiddenEnd.value = end;
 
-                    const startInput = document.getElementById("editTripStart");
-                    const endInput = document.getElementById("editTripEnd");
-
-                    startInput.readOnly = false;
-                    startInput.style.backgroundColor = "#f0f0f0";
-                    endInput.readOnly = false;
-                    endInput.style.backgroundColor = "#f0f0f0";
-
+                    const rangeInput = document.getElementById("editTripRange");
+                    if (rangeInput && rangeInput._flatpickr) {
+                        rangeInput._flatpickr.setDate([start,end], true);
+                    }
                     document.getElementById("editModal").classList.remove("schedule-edit-modal", "hidden");
                 });
             });
+
+            /*保存ボタンタップ後　flatpickrの値をhiddnに反映*/
+            const saveBtn = document.getElementById("editSaveBtn");
+            if (saveBtn) {
+                saveBtn.addEventListener("click", function () {
+                    const rangeInput = document.getElementById("editTripRange");
+                    const hiddenStart = document.getElementById("trip_start_date");
+                    const hiddenEnd = document.getElementById("trip_end_date");
+
+                    if (rangeInput && rangeInput._flatpickr) {
+                        const dates = rangeInput._flatpickr.selectedDates;
+                        if (dates.length === 2) {
+                            hiddenStart.value = dates[0].toISOString().split("T")[0];
+                            hiddenEnd.value = dates[1].toISOString().split("T")[0];
+                        }
+                    }
+                });
+            }
 
             /*消去モーダル*/
 

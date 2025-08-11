@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">-->
 </head>
 <body>
-    <h2>{{ schedule.title }} 予定表</h2>
+    <h2>{{ schedule.title|break_every|safe }} 予定表</h2>
 
     <div class="day-tabs">
         {% for date in sorted_dates %}

@@ -473,6 +473,48 @@
     color: #ff0000;
 }
 
+.schedule-form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.schedule-form-group label {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+#editTitle {
+    width: 260px;
+    display: block;
+    margin: 0 auto;
+    height: 38px;
+    padding: 6px 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#editTripRange + flatpickr-input {
+    width: 260px;
+    display: block;
+    margin: 0 auto;
+    height: 38px;
+    padding: 6px 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.schedule-edit-save {
+    background-color: #1e90ff;
+}
+
 @media (max-width: 768px) {
 
     .sort-button {
@@ -511,6 +553,12 @@
     .back-button {
         left: 10px;
         padding-left: 10px;
+    }
+    #editModal .modal-content {
+        font-size: 11px;
+    }
+    #editModal .label {
+        font-size: 14px;
     }
 }
 
