@@ -257,9 +257,14 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             trip_dates=trip_choices
         )
         
-        link_formset = LinkFormSet(request.POST, request.FILES, instance=plan, prefix='links')
-        picture_formset = PictureFormSet(request.POST, request.FILES, instance=plan, prefix='pictures')
+        link_formset = LinkFormSet(request.POST, request.FILES, queryset=Link.objects.filter(plan=plan), prefix='links')
+        picture_formset = PictureFormSet(request.POST, request.FILES, queryset=Picture.objects.filter(plan=plan), prefix='pictures')
         
+        for f in link_formset:
+            f.empty_permitted = True
+        for f in picture_formset:
+            f.empty_permitted = True
+
         selected_category = request.POST.get('action_category') or ''
         print("selected_category from POST:", selected_category)
         

@@ -306,6 +306,7 @@
                     <div id="link-form-container">
                         {% for form in link_formset %}
                             <div class="link-form-block">
+                                {{ form.id }}
                                 {{ form.url }}
                             </div>
                         {% endfor %}
@@ -317,6 +318,7 @@
                     {{ picture_formset.management_form }}
                     {% for form in picture_formset %}
                         <div class="picture-form" data-index="{{ forloop.counter0 }}" {% if not form.instance.pk and forloop.counter0 > 0 %}style="display: none;"{% endif %}>
+                            {{ form.id }}
                             {% if form.instance.pk and form.instance.image %}
                                 <div class="image-preview-wrapper">
                                     {{ form.image }}

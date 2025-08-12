@@ -97,11 +97,6 @@
     padding-top: 40px;
 }
 
-.form-group {
-    display: block;
-    margin-bottom: 25px;
-    font-weight: bold;
-}
 
 .required-label {
     display: inline-block;
@@ -787,6 +782,14 @@
     border-radius: 6px;
 }
 
+.category-fields,
+.common-fields {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0;
+}
+
 .link-form, .image-form {
     margin-bottom: 10px;
 }
@@ -890,13 +893,14 @@ input[type="radio"]:checked + label.label {
 }
 
 .transportation-title {
-    min-width: 80px;
+    white-space: nowrap;
+    font-size: 14px;
     font-weight: bold;
 }
 
 .custom-select-box {
     position: relative;
-    width: 300px;
+    max-width: 250px;
 }
 .selected-option {
     border: 1px solid #ccc;
@@ -933,7 +937,29 @@ input[type="radio"]:checked + label.label {
 }
 
 .plan-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
     padding-bottom: 80px;
+}
+
+.form-group {
+    display: block;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+.form-group label {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    vertical-align: middle;
 }
 
 .error-message {
@@ -944,9 +970,14 @@ input[type="radio"]:checked + label.label {
 
 .common-fields {
     display: none;
+    text-align: center;
     max-width: 600px;
     margin: 0 auto;
     padding: 20px 0;
+}
+
+.btn-primary {
+    background-color: #1e90ff;
 }
 
 .picture-formset-container {
@@ -994,6 +1025,38 @@ input[type="radio"]:checked + label.label {
     cursor: pointer;
     z-index: 10;
 }
+
+/*ＰＣサイズ用*/
+@media screen and (min-width: 768px) {
+    .page-title {
+        font-size: 30px;
+        margin-bottom: 12px;
+    }
+    .category-radio {
+        display: block;
+        white-space: nowrap;
+        max-width: none;
+        width: 800px;
+        margin: 20px auto;
+        text-align: center;
+    }
+    .category-radio label {
+        display: inline-block;
+        margin: 5px;
+        padding: 14px 20px;
+        font-size: 18px;
+        border-radius: 10px;
+    }
+    .plan-form-container label {
+        font-size: 18px;
+    }
+    .btn-primary {
+        padding: 10px 18px;
+        font-size: 14px;
+        border-radius: 6px;
+    }
+}
+
 
 /*予定詳細画面*/
 
@@ -1143,6 +1206,15 @@ h2 {
 .time-label .location {
     margin-left: 10px;
 }
+
+.time-block .label,
+.time-block .time,
+.time-block .location {
+    display: inline-block;
+    vertical-align: top;
+}
+
+
 
 /*予定ケバブメニュー、消去モーダル*/
 .plan-kebab-menu {
