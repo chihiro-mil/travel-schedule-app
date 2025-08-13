@@ -412,6 +412,9 @@ class LinkForm(forms.ModelForm):
                 'placeholder': '例：https://example.com'
             }),
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['url'].required = False
 
 LinkFormSet = modelformset_factory(Link, form=LinkForm, extra=5, max_num=5, can_delete=True)
 
@@ -422,7 +425,7 @@ class PictureForm(forms.ModelForm):
         model = Picture
         fields = ['image']
         widgets = {
-            'image': forms.ClearableFileInput(attrs={
+            'image': forms.FileInput(attrs={
                 'class': 'form-control-file'
             }),
         }

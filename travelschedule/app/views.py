@@ -10,7 +10,6 @@ from django.forms import inlineformset_factory
 from app.models import Plan
 
 
-
 from .forms import (
     RegisterForm,
     LoginForm,
@@ -247,6 +246,20 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
 
     trip_choices = generate_trip_date_choices(schedule)
     
+    saved_link_count = Link.objects.filter(plan=plan).count()
+    link_extra = max(0, 5 - saved_link_count)
+    
+    LinkFormSet = inlineformset_factory(
+        Plan,
+        Link,
+        form=LinkForm,
+        formset=BaseLinkFormSet,
+        extra=link_extra,
+        max_num=5,
+        validate_max=True,
+        can_delete=True
+    )
+    
     if request.method == 'POST':
         print('post成功')
         print("post中身", request.POST)
@@ -257,8 +270,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             trip_dates=trip_choices
         )
         
-        link_formset = LinkFormSet(request.POST, request.FILES, queryset=Link.objects.filter(plan=plan), prefix='links')
-        picture_formset = PictureFormSet(request.POST, request.FILES, queryset=Picture.objects.filter(plan=plan), prefix='pictures')
+        link_formset = LinkFormSet(request.POST, request.FILES, instance=plan, prefix='links')
+        picture_formset = PictureFormSet(request.POST, request.FILES, instance=plan, prefix='pictures')
         
         for f in link_formset:
             f.empty_permitted = True
@@ -278,6 +291,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         print("picture_formset.errors:", picture_formset.errors)
         
         if form.is_valid() and link_formset.is_valid() and picture_formset.is_valid():
+            
             print("フォームから受けとったスタート日", form.cleaned_data.get("start_date"))
             print("フォームから受けとったスタート時間", form.cleaned_data.get("start_time"))
             print('フォームバリア:', form.is_valid())
@@ -319,8 +333,14 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             latest_plan = Plan.objects.get(pk=plan_instance.pk)
             print("保存直後のDB上のstart_datetime", latest_plan.start_datetime)
             print("保存直後のDB上のend_datetime", latest_plan.end_datetime)
+                    
+                    
+            link_instances = link_formset.save(commit=False)
             
-            for link in link_formset.save(commit=False):
+            for obj in link_formset.deleted_objects:
+                print("削除対象：", obj.pk)
+                obj.delete()
+            for link in link_instances:
                 link.plan = plan_instance
                 link.action_category = plan_instance.action_category
                 link.save()
@@ -355,9 +375,12 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 initial['end_date'] = local_end.date()
                 initial['end_time'] = local_end.time()
             form = PlanForm(instance=plan, trip_dates=trip_choices, initial=initial)
-
             
-            link_formset = LinkFormSet(instance=plan, prefix='links')
+            link_formset = LinkFormSet(
+                instance=plan,
+                prefix='links'
+            )
+            
             picture_formset = PictureFormSet(instance=plan, prefix='pictures')
         else:
             form = PlanForm(trip_dates=trip_choices)

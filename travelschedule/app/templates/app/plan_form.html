@@ -308,6 +308,9 @@
                             <div class="link-form-block">
                                 {{ form.id }}
                                 {{ form.url }}
+                                {% if form.DELETE %}
+                                    <label>削除： {{ form.DELETE }}</label>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     </div>
@@ -319,17 +322,21 @@
                     {% for form in picture_formset %}
                         <div class="picture-form" data-index="{{ forloop.counter0 }}" {% if not form.instance.pk and forloop.counter0 > 0 %}style="display: none;"{% endif %}>
                             {{ form.id }}
+
                             {% if form.instance.pk and form.instance.image %}
                                 <div class="image-preview-wrapper">
-                                    {{ form.image }}
-                                    <span class="remove-picture" title="消去">&times;</span>
+                                    <span class="current-image">現在： <br>
+                                        <a href="{{ form.instance.image.url }}" target="_blank">{{ form.instance.image.url }}</a>
+                                    </span>
+                                    <span class="remove-picture" title="削除">&times;</span>
                                 </div>
-                            {% endif%}
-                            {{ form.image.as_widget }}
-
-                            {% if form.DELETE %}
-                                <label class="delete-checkbox" style="margin-lift: 10px;">削除 {{ form.DELETE }}</label>
                             {% endif %}
+
+                            {{ form.image }}
+
+                                {% if form.DELETE %}
+                                    <label class="delete-checkbox" style="margin-lift: 10px;">削除 {{ form.DELETE }}</label>
+                                {% endif %}
                         </div>
                     {% endfor %}
                 </div>
@@ -501,10 +508,11 @@
             const removeButtons = document.querySelectorAll('.remove-picture');
             removeButtons.forEach(function(button) {
                 button.addEventListener('click', function () {
-                    const pictureForm = button.closest('.picture-form');
-                    if(pictureForm) {
-                        pictureForm.style.display = 'none';
-                        const input = pictureForm.querySelector('input[type="file"]');
+                    const preview = button.closest('.image-preview-wrapper');
+                    if(preview) {
+                        preview.style.display = 'none';
+                        const del = preview.querySelector('input[type="checkbox"][name$=DELETE]');
+                        if (del) del.checkesd = true;
                     }
                 });
             });
