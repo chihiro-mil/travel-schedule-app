@@ -10,6 +10,7 @@ from django.forms import modelformset_factory
 from django.utils import timezone
 from django.contrib.auth.forms import PasswordChangeForm
 from django.forms import BaseInlineFormSet
+from django.forms import inlineformset_factory
 
 
 
@@ -400,6 +401,7 @@ class PlanForm(forms.ModelForm):
             print("保存完了 instance:", instance.start_datetime, instance.end_datetime)
         return instance
     
+
     
 #リンクフォーム用
 class LinkForm(forms.ModelForm):
@@ -415,8 +417,14 @@ class LinkForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['url'].required = False
-
-LinkFormSet = modelformset_factory(Link, form=LinkForm, extra=5, max_num=5, can_delete=True)
+        
+class BaseLinkFormSet(BaseInlineFormSet):
+    can_delete = True
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.forms:
+            form.empty_permitted = True
 
 
 #写真フォーム用
@@ -429,16 +437,14 @@ class PictureForm(forms.ModelForm):
                 'class': 'form-control-file'
             }),
         }
-PictureFormSet = modelformset_factory(Picture, form=PictureForm, extra=10, max_num=10, can_delete=False)
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['image'].required = False
+        
 class BasePictureFormSet(BaseInlineFormSet):
-    def _construct_form(self, i, **kwargs):
-        form = super()._construct_form(i, **kwargs)
-        form.empty_permitted = True
-        return form
-
-class BaseLinkFormSet(BaseInlineFormSet):
-    def _construct_form(self, i, **kwargs):
-        form = super()._construct_form(i, **kwargs)
-        form.empty_permitted = True
-        return form
+    can_delete = True
+    
+    def  __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.forms:
+            form.empty_permitted = True

@@ -15,8 +15,6 @@ from .forms import (
     LoginForm,
     ScheduleForm,
     PlanForm,
-    LinkFormSet,
-    PictureFormSet,
     ChangeUsernameForm, 
     ChangeEmailForm,
     CustomPasswordChangeForm,
@@ -257,8 +255,23 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         extra=link_extra,
         max_num=5,
         validate_max=True,
-        can_delete=True
+        can_delete=True,
     )
+    
+    saved_picture_count = Picture.objects.filter(plan=plan).count()
+    picture_extra = max(0, 10 - saved_picture_count)
+    
+    PictureFormSet = inlineformset_factory(
+        Plan,
+        Picture,
+        form=PictureForm,
+        formset=BasePictureFormSet,
+        extra=picture_extra,
+        max_num=10,
+        validate_max=True,
+        can_delete=True,
+    )
+    
     
     if request.method == 'POST':
         print('post成功')
@@ -344,10 +357,18 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 link.plan = plan_instance
                 link.action_category = plan_instance.action_category
                 link.save()
-                
-            for picture in picture_formset.save(commit=False):
+            
+            picture_instances = picture_formset.save(commit=False)
+            
+            for obj in picture_formset.deleted_objects:
+                print("削除対象：", obj.pk)
+                obj.delete()
+            for picture in picture_instances:
                 picture.plan = plan_instance
+                picture.action_category = plan_instance.action_category
                 picture.save()
+                
+            picture_formset.save_m2m()
                 
             return redirect('app:schedule_detail', schedule_id=schedule.id)
             
@@ -384,8 +405,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             picture_formset = PictureFormSet(instance=plan, prefix='pictures')
         else:
             form = PlanForm(trip_dates=trip_choices)
-            link_formset = LinkFormSet(queryset=Link.objects.none(), prefix='links')
-            picture_formset = PictureFormSet(queryset=Picture.objects.none(), prefix='pictures')
+            link_formset = LinkFormSet(instance=plan, prefix='links')
+            picture_formset = PictureFormSet(instance=plan, prefix='pictures')
         print("PlanForm errors:", form.errors)
         print("LinkFormSet errors:", link_formset.errors)
         print("PictureFormSet errors:" , picture_formset.errors)
