@@ -270,8 +270,6 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
     
     
     if request.method == 'POST':
-        print('post成功')
-        print("post中身", request.POST)
         form = PlanForm(
             request.POST,
             request.FILES,
@@ -281,8 +279,6 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         
         link_formset = LinkFormSet(request.POST, request.FILES, instance=plan, prefix='links')
         picture_formset = PictureFormSet(request.POST or None, request.FILES or None, instance=plan, prefix='pictures')
-        print("フォームセットの型チェック：", type(picture_formset))
-        print("picture_formset フォーム数：", len(picture_formset.forms))
         
         for f in link_formset:
             f.empty_permitted = True
@@ -290,66 +286,22 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             f.empty_permitted = True
 
         selected_category = request.POST.get('action_category') or ''
-        print("selected_category from POST:", selected_category)
-        
-                
-        print("form.is_valid():", form.is_valid())
-        print("link_formset.is_valid():", link_formset.is_valid())
-        print("picture_formset.is_valid():", picture_formset.is_valid())
-        
-        print("form.errors:", form.errors)
-        print("link_formset.errors:", link_formset.errors)
-        print("picture_formset.errors:", picture_formset.errors)
         
         if form.is_valid() and link_formset.is_valid() and picture_formset.is_valid():
             
-            print("フォームから受けとったスタート日", form.cleaned_data.get("start_date"))
-            print("フォームから受けとったスタート時間", form.cleaned_data.get("start_time"))
-            print('フォームバリア:', form.is_valid())
-            print('クリーン:', form.cleaned_data)
-            print('このフォームは有効')
-            print('cleaned_dataの中身:')
-            for key, value in form.cleaned_data.items():
-                print(f' {key} : {value}')
-            print("form.instanceの中身：")
-            print(f'action_category: {form.instance.action_category}')
-            print('start_datetime:', form.cleaned_data.get('start_datetime'))
-            print('end_datetime:', form.cleaned_data.get('end_datetime'))
-            
-            print(">>> form.instance.start_datetime(保存前のフォームインスタンス：)", form.instance.start_datetime)
-            print(">>> form.instance.end_datetime(保存前のフォームインスタンス：)", form.instance.end_datetime)
+            #for key, value in form.cleaned_data.items():
             
             plan_instance = form.save(commit=False)
             
-            print(">>> plan_instance.start_datetime(save(commit=False) 直後)", plan_instance.start_datetime)
-            print(">>> plan_instance.end_datetime(保存前のフォームインスタンス：)", plan_instance.end_datetime)
-            
-            
-            print("保存直前の plan_instans:")
-            print("schedule_id:", plan_instance.schedule_id)
-            print("start_datetime:", plan_instance.start_datetime)
-            print("end_datetime:", plan_instance.end_datetime)
-            print("action_category:", plan_instance.action_category)
-            
             plan_instance.schedule = schedule
-            
-            print(">>>保存直前のスケジュールid:", plan_instance.schedule_id)
-            print(">>>保存直前のスケジュールオブジェクト:", plan_instance.schedule)
             
             
             plan_instance.save()
-            print("保存直後 一覧:", Plan.objects.all())
-            print(">>>保存ごのスケジュールid:", plan_instance.schedule_id)
-            
-            latest_plan = Plan.objects.get(pk=plan_instance.pk)
-            print("保存直後のDB上のstart_datetime", latest_plan.start_datetime)
-            print("保存直後のDB上のend_datetime", latest_plan.end_datetime)
                     
                     
             link_instances = link_formset.save(commit=False)
             
             for obj in link_formset.deleted_objects:
-                print("削除対象：", obj.pk)
                 obj.delete()
             for link in link_instances:
                 link.plan = plan_instance
@@ -368,18 +320,9 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                     continue
                 
                 if not form.cleaned_data.get('image'):
-                    print("画像が空なのでスキップ")
                     continue
                 
                 picture = form.save(commit=False)
-                
-                picture_id = form.cleaned_data.get('id')
-                print("form.cleaned_data[id]:", picture_id)
-                
-                if not picture.pk:
-                    print("新規画像として保存")
-                else:
-                    print("既存画像の更新")
                     
                 picture.plan = plan_instance
                 picture.save()
@@ -421,10 +364,6 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             form = PlanForm(trip_dates=trip_choices)
             link_formset = LinkFormSet(instance=plan, prefix='links')
             picture_formset = PictureFormSet(instance=plan, prefix='pictures')
-        print("PlanForm errors:", form.errors)
-        print("LinkFormSet errors:", link_formset.errors)
-        print("PictureFormSet errors:" , picture_formset.errors)
-        print("selected_category from PORT:", selected_category)
         
         return render(request, 'app/plan_form.html', {
             'form': form, 
@@ -455,29 +394,19 @@ def schedule_detail_view(request, schedule_id):
 
     
     plans_by_date = defaultdict(list)
-    print(type(plans_by_date))
     
     for plan in plans:
-        print(f"Plan ID: {plan.id}, start: {plan.start_datetime}, end: {plan.end_datetime}")
         if plan.start_datetime and plan.end_datetime:
-            print(f"[VALID] Plan ID: {plan.id}, start:{plan.start_datetime}, end:{plan.end_datetime}")
             current_date = localtime(plan.start_datetime).date()
             end_date = localtime(plan.end_datetime).date()
-            print("start_day", plan.start_datetime)
-            print("current_date", current_date)
-            print("end_date", end_date)
             
             while current_date <= end_date:
-                print(f"name={plan.name or 'None'}, category={plan.action_category}, date={current_date}")
                 plans_by_date[current_date].append(plan)
                 current_date += timedelta(days=1)
         
         for date, day_plans in plans_by_date.items():
             sorted_day_plans = sorted(day_plans, key=lambda p: p.start_datetime)
-            
-            for plan in sorted_day_plans:
-                print(f"{plan.name}: {plan.start_datetime}")
-            
+
             active_ends = []
             for plan in sorted_day_plans:
                 plan.nest_level = 0
