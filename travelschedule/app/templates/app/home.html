@@ -102,10 +102,10 @@
                 {% csrf_token %}
 
                 
-                <label>旅行タイトル</label><br>
+                <label>旅行タイトル <span class="home-required-label">必須</span></label><br>
                 <input type="text" name="title" maxlength="50" required><br><br>
 
-                <label>旅行期間</label><br>
+                <label>旅行期間 <span class="home-required-label">必須</span></label><br>
                 <div class="calendar-wrapper">
                     <input type="text" id="dateRange" name="trip_period" placeholder="日付を選択" readonly>
                     <i class="fas fa-calendar-alt calendar-icon"></i>

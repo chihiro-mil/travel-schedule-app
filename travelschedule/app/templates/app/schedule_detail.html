@@ -52,7 +52,9 @@
                         <div class="transportation-icon">
                             {% if plan.action_category == "move" and plan.transportation %}
                                 <i class="fas {{ transportation_icon_map|get_item:plan.transportation.transportation}}"></i><br>
-                                <span class="category-label">移動</span>
+                                <span class="category-label">
+                                    {{ plan.transportation.get_transportation_display }}
+                                </span>
                             {% elif plan.action_category == "sightseeing" %}
                                 <i class="fas fa-map"></i><br>
                                 <span class="category-label">観光地</span>
@@ -142,7 +144,7 @@
                                     <div class="picture-grid">
                                         {% for picture in plan.pictures.all %}
                                             <a href="{{ picture.image.url }}" class="thumbnail" data-image-url="{{ picture.image.url}}">
-                                                <img src="{{ picture.image.url }}" alt="plan image" class="plan-image">
+                                                <img src="{{ picture.image.url }}" alt="plan image" class="plan-image thumbnail">
                                             </a>
                                         {% endfor %}
                                     </div>

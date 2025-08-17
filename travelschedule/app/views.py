@@ -178,7 +178,6 @@ def edit_schedule_title(request):
         new_title = request.POST.get('title')
         schedule = get_object_or_404(Schedule, id=schedule_id)
         
-        #未使用
         old_start = schedule.trip_start_date
         old_end = schedule.trip_end_date
         
