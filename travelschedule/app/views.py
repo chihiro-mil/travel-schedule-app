@@ -70,9 +70,6 @@ def login_view(request):
     return render(request, 'app/login.html', {'form': form})
 
 
-def edit_profile_view(request):
-    return render(request, 'app/edit_profile.html')
-
 #マイページ設定画面
 @login_required
 def mypage_view(request):
