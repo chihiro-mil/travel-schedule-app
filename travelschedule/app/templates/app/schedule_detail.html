@@ -101,7 +101,7 @@
                                 {% if plan.action_category == "move" %}
                                     <span class="label">着：</span>
                                     <span class="time">{{ plan.end_datetime|localtime|date:"H:i" }}</span>
-                                    <span class="location">{{ plan.departure_location }}</span>
+                                    <span class="location">{{ plan.arrival_location }}</span>
                                 {% elif plan.action_category == "sightseeing" or plan.action_category == "meal" %}
                                     {% if plan.end_datetime %}
                                         <span class="label">終了：</span>
