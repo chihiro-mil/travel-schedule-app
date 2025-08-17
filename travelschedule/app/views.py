@@ -284,7 +284,9 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         )
         
         link_formset = LinkFormSet(request.POST, request.FILES, instance=plan, prefix='links')
-        picture_formset = PictureFormSet(request.POST, request.FILES, instance=plan, prefix='pictures')
+        picture_formset = PictureFormSet(request.POST or None, request.FILES or None, instance=plan, prefix='pictures')
+        print("フォームセットの型チェック：", type(picture_formset))
+        print("picture_formset フォーム数：", len(picture_formset.forms))
         
         for f in link_formset:
             f.empty_permitted = True
@@ -358,17 +360,33 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 link.action_category = plan_instance.action_category
                 link.save()
             
-            picture_instances = picture_formset.save(commit=False)
-            
-            for obj in picture_formset.deleted_objects:
-                print("削除対象：", obj.pk)
-                obj.delete()
-            for picture in picture_instances:
-                picture.plan = plan_instance
-                picture.action_category = plan_instance.action_category
-                picture.save()
+            for obj in picture_formset.deleted_forms:
+                if obj.cleaned_data.get('DELETE') and obj.instance.pk:
+                    obj.instance.delete()
+                    
+            for form in picture_formset:
+                if not form.cleaned_data:
+                    continue
                 
-            picture_formset.save_m2m()
+                if form.cleaned_data.get('DELETE'):
+                    continue
+                
+                if not form.cleaned_data.get('image'):
+                    print("画像が空なのでスキップ")
+                    continue
+                
+                picture = form.save(commit=False)
+                
+                picture_id = form.cleaned_data.get('id')
+                print("form.cleaned_data[id]:", picture_id)
+                
+                if not picture.pk:
+                    print("新規画像として保存")
+                else:
+                    print("既存画像の更新")
+                    
+                picture.plan = plan_instance
+                picture.save()
                 
             return redirect('app:schedule_detail', schedule_id=schedule.id)
             

@@ -438,13 +438,20 @@ class PictureForm(forms.ModelForm):
             }),
         }
     def __init__(self, *args, **kwargs):
+        print("PictureFormの__init__呼ばれた")
+        print("args:", args)
+        print("kwargs:", kwargs)
         super().__init__(*args, **kwargs)
-        self.fields['image'].required = False
+        if not self.instance.pk:
+            self.fields['image'].required = False
         
 class BasePictureFormSet(BaseInlineFormSet):
     can_delete = True
     
     def  __init__(self, *args, **kwargs):
+        print("BasePictureFormSetの__init__呼ばれた")
+        print("args:", args)
+        print("kwargs:", kwargs)
         super().__init__(*args, **kwargs)
         for form in self.forms:
             form.empty_permitted = True

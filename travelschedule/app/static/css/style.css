@@ -1026,6 +1026,12 @@ input[type="radio"]:checked + label.label {
     z-index: 10;
 }
 
+.current-image a {
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-all;
+}
+
 /*ＰＣサイズ用*/
 @media screen and (min-width: 768px) {
     .page-title {
@@ -1214,6 +1220,85 @@ h2 {
     vertical-align: top;
 }
 
+
+@media (max-width: 768px) {
+    .plan-card {
+        --card-font: 13px;
+        --card-pad: 10px;
+        --row-gap: 0px;
+        --icon-size: 18px;
+        --label-w: 2.5em;
+        width: 100%;
+        max-width: 330px;
+        padding: var(--card-pad);
+        margin: 0 auto 12px;
+        font-size: var(--card-font);
+    }
+    .plan-card img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+    .plan-card .time-block,
+    .plan-card .plan-links,
+    .plan-card .plan-pictures {
+        width: 100%;
+    }
+    .plan-card .transportation-row { 
+        gap: 8px; 
+    }
+    .plan-card .transportation-icon {
+        width: 24px;
+        text-align: center;
+    }
+    .plan-card .time-block { 
+        gap: 0px; 
+        margin-bottom: 0px;
+    }
+    .plan-card .plan-memo,
+    .plan-card .time-label {
+        margin: 0;
+        line-height: 1;
+    }
+    .plan-card .plan-memo {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        display: inline-block;
+        max-width: 100%;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+    .plan-card .label {
+        display: inline-block;
+        width: var(--label-w);
+    }
+    .plan-card .location {
+        white-space: per-wrap;
+        word-break: break-word;
+    }
+    .plan-card .plan-links,
+    .plan-card .plan-pictures {
+        margin-top: 0px;
+    }
+    .plan-card picture-grid img {
+        max-width: 100%;
+        border-radius: 6px;
+    }
+    .category-label {
+        font-size: 12px;
+        writing-mode: horizontal-tb;
+        display: inline-block;
+        white-space: nowrap;
+        margin-left: -12px;
+    }
+    .time-label {
+        font-size: 16px;
+    }
+    .thumbnail {
+        width: 60px;
+        height: auto;
+    }
+}
 
 
 /*予定ケバブメニュー、消去モーダル*/

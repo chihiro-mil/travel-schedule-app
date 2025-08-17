@@ -320,7 +320,7 @@
                 <div class="form-group picture-formset-container">
                     {{ picture_formset.management_form }}
                     {% for form in picture_formset %}
-                        <div class="picture-form" data-index="{{ forloop.counter0 }}" {% if not form.instance.pk and forloop.counter0 > 0 %}style="display: none;"{% endif %}>
+                        <div class="picture-form" data-index="{{ forloop.counter0 }}">
                             {{ form.id }}
 
                             {% if form.instance.pk and form.instance.image %}
@@ -334,8 +334,14 @@
 
                             {{ form.image }}
 
+                            {% if form.instance.pk and form.instance.image %}
+                                <p class="image-note">※新しい画像を選択すると、上書きされます</p>
+                            {% endif %}
+
                                 {% if form.DELETE %}
-                                    <label class="delete-checkbox" style="margin-lift: 10px;">削除 {{ form.DELETE }}</label>
+                                    <div style="display: none;">
+                                        {{ form.DELETE }}
+                                    </div>
                                 {% endif %}
                         </div>
                     {% endfor %}
@@ -508,11 +514,31 @@
             const removeButtons = document.querySelectorAll('.remove-picture');
             removeButtons.forEach(function(button) {
                 button.addEventListener('click', function () {
-                    const preview = button.closest('.image-preview-wrapper');
+                    const pictureForm = button.closest('.picture-form');
+
+                    const idInput = pictureForm.querySelector('input[name$="-id"]');
+                    if (idInput && idInput.value === ""){
+                        return;
+                    }
+                    const preview = pictureForm.querySelector('.image-preview-wrapper');
                     if(preview) {
                         preview.style.display = 'none';
-                        const del = preview.querySelector('input[type="checkbox"][name$=DELETE]');
-                        if (del) del.checkesd = true;
+                    }
+
+                    const del = pictureForm.querySelector('input[type="checkbox"][name$="-DELETE"]');
+                    if (del) {
+                        del.checked = true;
+                    }
+                });
+            });
+
+            const imageInputs = document.querySelectorAll('input[type="file"][name$="-image"]');
+            imageInputs.forEach(function (input) {
+                input.addEventListener('change', function () {
+                    const pictureForm = input.closest('.picture-form');
+                    const del = pictureForm.querySelector('input[type="checkbox"][name$="-DELETE"]');
+                    if (del) {
+                        del.checked = false;
                     }
                 });
             });
@@ -542,7 +568,7 @@
             }
 
             /*写真追加*/
-            const pictureForms = document.querySelectorAll('.picture-form');
+            /*const pictureForms = document.querySelectorAll('.picture-form');
 
             pictureForms.forEach((form, index) => {
                 const input = form.querySelector('input[type="file"]');
@@ -556,7 +582,7 @@
                         }
                     }
                 });
-            });
+            });*/
         });
         
     </script>

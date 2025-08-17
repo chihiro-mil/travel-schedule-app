@@ -127,7 +127,6 @@
 
                             {% if plan.links.all %}
                                 <div class="plan-links">
-                                    <p><strog>ＵＲＬ：</strog></p>
                                     <ul>
                                         {% for link in plan.links.all %}
                                             {% if link.url %}
@@ -140,7 +139,6 @@
 
                             {% if plan.pictures.all %}
                                 <div class="plan-pictures">
-                                    <p><strog>写真：</strog></p>
                                     <div class="picture-grid">
                                         {% for picture in plan.pictures.all %}
                                             <a href="{{ picture.image.url }}" class="thumbnail" data-image-url="{{ picture.image.url}}">

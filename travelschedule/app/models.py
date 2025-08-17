@@ -96,7 +96,7 @@ class Picture(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.caption or "画像"
+        return str(self.image.name) if self.image else "画像"
     
 #移動カテゴリテーブル
 class TransportationMethod(models.Model):
