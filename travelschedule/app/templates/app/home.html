@@ -207,52 +207,6 @@
                 });
             }
 
-            /*予定期間変更警告モーダル*/
-            /*const saveBtn = document.querySelector("#editModalForm");
-                if (saveBtn) {
-                    console.log("saveBtn取得");
-                    saveBtn.addEventListener('submit', function (e) {
-                        e.preventDefault();
-                        console.log("submit発火");
-                        const startInput = document.getElementById('input[name="start_date"]');
-                        const endInput = document.getElementById('input[name="end_date"]');
-                        console.log("startInput", startInput);
-                        console.log("endInput", endInput);
-
-                        const originalStartStr = startInput.dataset.original;
-                        const originalEndStr = endInput.dataset.original;
-                        const newStartStr = startInput.value.trim();
-                        const newEndStr = endInput.value.trim();
-
-
-                        console.log("originalStartStr:", originalStartStr);
-                        console.log("originalEndStr:", originalEndStr);
-                        console.log("newStartStr", newStartStr);
-                        console.log("newEndStr", newEndStr);
-
-                        const originalStart = new Date(originalStartStr);
-                        const originalEnd = new Date(originalEndStr);
-                        const newStart = new Date(newStartStr);
-                        const newEnd = new Date(newEndStr);
-
-                        console.log("originalStart", originalStart);
-                        console.log("originalEnd", originalEnd);
-                        console.log("newStart", newStart);
-                        console.log("newEnd", newEnd);
-
-
-                        console.log("現在の終了日：", endInput.value);
-                        console.log("元の終了日：", originalEnd);
-                        console.log("比較結果：", newEnd < originalnd);
-
-                        if ((newStart < originalStart || newEnd < originalEnd)) {
-                            const confirmed = confirm("旅行期間を短くすると、期間外の予定は削除されます。よろしいですか？");
-                            if (!confirmed) {
-                                e.preventDefault();
-                            }
-                        }
-                    });
-                }*/
 
             /*予定表追加モーダル用カレンダー*/
                 const modal = document.getElementById("modal");

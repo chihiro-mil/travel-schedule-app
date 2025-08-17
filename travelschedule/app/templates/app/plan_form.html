@@ -10,13 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!--<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/rangePlugin.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
-    <script>
-        flatpickr.localize(flatpickr.l10ns.ja);
-    </script>-->
-
 
     <a href="{% url 'app:schedule_detail' schedule_id=schedule.id %}"class="back-button">＜戻る</a>
     <div class="plan-form-container">
@@ -392,28 +385,6 @@
 
     <script>
 
-        /*エラーメッセージを他のカテゴリに反映させない設定（保留）*/
-        /*function updateCategoryDisplay(selectedCategory) {
-            document.querySelectorAll('.category-fields').forEach(block => {
-                block.style.display = 'none';
-
-                block.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
-
-                block.querySelectorAll('.error-message').forEach(errorEl => {
-                    errorEl.style.display = 'none';
-                });
-            });
-
-            const activeBlock = document.querySelector(`.category-fields[data-category="${selectedCategory}"]`);
-            if (activeBlock) {
-                activeBlock.style.display = 'block';
-                activeBlock.querySelectorAll('input, select, textarea').forEach(el => el.disabled = false);
-                activeBlock.querySelectorAll('.error-message').forEach(errorEl => {
-                    errorEl.style.display = 'block';
-                });
-            }
-        }*/
-
         document.addEventListener('DOMContentLoaded', function () {
             /*バリエーションエラーメッセージ表示*/
             document.querySelectorAll('.category-fields').forEach(block => {
@@ -458,15 +429,12 @@
                             block.querySelectorAll("input, select, textarea").forEach(el => el.disabled = true);
                         }
                     });
-
-                    /*updateCategoryDisplay(selected);*/
                 });
             });
             
             const checkedRadio = document.querySelector('input[name="action_category"]:checked');
             if (checkedRadio) {
                 const selected = checkedRadio.value;
-                /*updateCategoryDisplay(selected);*/
                 checkedRadio.dispatchEvent(new Event("change"));
             }
 
@@ -566,23 +534,6 @@
             if (checked) {
                 checked.dispatchEvent(new Event('change'));
             }
-
-            /*写真追加*/
-            /*const pictureForms = document.querySelectorAll('.picture-form');
-
-            pictureForms.forEach((form, index) => {
-                const input = form.querySelector('input[type="file"]');
-
-                input.addEventListener('change', () => {
-                    const nextIndex = index + 1;
-                    if (nextIndex < pictureForms.length) {
-                        const nextForm = pictureForms[nextIndex];
-                        if (nextForm && nextForm.style.display === 'none') {
-                            nextForm.style.display = 'block';
-                        }
-                    }
-                });
-            });*/
         });
         
     </script>
