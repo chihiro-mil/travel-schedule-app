@@ -274,7 +274,6 @@ class PlanForm(forms.ModelForm):
     
     def clean(self):
         cleaned_data = super().clean()
-        print("planform.cleand=", cleaned_data)
         
         action_category = cleaned_data.get('action_category')
         name = cleaned_data.get('name')
@@ -295,17 +294,6 @@ class PlanForm(forms.ModelForm):
         elif not end_date:
             self.add_error('end_date', '')
         end_time = cleaned_data.get('end_time')
-        
-        print("[forms.py - clean()] 入力内容:")
-        print("category:", action_category)
-        print("name:", name)
-        print("memo:", memo)
-        print("departure_location:", departure)
-        print("arrival_location:", arrival)
-        print("start_date:", start_date)
-        print("start_time:", start_time)
-        print("end_date:", end_date)
-        print("end_time:", end_time)
         
         
         start_datetime = None
@@ -391,14 +379,11 @@ class PlanForm(forms.ModelForm):
     
     def save(self, commit=True):
         instance = super().save(commit=False)
-        print("保存前 start_datetime:", self.cleaned_data.get('start_datetime'))
-        print("保存前 end_datetime:", self.cleaned_data.get('end_datetime'))
         
         instance.start_datetime = self.cleaned_data.get('start_datetime')
         instance.end_datetime = self.cleaned_data.get('end_datetime')
         if commit:
             instance.save()
-            print("保存完了 instance:", instance.start_datetime, instance.end_datetime)
         return instance
     
 
@@ -438,9 +423,6 @@ class PictureForm(forms.ModelForm):
             }),
         }
     def __init__(self, *args, **kwargs):
-        print("PictureFormの__init__呼ばれた")
-        print("args:", args)
-        print("kwargs:", kwargs)
         super().__init__(*args, **kwargs)
         if not self.instance.pk:
             self.fields['image'].required = False
@@ -449,9 +431,6 @@ class BasePictureFormSet(BaseInlineFormSet):
     can_delete = True
     
     def  __init__(self, *args, **kwargs):
-        print("BasePictureFormSetの__init__呼ばれた")
-        print("args:", args)
-        print("kwargs:", kwargs)
         super().__init__(*args, **kwargs)
         for form in self.forms:
             form.empty_permitted = True
