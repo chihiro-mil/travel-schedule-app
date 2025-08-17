@@ -31,6 +31,12 @@
 .img img {
     text-align: center;
 }
+.screenshot {
+    width: 80%;
+    max-width: 700px;
+    height: auto;
+}
+
 .center-box {
     text-align: center;
 }
