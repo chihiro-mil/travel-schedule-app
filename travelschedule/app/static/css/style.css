@@ -464,10 +464,6 @@
     display: none !important;
 }
 
-/*.kebab-dropdown.hidden {
-    display: none;
-}
-*/
 .kebab-dropdown button {
     display: block;
     width: 100%;
@@ -571,30 +567,6 @@
     }
 }
 
-/*.kebab-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #ffffff;
-    border: 1px solid#ccc;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-    padding: 5px;
-    border-radius: 5px;
-    min-width: 120px;
-}*/
-
-/*.schedule-delete-modal-hidden {
-    display: none;
-}*/
-
-/*.schedule-edit-modal-hidden {
-    display: none !important;
-}
-*/
-/*.schedule-add-modal-hidden {
-    display: none !important;
-}*/
 
 /*予定表詳細画面*/
 
@@ -1129,7 +1101,7 @@ h2 {
     margin: 0 auto 16px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    padding: 16px 60px 16px 60px;
+    padding: 10px 40px 10px 40px;
     margin-bottom: 16px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
