@@ -1294,6 +1294,12 @@ plan-image.thumbnail {
         width: 70px;
         height: auto;
     }
+    .plan-card.move.nest-1,
+    .plan-card.sightseeing.nest-1,
+    .plan-card.meal.nest-1,
+    .plan-card.stay.nest-1 {
+        transform: translateX(15px) !important;
+    }
 }
 
 

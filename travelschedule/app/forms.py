@@ -113,6 +113,11 @@ class ChangeUsernameForm(forms.ModelForm):
         fields = ['name']
         labels = {'name': '新しいユーザー名'}
         
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.name:
+            self.fields['name'].initial = self.instance.name
+        
 class ChangeEmailForm(forms.ModelForm):
     class Meta:
         model = User

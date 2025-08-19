@@ -407,6 +407,36 @@
             const selectedIcon = document.getElementById('selected-icon');
             const selectedLabel = document.getElementById('selected-label');
 
+            /*console.log("selectedOption:", selectedOption);
+            console.log("optionsList:", optionsList);
+            console.log("hiddenInput:", hiddenInput);
+            console.log("selectedLabel:", selectedLabel);*/
+
+            selectedOption.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isVisible = window.getComputedStyle(optionsList).display !== "none";
+                optionsList.style.display = isVisible ? "none" : "block";
+            });
+
+            document.addEventListener("click", (e) => {
+                if (!e.target.closest('.custom-select-box')) {
+                    optionsList.style.display = "none";
+                }
+            });
+
+            document.querySelectorAll("#options-list .option-item").forEach(item => {
+                item.addEventListener("click", (e) => {
+                    const id = item.dataset.id;
+                    const label = item.dataset.label;
+                    const icon = item.dataset.icon;
+
+                    selectedLabel.textContent = label;
+                    hiddenInput.value =  id;
+
+                    optionsList.style.display = 'none';
+                });
+            });
+
 
 
             allCategoryForms.forEach(function (block) {
@@ -438,11 +468,11 @@
                 checkedRadio.dispatchEvent(new Event("change"));
             }
 
-            selectedOption.addEventListener('click', () => {
+            /*selectedOption.addEventListener('click', () => {
                 optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
-            });
+            });*/
 
-            document.querySelectorAll('.option-item').forEach(item => {
+            /*document.querySelectorAll('.option-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const id = item.dataset.id;
                     const label = item.dataset.label;
@@ -460,7 +490,7 @@
                 if (!e.target.closest('.custom-select-box')) {
                     optionsList.style.display = 'none';
                 }
-            });
+            });*/
 
             const commonFields = document.querySelector('.common-fields');
 
