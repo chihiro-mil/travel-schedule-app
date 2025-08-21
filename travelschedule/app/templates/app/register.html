@@ -25,13 +25,13 @@
 
             
                 <div class="form-group">
-                    <label for="{{ form.username.id_for_label }}">
-                        {{ form.username.label }}
+                    <label for="{{ form.name.id_for_label }}">
+                        {{ form.name.label }}
                         <span class="required-label">必須</span>
                     </label>
-                    <div class="form-input">{{ form.username }}</div>
-                    {% if form.username.errors %}
-                        <div class="error">{{ form.username.errors.0 }}</div>
+                    <div class="form-input">{{ form.name }}</div>
+                    {% if form.name.errors %}
+                        <div class="error">{{ form.name.errors.0 }}</div>
                     {% endif %}
                 </div>
 

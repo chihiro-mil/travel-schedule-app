@@ -16,7 +16,7 @@ from django.forms import inlineformset_factory
 
 #アカウント登録画面用
 class RegisterForm(forms.ModelForm):
-    username = forms.CharField(
+    name = forms.CharField(
         max_length=20, 
         label='ユーザー名', 
         help_text='',
@@ -57,18 +57,18 @@ class RegisterForm(forms.ModelForm):
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['name', 'email', 'password']
         labels = {
-            'username': 'ユーザー名',
+            'name': 'ユーザー名',
             'email': 'メールアドレス',
             'password': 'パスワード',
         }
         
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        if not (1 <= len(username) <= 20):
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if not (1 <= len(name) <= 20):
             raise ValidationError("ユーザー名は１文字以上２０文字以下で入力してください。")
-        return username
+        return name
     
     def clean_password(self):
         password = self.cleaned_data['password']
