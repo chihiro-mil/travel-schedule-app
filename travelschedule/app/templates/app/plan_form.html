@@ -413,6 +413,7 @@
             console.log("selectedLabel:", selectedLabel);*/
 
             selectedOption.addEventListener('click', (e) => {
+                console.log("selected-option clicked");
                 e.stopPropagation();
                 const isVisible = window.getComputedStyle(optionsList).display !== "none";
                 optionsList.style.display = isVisible ? "none" : "block";
