@@ -378,8 +378,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         for m in TransportationMethod.objects.all():
             tm.append({
                 'id': m.id,
-                'label': m.get_transportation_display(),
-                'icon': transportation_icon_map.get(m.transportation, 'fa-solid fa-question'),
+                'label': m.get_transportation,
+                'icon': m.transportation_icon_class,
             })
         
         return render(request, 'app/plan_form.html', {
