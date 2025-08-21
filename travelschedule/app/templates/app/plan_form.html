@@ -49,9 +49,9 @@
                         </div>
                         <div class="options-list" id="options-list">
                             {% for method in transportation_methods %}
-                                <div class="option-item" data-id="{{ method.id }}" data-label="{{ method.get_transportation_display }}" data-icon="{{ method.transportation_icon_class }}">
-                                    <i class="{{ method.transportation_icon_class }}"></i>
-                                    <span class="transportation-label">{{ method.get_transportation_display }}</span>
+                                <div class="option-item" data-id="{{ method.id }}" data-label="{{ method.label }}" data-icon="{{ method.icon }}">
+                                    <i class="{{ method.icon }}"></i>
+                                    <span class="transportation-label">{{ method.label }}</span>
                                 </div>
                             {% endfor %}
                             </div>

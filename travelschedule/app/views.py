@@ -268,6 +268,15 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         can_delete=True,
     )
     
+    transportation_icon_map = {
+        'walk': 'fa-solid fa-person-walking',
+        'train': 'fa-solid fa-train',
+        'shinkansen': 'fa-solid fa-subway',
+        'bus': 'fa-solid fa-bus',
+        'plane': 'fa-solid fa-plane',
+        'car': 'fa-solid fa-car',
+        'other': 'fa-solid fa-compass',
+    }
     
     if request.method == 'POST':
         form = PlanForm(
@@ -364,6 +373,14 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             form = PlanForm(trip_dates=trip_choices)
             link_formset = LinkFormSet(instance=plan, prefix='links')
             picture_formset = PictureFormSet(instance=plan, prefix='pictures')
+            
+        tm = []
+        for m in TransportationMethod.objects.all():
+            tm.append({
+                'id': m.id,
+                'label': m.get_transportation_display(),
+                'icon': transportation_icon_map.get(m.transportation, 'fa-solid fa-question'),
+            })
         
         return render(request, 'app/plan_form.html', {
             'form': form, 
@@ -372,7 +389,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             'schedule': schedule,
             'form_title': '予定編集' if plan else '予定追加',
             'schedule_id': schedule_id,
-            'transportation_methods': TransportationMethod.objects.all(),
+            'transportation_methods': tm,
             'selected_category': selected_category,
         })
     
@@ -427,13 +444,13 @@ def schedule_detail_view(request, schedule_id):
     sorted_dates = date_list
     
     transportation_icon_map = {
-        'walk': 'fa-person-walking',
-        'train': 'fa-train',
-        'subway': 'fa-subway',
-        'bus': 'fa-bus',
-        'plane': 'fa-plane',
-        'car': 'fa-car',
-        'compass': 'fa-compass',
+        'walk': 'fa-solid fa-person-walking',
+        'train': 'fa-solid fa-train',
+        'shinkansen': 'fa-solid fa-subway',
+        'bus': 'fa-solid fa-bus',
+        'plane': 'fa-solid fa-plane',
+        'car': 'fa-solid fa-car',
+        'other': 'fa-solid fa-compass',
     }
     
     context = {
