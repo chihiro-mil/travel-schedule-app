@@ -50,9 +50,9 @@
                     <div class="transportation-row">
                         <div class="transportation-icon">
                             {% if plan.action_category == "move" and plan.transportation %}
-                                <i class="fas {{ transportation_icon_map|get_item:plan.transportation.transportation}}"></i><br>
+                                <i class="{{ plan.transportation.transportation_icon_class }}"></i><br>
                                 <span class="category-label">
-                                    {{ plan.transportation.get_transportation_display }}
+                                    {{ plan.transportation.transportation }}
                                 </span>
                             {% elif plan.action_category == "sightseeing" %}
                                 <i class="fas fa-map"></i><br>

@@ -268,16 +268,6 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         can_delete=True,
     )
     
-    transportation_icon_map = {
-        'walk': 'fa-solid fa-person-walking',
-        'train': 'fa-solid fa-train',
-        'shinkansen': 'fa-solid fa-subway',
-        'bus': 'fa-solid fa-bus',
-        'plane': 'fa-solid fa-plane',
-        'car': 'fa-solid fa-car',
-        'other': 'fa-solid fa-compass',
-    }
-    
     if request.method == 'POST':
         form = PlanForm(
             request.POST,
@@ -378,7 +368,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         for m in TransportationMethod.objects.all():
             tm.append({
                 'id': m.id,
-                'label': m.get_transportation,
+                'label': m.transportation,
                 'icon': m.transportation_icon_class,
             })
         
@@ -443,22 +433,12 @@ def schedule_detail_view(request, schedule_id):
         
     sorted_dates = date_list
     
-    transportation_icon_map = {
-        'walk': 'fa-solid fa-person-walking',
-        'train': 'fa-solid fa-train',
-        'shinkansen': 'fa-solid fa-subway',
-        'bus': 'fa-solid fa-bus',
-        'plane': 'fa-solid fa-plane',
-        'car': 'fa-solid fa-car',
-        'other': 'fa-solid fa-compass',
-    }
-    
     context = {
         'schedule_id': schedule.id,
         'plans_by_date': plans_by_date,
         'sorted_dates': sorted_dates,
-        'transportation_icon_map': transportation_icon_map,
         'schedule': schedule,
+        'transportation_methods': TransportationMethod.objects.all(),
         'sorted_dates': sorted(plans_by_date.keys()),
     }
     return render(request, 'app/schedule_detail.html', context)
