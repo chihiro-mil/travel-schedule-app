@@ -43,7 +43,6 @@ def register_view(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.name = form.cleaned_data['name']
             user.set_password(form.cleaned_data['password'])
             user.save()
             return redirect('/app/login/')

@@ -16,7 +16,7 @@ from django.forms import inlineformset_factory
 
 #アカウント登録画面用
 class RegisterForm(forms.ModelForm):
-    name = forms.CharField(
+    username = forms.CharField(
         max_length=20, 
         label='ユーザー名', 
         help_text='',
@@ -57,18 +57,19 @@ class RegisterForm(forms.ModelForm):
     
     class Meta:
         model = User
-        fields = ['name', 'email', 'password']
+        fields = ['username', 'email']
         labels = {
             'name': 'ユーザー名',
             'email': 'メールアドレス',
-            'password': 'パスワード',
         }
         
-    def clean_name(self):
-        name = self.cleaned_data['name']
-        if not (1 <= len(name) <= 20):
-            raise ValidationError("ユーザー名は１文字以上２０文字以下で入力してください。")
-        return name
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if not (1 <= len(username) <= 20):
+            raise forms.ValidationError("ユーザー名は１文字以上２０文字以下で入力してください。")
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("このユーザー名はすでに使われています。")
+        return username
     
     def clean_password(self):
         password = self.cleaned_data['password']
@@ -110,13 +111,13 @@ User = get_user_model()
 class ChangeUsernameForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['name']
-        labels = {'name': '新しいユーザー名'}
+        fields = ['username']
+        labels = {'username': '新しいユーザー名'}
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance and self.instance.name:
-            self.fields['name'].initial = self.instance.name
+        if self.instance and self.instance.username:
+            self.fields['username'].initial = self.instance.username
         
 class ChangeEmailForm(forms.ModelForm):
     class Meta:
