@@ -429,6 +429,10 @@ def schedule_detail_view(request, schedule_id):
     while current_date <= schedule.trip_end_date:
         date_list.append(current_date)
         current_date += timedelta(days=1)
+    
+    for d in date_list:
+        if d not in plans_by_date:
+            plans_by_date[d] = []
         
     sorted_dates = date_list
     
