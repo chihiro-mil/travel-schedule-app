@@ -150,21 +150,25 @@ def home_view(request):
             schedule.save()
             return redirect('app:plan_create_or_edit', schedule_id=schedule.id)
         else:
+            no_schedules = not schedules.exists()
             return render(request, 'app/home.html', {
                 'form': form,
                 'schedules': schedules,
                 'sort_label': sort_label,
                 'next_sort': next_sort,
-                'show_add_modal': True
+                'show_add_modal': True,
+                'no_schedules': no_schedules,
             })
     else:
         form = ScheduleForm()
+        no_schedules = not schedules.exists()
         return render(request, 'app/home.html', {
             'form': form,
             'schedules': schedules,
             'sort_label': sort_label,
             'next_sort': next_sort,
-            'show_add_modal': False
+            'show_add_modal': False,
+            'no_schedules': no_schedules,
         })
     
 #予定表のタイトル編集ケバブ

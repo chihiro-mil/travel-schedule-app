@@ -25,6 +25,12 @@
     </div>
 
 
+    {% if no_schedules %}
+        <div class="no-schedule-message">
+            下の「予定表追加ボタン」から予定表を作成してみましょう！
+        </div>
+    {% endif %}
+
     {% for schedule in schedules %}
         <div class="schedule-card-wrapper" style="position: relative;">
 

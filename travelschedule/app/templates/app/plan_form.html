@@ -44,7 +44,7 @@
                     <label class-"transportation-title">移動手段</label>
                     <div class="custom-select-box">
                         <div class="selected-option" id="selected-option">
-                            <i id="selected-icon" class="" ></i>
+                            <i id="selected-icon" class=""></i>
                             <span id="selected-label">選択してください</span>
                         </div>
                         <div class="options-list" id="options-list">
@@ -428,10 +428,12 @@
                 item.addEventListener("click", (e) => {
                     const id = item.dataset.id;
                     const label = item.dataset.label;
-                    const icon = item.dataset.icon;
+                    const iconClass = item.dataset.icon;
 
                     selectedLabel.textContent = label;
                     hiddenInput.value =  id;
+
+                    selectedIcon.className = iconClass;
 
                     optionsList.style.display = 'none';
                 });
