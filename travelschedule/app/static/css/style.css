@@ -1032,6 +1032,13 @@ input[type="radio"]:checked + label.label {
     word-break: break-all;
 }
 
+.preview-image {
+    max-width: 120px;
+    height: auto;
+    display: block;
+    margin-top: 5px;
+}
+
 /*ＰＣサイズ用*/
 @media screen and (min-width: 768px) {
     .page-title {

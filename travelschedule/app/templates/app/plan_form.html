@@ -44,8 +44,18 @@
                     <label class-"transportation-title">移動手段</label>
                     <div class="custom-select-box">
                         <div class="selected-option" id="selected-option">
-                            <i id="selected-icon" class=""></i>
-                            <span id="selected-label">選択してください</span>
+                            <i id="selected-icon" class="{% if form.instance.pk and form.instance.transportation %}{{ form.instance.transportation.icon }}{% endif %}"></i>
+                            <span id="selected-label">
+                                {% if form.instance.pk and form.instance.transportation %}
+                                    {% with trans=form.instance.transportation %}
+                                        <i id="selected-icon" class="">{{ trans.icon }}</i>
+                                        <span id="selected-label">{{ trans.label }}</span>
+                                    {% endwith %}
+                                {% else %}
+                                    <i id="selected-icon" class=""></i>
+                                    <span id="selected-label">選択してください</span>
+                                {% endif %}
+                            </span>
                         </div>
                         <div class="options-list" id="options-list">
                             {% for method in transportation_methods %}
@@ -58,7 +68,8 @@
                             {% if form.transportation.errors %}
                                 <div class="error-message">{{ form.transportation.errors.0 }}</div>
                             {% endif %}
-                            <input type="hidden" name="transportation" id="transportation-hidden-input">
+                            <input type="hidden" name="transportation" id="transportation-hidden-input"
+                                value="{% if form.instance.pk and form.instance.transportation %}{{ form.instance.transportation.id }}{% endif %}">
                         </div>
                     </div>
 
@@ -318,9 +329,8 @@
 
                             {% if form.instance.pk and form.instance.image %}
                                 <div class="image-preview-wrapper">
-                                    <span class="current-image">現在： <br>
-                                        <a href="{{ form.instance.image.url }}" target="_blank">{{ form.instance.image.url }}</a>
-                                    </span>
+                                    <p class="current-image">現在の画像： </p>
+                                    <img src="{{ form.instance.image.url }}" alt="登録済み画像" class="preview-image">
                                     <span class="remove-picture" title="削除">&times;</span>
                                 </div>
                             {% endif %}
@@ -411,6 +421,29 @@
             console.log("optionsList:", optionsList);
             console.log("hiddenInput:", hiddenInput);
             console.log("selectedLabel:", selectedLabel);*/
+
+            if (hiddenInput && hiddenInput.value) {
+                const matchedItem = Array.from(document.querySelectorAll(".option-item")).find(item => {
+                    return item.dataset.id === hiddenInput.value;
+                });
+                if(matchedItem) {
+                    selectedLabel.textContent = matchedItem.dataset.label;
+                    selectedIcon.className = matchedItem.dataset.icon;
+                }
+            }
+
+            if (selectedLabel && selectedLabel.textContent.trim() !=="" && hiddenInput) {
+                const selectedText = selectedLabel.textContent.trim();
+
+                const matchedItem = Array.from(document.querySelectorAll(".option-item")).find(item => {
+                    return item.dataset.label === selectedText;
+                });
+
+                if (matchedItem) {
+                    hiddenInput.value = matchedItem.dataset.id;
+                    selectedIcon.className = matchedItem.dataset.icon;
+                }
+            }
 
             selectedOption.addEventListener('click', (e) => {
                 e.stopPropagation();
