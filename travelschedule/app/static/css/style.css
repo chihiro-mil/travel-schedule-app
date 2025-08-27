@@ -789,6 +789,12 @@
     padding: 0;
 }
 
+.locked {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 .link-form, .image-form {
     margin-bottom: 10px;
 }
@@ -1186,9 +1192,18 @@ h2 {
 
 .plan-links {
     margin-top: 6p;
+    max-width: 280px;
 }
 .plan-links ul {
     padding-left: 18px;
+}
+
+.plan-links a {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .transportation-icon {

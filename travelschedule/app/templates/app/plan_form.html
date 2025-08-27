@@ -22,19 +22,19 @@
 
                 <input type="radio" name="action_category" value="move" id="category-move"
                     {% if selected_category == "move" %}checked{% endif %}>
-                <label for="category-move" class="label-move">移動</label>
+                <label for="category-move" class="label-move {% if form.instance.pk and selected_category != 'move' %}locked{% endif %}">移動</label>
 
                 <input type="radio" name="action_category" value="sightseeing" id="category-sightseeing"
                     {% if selected_category == "sightseeing" %}checked{% endif %}>
-                <label for="category-sightseeing" class="label-sightseeing">観光地</label>
+                <label for="category-sightseeing" class="label-sightseeing {% if form.instance.pk and selected_category != 'sightseeing' %}locked{% endif %}">観光地</label>
 
                 <input type="radio" name="action_category" value="meal" id="category-meal"
                     {% if selected_category == "meal" %}checked{% endif %}>
-                <label for="category-meal" class="label-meal">食事</label>
+                <label for="category-meal" class="label-meal {% if form.instance.pk and selected_category != 'meal' %}locked{% endif %}">食事</label>
 
                 <input type="radio" name="action_category" value="stay" id="category-stay"
                     {% if selected_category == "stay" %}checked{% endif %}>
-                <label for="category-stay" class="label-stay">宿泊</label>
+                <label for="category-stay" class="label-stay {% if form.instance.pk and selected_category != 'stay' %}locked{% endif %}">宿泊</label>
             </div>
 
             <!--移動カテゴリ-->
@@ -299,9 +299,8 @@
             </div>
             <div class="common-fields">
 
-                <div class="form-group" id="memo-field">
-                    <label id="stay-memo-label">メモ</label>
-                    {{ form.memo }}
+                <div class="form-group">
+                    <label for="{{ form.memo.id_for_label }}">メモ</label>{{ form.memo }}
                 </div>
 
                 <div class="form-group link-formset-container">
