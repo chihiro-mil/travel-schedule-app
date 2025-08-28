@@ -41,35 +41,37 @@
             <div class="category-fields" data-category="move" 
                 {% if selected_category == "move" %}style="display: block;"{% else %}style="display: none;"{% endif %}>
                 <div class="transportation-row">
-                    <label class-"transportation-title">移動手段</label>
-                    <div class="custom-select-box">
-                        <div class="selected-option" id="selected-option">
-                            <i id="selected-icon" class="{% if form.instance.pk and form.instance.transportation %}{{ form.instance.transportation.icon }}{% endif %}"></i>
-                            <span id="selected-label">
-                                {% if form.instance.pk and form.instance.transportation %}
-                                    {% with trans=form.instance.transportation %}
-                                        <i id="selected-icon" class="">{{ trans.icon }}</i>
-                                        <span id="selected-label">{{ trans.label }}</span>
-                                    {% endwith %}
-                                {% else %}
-                                    <i id="selected-icon" class=""></i>
-                                    <span id="selected-label">選択してください</span>
-                                {% endif %}
-                            </span>
-                        </div>
-                        <div class="options-list" id="options-list">
-                            {% for method in transportation_methods %}
-                                <div class="option-item" data-id="{{ method.id }}" data-label="{{ method.label }}" data-icon="{{ method.icon }}">
-                                    <i class="{{ method.icon }}"></i>
-                                    <span class="transportation-label">{{ method.label }}</span>
-                                </div>
-                            {% endfor %}
+                    <div class="form-group">
+                        <label class-"transportation-title">移動手段</label>
+                        <div class="custom-select-box">
+                            <div class="selected-option" id="selected-option">
+                                <i id="selected-icon" class="{% if form.instance.pk and form.instance.transportation %}{{ form.instance.transportation.icon }}{% endif %}"></i>
+                                <span id="selected-label">
+                                    {% if form.instance.pk and form.instance.transportation %}
+                                        {% with trans=form.instance.transportation %}
+                                            <i id="selected-icon" class="">{{ trans.icon }}</i>
+                                            <span id="selected-label">{{ trans.label }}</span>
+                                        {% endwith %}
+                                    {% else %}
+                                        <i id="selected-icon" class=""></i>
+                                        <span id="selected-label">選択してください</span>
+                                    {% endif %}
+                                </span>
                             </div>
-                            {% if form.transportation.errors %}
-                                <div class="error-message">{{ form.transportation.errors.0 }}</div>
-                            {% endif %}
-                            <input type="hidden" name="transportation" id="transportation-hidden-input"
-                                value="{% if form.instance.pk and form.instance.transportation %}{{ form.instance.transportation.id }}{% endif %}">
+                            <div class="options-list" id="options-list">
+                                {% for method in transportation_methods %}
+                                    <div class="option-item" data-id="{{ method.id }}" data-label="{{ method.label }}" data-icon="{{ method.icon }}">
+                                        <i class="{{ method.icon }}"></i>
+                                        <span class="transportation-label">{{ method.label }}</span>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                                {% if form.transportation.errors %}
+                                    <div class="error-message">{{ form.transportation.errors.0 }}</div>
+                                {% endif %}
+                                <input type="hidden" name="transportation" id="transportation-hidden-input"
+                                    value="{% if form.instance.pk and form.instance.transportation %}{{ form.instance.transportation.id }}{% endif %}">
+                            </div>
                         </div>
                     </div>
 
@@ -303,8 +305,8 @@
                     <label for="{{ form.memo.id_for_label }}">メモ</label>{{ form.memo }}
                 </div>
 
+                <h4>ＵＲＬ<br>(最大５件)</h4>
                 <div class="form-group link-formset-container">
-                    <h4>ＵＲＬ(最大５件)</h4>
                     {{ link_formset.management_form }}
                     <div id="link-form-container">
                         {% for form in link_formset %}

@@ -783,7 +783,7 @@
 
 .category-fields,
 .common-fields {
-    width: 100%;
+    width: auto;
     max-width: 400px;
     margin: 0 auto;
     padding: 0;
@@ -889,19 +889,6 @@ input[type="radio"]:checked + label.label {
     background-color: #7fff00;
 }
 
-.transportation-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin-bottom: 1rem;
-}
-
-.transportation-title {
-    white-space: nowrap;
-    font-size: 14px;
-    font-weight: bold;
-}
 
 .custom-select-box {
     position: relative;
@@ -948,18 +935,25 @@ input[type="radio"]:checked + label.label {
     align-items: center;
     gap: 10px;
     padding-bottom: 80px;
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .form-group {
-    display: block;
+    display: flex;
+    align-items: center;
     margin-bottom: 25px;
     font-weight: bold;
 }
 
 .form-group label {
     display: inline-block;
-    vertical-align: middle;
+    width: 110px;
+    text-align: left;
+    vertical-align: top;
     margin-right: 5px;
+    margin-left: 50px;
 }
 
 .form-group input,
@@ -968,6 +962,11 @@ input[type="radio"]:checked + label.label {
     vertical-align: middle;
 }
 
+.form-group.common-submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .error-message {
     color: #ff0000;
     font-size: 0.9em;
@@ -977,7 +976,6 @@ input[type="radio"]:checked + label.label {
 .common-fields {
     display: none;
     text-align: center;
-    max-width: 600px;
     margin: 0 auto;
     padding: 20px 0;
 }
@@ -1068,6 +1066,9 @@ input[type="radio"]:checked + label.label {
     }
     .plan-form-container label {
         font-size: 18px;
+    }
+    .plan-form-container {
+        max-width: 480px;
     }
     .btn-primary {
         padding: 10px 18px;
@@ -1172,10 +1173,11 @@ h2 {
     display: flex;
     align-items: flex-start;
     gap: 20px;
-    padding: 10px;
     border-radius: 10px;
     margin: 10px 0;
 }
+
+
 
 .plan-name {
     margin-top: 8px;
