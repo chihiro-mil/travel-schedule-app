@@ -12,7 +12,7 @@
     <div class="login-container">
         <h1 class="login-title">Travel schedule</h1>
         <h2 class="login-subtitle">ログイン</h2>
-            <form method="post" action="{% url 'app:login' %}">
+            <form method="post" action="{% url 'app:login' %}" class="login-form">
                 {% csrf_token %}
 
                 {% if form.non_field_errors %}
@@ -23,7 +23,7 @@
                     </div>
                 {% endif %}
 
-                <div class="form-group">
+                <div class="login-form-group">
                     <label for="{{ form.email.id_for_label }}">メールアドレス</label>
                     <div class="form-input">{{ form.email }}</div>
                     {% if form.email.errors %}
@@ -35,7 +35,7 @@
                     {% endif %}
                 </div>
 
-                <div class="form-group">
+                <div class="login-form-group">
                     <label for="{{ form.password.id_for_label }}">パスワード</label>
                     <div class="form-input">{{ form.password }}</div>
                     {% if form.password.errors %}

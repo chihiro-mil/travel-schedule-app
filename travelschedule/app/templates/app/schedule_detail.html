@@ -162,7 +162,7 @@
             <form method="POST" id="deleteForm" action="">
                 {% csrf_token %}
                 <input type="hidden" name="plan_id" id="deletePlanIdInput">
-                <div class="modal-buttons">
+                <div class="modal-buttons" style="text-align: center; margin-top: 10px;">
                     <button type="submit" id="confirmDelete">はい</button>
                     <button type="button" id="cancelDelete">いいえ</button>
                 </div>

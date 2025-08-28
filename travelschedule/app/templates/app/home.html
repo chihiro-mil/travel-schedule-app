@@ -165,9 +165,9 @@
                 <form method="POST" action="{% url 'app:delete_schedule' schedule.id %}">
                     {% csrf_token %}
                     <input type="hidden" name="schedule_id" id="deleteScheduleId">
-                    <div style="text-align: right; margin-top: 10px;">
+                    <div style="text-align: center; margin-top: 10px;">
                         <button type="submit">はい</button>
-                        <button type="button" id="cancelDeleteBtn">いいえ</button>
+                        <button type="button" style="margin-left: 10px;" id="cancelDeleteBtn">いいえ</button>
                     </div>
                 </form>
             </div>
