@@ -108,10 +108,12 @@
                 {% csrf_token %}
 
                 
-                <label>旅行タイトル <span class="home-required-label">必須</span></label><br>
-                <input type="text" name="title" maxlength="50" required><br><br>
+                <label>旅行タイトル <span class="home-required-label">必須</span></label>
+                <div class="home-required-wrapper">
+                    <input type="text" name="title" maxlength="50" required>
+                </div><br>
 
-                <label>旅行期間 <span class="home-required-label">必須</span></label><br>
+                <label>旅行期間 <span class="home-required-label">必須</span></label>
                 <div class="calendar-wrapper">
                     <input type="text" id="dateRange" name="trip_period" placeholder="日付を選択" readonly>
                     <i class="fas fa-calendar-alt calendar-icon"></i>
@@ -130,7 +132,11 @@
 
     <div id="editModal" class="modal schedule-edit-modal hidden">
         <div class="modal-content">
-            <span class="close" id="editModalClose">&times;</span>
+            <div class="modal-header">
+                <span class="schedule-edit-modal-title">タイトル・旅行期間の変更</span>
+                <span class="close" id="editModalClose">&times;</span>
+            </div>
+            
             <form id="editModalForm" method="POST" action="{% url 'app:edit_schedule_title' %}">
                 {% csrf_token %}
                 <input type="hidden" name="schedule_id" id="editScheduleId">

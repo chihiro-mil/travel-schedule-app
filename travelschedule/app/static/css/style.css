@@ -1,5 +1,5 @@
 @charset "utf-8";
-
+html, body { margin: 0; }
 
 /*ポートフォリオ画面*/
 .index-body {
@@ -58,6 +58,33 @@
     text-decoration: none;
     color: #4169e1; 
 
+}
+
+@media (max-width: 768px) {
+    .index-h1 {
+        font-size: 20px;
+    }
+    .index-h2 {
+        font-size: 18px;
+    }
+    .large-text,
+    .small-text {
+        font-size: 14px;
+    }
+    .nav-link {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        gap: 12px;
+    }
+    .nav-link a {
+        display: inline-block;
+        text-align: center;
+        min-width: 20px;
+        white-space: nowrap;
+        padding: 0;
+        text-decoration: underline;
+    }
 }
 
 
@@ -326,12 +353,12 @@
 .footer-nav {
     position: fixed;
     bottom: 0;
+    left: 0;
+    right: 0;
     width: 100%;
     background-color: #f5f5f5;
     border-top: 1px solid #ccc;
-    display: flex;
-    justify-content: center;
-    padding: 10px 0;
+    padding: 0;
     font-size: 16px;
     z-index: 1000;
     transition: transform 0.3s ease;
@@ -340,13 +367,15 @@
 .footer-nav ul {
     list-style: none;
     display: flex;
-    justify-content: space-evenly;
     width: 100%;
     padding: 0;
     margin: 0;
+    height: 100%;
 }
 
 .footer-nav li {
+    flex: 1 1 0;
+    min-width: 0;
     text-align: center;
     font-size: 14px;
 }
@@ -358,8 +387,16 @@
 }
 
 .footer-nav li a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 0;
+    width: 100%;
+    height: 56px;
     color: #000;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 .footer-nav .disabled-link {
@@ -452,7 +489,44 @@
     text-decoration: underline;
 }
 
-.home-required-label {
+.schedule-add-modal form {
+    width: 90%;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.schedule-add-modal .calendar-wrapper,
+.schedule-add-modal .home-required-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.schedule-add-modal label {
+    display: block;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.schedule-add-modal .calendar-wrapper,
+.schedule-add-modal .home-required-wrapper input {
+    min-width: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.schedule-add-modal .calendar-wrapper .calendar-icon {
+    flex: 0 0 24px;
+    margin-left: 6px;
+    font-size: 20px;
+    cursor: default;
+    color: #888;
+    pointer-events: none;
+}
+
+.schedule-add-modal .home-required-label {
     color: #ff0000;
     font-size: 11px;
     margin-left: 5px;
@@ -509,6 +583,27 @@
 
 .home-error-message {
     color: #ff0000;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.schedule-edit-modal-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.modal-header .close {
+    position: absolute;
+    right: 10px;
+
 }
 
 .schedule-form-group {
@@ -667,8 +762,6 @@
     background-color: #fff;
     padding: 30px;
     border-radius: 8px;
-    width: 500px;
-    max-width: 90%px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     font-size: 16px;
     text-align: center;
@@ -676,9 +769,10 @@
 
 .modal-content input[type="text"],
 .modal-content input[type="date"] {
-    width: 250px;
+    width: 260px;
     padding: 8px;
     box-sizing: border-box;
+    display: block;
 }
 
 
@@ -695,26 +789,6 @@
     color: #000;
 }
 
-.calendar-wrapper-horizontal {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    gap: 8px;
-}
-
-.calendar-wrapper-horizontal input {
-    flex-grow: 1;
-    padding: 8px;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-
-.calendar-icon {
-    cursor: default;
-    color: #888;
-    font-size: 20px;
-    pointer-events: none;
-}
 
 .transportation-options {
     display: flex;
@@ -760,7 +834,6 @@
     .modal-content {
     font-size: 14px;
     padding: 10px;
-    width: 90%;
     }
     .modal-content input,
     .modal-content button {
@@ -849,21 +922,28 @@
 .category-radio {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
+    white-space: nowrap;
+    max-width: none;
+    width: 400px;
     margin: 20px auto;
-    max-width: 400px;
+    text-align: center;
+    gap: 10px;
 }
 
 .category-radio label {
-    display: inline-block;
-    padding: 10px 16px;
-    margin: 4px;
+    flex: 1 1 0;
+    min-width: 60px;
+    box-sizing: border-box;
+    max-width: 100px;
+    text-align: center;
+    margin: 0px;
+    padding: 10px 0;
     border: 2px solid #888;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    transition: all 0.2s;
+    transition: background-color 0.3s, color 0.3s;
+    white-space: nowrap;
 }
 
 .category-label input[type="radio"]{
@@ -887,29 +967,41 @@ input[type="radio"]:checked + label.label {
 .label-move {
     background-color: #add8e6;
 }
-.label-move:hover {
-    background-color: #00bfff;
+#category-move:checked + .label-move {
+    background-color: #00a2ff;
+}
+#category-move:checked + .label-move:hover {
+    background-color: #0052cc;
 }
 
 .label-sightseeing {
     background-color: #f0e68c;
 }
-.label-sightseeing:hover {
+#category-sightseeing:checked + .label-sightseeing {
     background-color: #ffd700;
+}
+#category-sightseeing:checked + .label-sightseeing:hover {
+    background-color: #e6c200;
 }
 
 .label-meal {
     background-color: #f08080;
 }
-.label-meal:hover {
+#category-meal:checked + .label-meal {
     background-color: #ff0000;
+}
+#category-meal:checked + .label-meal:hover {
+    background-color: #cc0000;
 }
 
 .label-stay {
     background-color: #90ee90;
 }
-.label-stay:hover {
+#category-stay:checked + .label-stay {
     background-color: #7fff00;
+}
+#category-stay:checked + .label-stay:hover {
+    background-color: #66cc66;
 }
 
 
@@ -1073,18 +1165,19 @@ input[type="radio"]:checked + label.label {
         margin-bottom: 12px;
     }
     .category-radio {
-        display: block;
-        white-space: nowrap;
-        max-width: none;
-        width: 800px;
-        margin: 20px auto;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 12px;
         text-align: center;
     }
     .category-radio label {
-        display: inline-block;
-        margin: 5px;
-        padding: 14px 20px;
+        flex: 0 0 calc((100% - 36px) / 4);
+        box-sizing: border-box;
+        margin: 0;
+        padding: 12px 0;
+        text-align: center;
         font-size: 18px;
+        white-space: nowrap;
         border-radius: 10px;
     }
     .plan-form-container label {
