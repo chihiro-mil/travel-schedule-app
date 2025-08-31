@@ -223,8 +223,8 @@ class PlanForm(forms.ModelForm):
             'style': 'width: 15em; white-space: pre-wrap; word-break: break-all;'
         })
     )
-    start_date = forms.DateField()
-    end_date = forms.DateField()
+    #start_date = forms.DateField()
+    #end_date = forms.DateField()
     
     start_date = forms.DateField(
         widget=forms.Select(),
@@ -282,9 +282,15 @@ class PlanForm(forms.ModelForm):
         
         
         if trip_dates:
-            date_choices = [(date, date.strftime('%Y-%m-%d')) for date in trip_dates]
+            date_choices = [
+                (d.isoformat(), d.strftime('%Y-%m-%d'))
+                for d in trip_dates
+            ]
             self.fields['start_date'].widget = forms.Select(choices=date_choices)
             self.fields['end_date'].widget = forms.Select(choices=date_choices)
+            
+            self.fields['start_date'].input_fprmats = ['%Y-%m-%d']
+            self.fields['end_date'].input_fprmats = ['%Y-%m-%d']
     
     def clean(self):
         cleaned_data = super().clean()

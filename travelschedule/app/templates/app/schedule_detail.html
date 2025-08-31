@@ -18,7 +18,7 @@
 
     <div class="day-tabs">
         {% for date in sorted_dates %}
-            <button class="day-tab {% if forloop.first %}active{% endif %}" data-day="{{ forloop.counter }}">
+            <button class="day-tab {% if forloop.first %}active{% endif %}" data-day="{{ forloop.counter }}" data-date="{{ date|date:"Y-m-d" }}">
                 {{ forloop.counter }}日目<br>{{ date|date:"n/j" }}({{ date|date:"D" }})
             </button>
         {% endfor %}
@@ -185,7 +185,8 @@
                 </a>
             </li>
             <li>
-                <a href="{% url 'app:plan_create_or_edit' schedule_id=schedule_id %}">
+                <a id="footer-add"
+                    href="{% url 'app:plan_create_or_edit' schedule_id=schedule_id %}">
                     <span class="footer-icon-label">
                         <i class="fas fa-plus-square"></i><br>予定追加
                     </span>
@@ -323,6 +324,24 @@
                 console.log("クリックされた");
                 modal.classList.add('modal-hidden');
                 modalImage.src = '';
+            });
+
+            const addLink = document.getElementById('footer-add');
+            if (!addLink) return;
+
+            addLink.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const active = document.querySelector('.day-tab.active');
+                const selectedDate = active ? active.getAttribute('data-date') : null;
+
+                const url = new URL(this.href, location.origin);
+                if (selectedDate) {
+                    url.searchParams.set('start', selectedDate);
+                    url.searchParams.set('end', selectedDate);
+                }
+
+                location.href = url.toString();
             });
         });
     </script>

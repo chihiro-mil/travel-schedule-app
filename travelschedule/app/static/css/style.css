@@ -699,51 +699,6 @@ html, body { margin: 0; }
 }
 
 
-/*予定表詳細画面*/
-
-.schedule-detail-container {
-    width: 100%;
-    max-width: 250px;
-    margin: 0 auto;
-    text-align: center;
-    padding: 20px;
-}
-.day-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    overflow-x: auto;
-}
-
-.day-tab {
-    padding: 8px 12px;
-    border: none;
-    background-color: #a9a9a9;
-    border-radius: 5px;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.day-tab.active {
-    background-color: #007bff;
-}
-
-.day-content {
-    display: block;
-}
-
-.fa-solid {
-    margin-right: 8px;
-    font-size: 16px;
-}
-
-.location {
-    display: inline-block;
-    width: 8em;
-    white-space: pre-wrap;
-    word-break: break-all;
-}
-
 /*予定表追加モーダル*/
 .modal {
     display: flex;
@@ -1100,25 +1055,25 @@ input[type="radio"]:checked + label.label {
 }
 
 .picture-formset-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(2, 1fr);
     justify-content: center;
     margin-top: 10px;
 }
 
 .picture-form {
-    width: 48%;
     box-sizing: border-box;
     position: relative;
 }
 
 .picture-form input[type="file"] {
     width: 100%;
+    min-width: 350px;
     padding: 6px;
     font-size: 14px;
     box-sizing: border-box;
-    display: block;
+    white-space: nowrap;
 }
 
 .image-preview-wrapper {
@@ -1158,6 +1113,10 @@ input[type="radio"]:checked + label.label {
     margin-top: 5px;
 }
 
+.image-note {
+    color: #ff0000;
+}
+
 /*ＰＣサイズ用*/
 @media screen and (min-width: 768px) {
     .page-title {
@@ -1194,6 +1153,27 @@ input[type="radio"]:checked + label.label {
 }
 
 
+@media (max-width: 768px) {
+    .picture-formset-container {
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+    margin-top: 10px;
+    grid-auto-columns: 350px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    }
+    .picture-form input[type="file"] {
+    width: 100%;
+    min-width: 340px;
+    padding: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    }
+}
+
 /*予定詳細画面*/
 
 
@@ -1211,8 +1191,17 @@ h2 {
     display: block;
 }
 
+.schedule-detail-container {
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+}
+
 .day-tabs {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
     padding: 10px 0;
@@ -1236,6 +1225,22 @@ h2 {
     color: white;
     font-weight: bold;
     border-color: #007bff;
+}
+
+.day-content {
+    display: block;
+}
+
+.fa-solid {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.location {
+    display: inline-block;
+    width: 8em;
+    white-space: pre-wrap;
+    word-break: break-all;
 }
 
 .plan-card {

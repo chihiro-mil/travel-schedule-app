@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.db.models import Prefetch
 from django.views.decorators.http import require_POST
 from django.utils.timezone import localtime
+from django.utils.dateparse import parse_date
 from django.forms import inlineformset_factory
 from app.models import Plan
 
@@ -363,7 +364,20 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             
             picture_formset = PictureFormSet(instance=plan, prefix='pictures')
         else:
-            form = PlanForm(trip_dates=trip_choices)
+            date_str = request.GET.get('date') or request.GET.get('start')
+            end_str = request.GET.get('end')
+            
+            start_date = parse_date(date_str) if date_str else None
+            end_date = parse_date(end_str) if end_str else start_date
+            
+            initial = {}
+            if start_date:
+                initial['start_date'] = start_date
+            if end_date:
+                initial['end_date'] = end_date
+                
+                
+            form = PlanForm(trip_dates=trip_choices, initial=initial)
             link_formset = LinkFormSet(instance=plan, prefix='links')
             picture_formset = PictureFormSet(instance=plan, prefix='pictures')
             
