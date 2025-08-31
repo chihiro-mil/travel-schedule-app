@@ -193,25 +193,67 @@ class PlanForm(forms.ModelForm):
     departure_location = forms.CharField(
         required=False,
         max_length=24,
-        widget=forms.Textarea(attrs={
-            'rows': 3,
-            'style': 'width: 8em; white-space: pre-wrap; word-break: break-all;'
+        widget=forms.TextInput(attrs={
+            'style': 'width: 8em;',
+            'maxlength': '24',
+            'onbeforeinput': (
+                "const m=24;"
+                "const t=this;"
+                "const et=event;"
+                "if(!et.inputTyoe) return;"
+                "const ins = et.inputTyoe.startsWith('insert');"
+                "if(!ins) return;"
+                "const sel=t.selectionEnd - t.selectionStart;"
+                "const add=(et.data||'').length;"
+                "const newLen=t.value.length - sel + add;"
+                "if(newLen>m){ et.preventDefault(); }"
+            ),
+            'oninput': "if(this.value.length>24){this.value=this.value.slice(0,24)}",
+            'oncompositionend': "if(this.value.length>24){this.value=this.value.slice(0,24)}",
         })
     )
     arrival_location = forms.CharField(
         required=False,
         max_length=24,
-        widget=forms.Textarea(attrs={
-            'rows': 3,
-            'style': 'width: 8em; white-space: pre-wrap; word-break: break-all;'
+        widget=forms.TextInput(attrs={
+            'style': 'width: 8em;',
+            'maxlength': '24',
+            'onbeforeinput': (
+                "const m=24;"
+                "const t=this;"
+                "const et=event;"
+                "if(!et.inputTyoe) return;"
+                "const ins = et.inputTyoe.startsWith('insert');"
+                "if(!ins) return;"
+                "const sel=t.selectionEnd - t.selectionStart;"
+                "const add=(et.data||'').length;"
+                "const newLen=t.value.length - sel + add;"
+                "if(newLen>m){ et.preventDefault(); }"
+            ),
+            'oninput': "if(this.value.length>24){this.value=this.value.slice(0,24)}",
+            'oncompositionend': "if(this.value.length>24){this.value=this.value.slice(0,24)}",
         })
     )
     name = forms.CharField(
         required=False,
         max_length=24,
-        widget=forms.Textarea(attrs={
-            'rows': 3,
-            'style': 'width: 8em; white-space: pre-wrap; word-break: break-all;'
+        widget=forms.TextInput(attrs={
+            'style': 'width: 8em;',
+            'maxlength': '24',
+            'onbeforeinput': (
+                "const m=24;"
+                "const t=this;"
+                "const et=event;"
+                "if(!et.inputTyoe) return;"
+                "const ins = et.inputTyoe.startsWith('insert');"
+                "if(!ins) return;"
+                "const sel=t.selectionEnd - t.selectionStart;"
+                "const add=(et.data||'').length;"
+                "const newLen=t.value.length - sel + add;"
+                "if(newLen>m){ et.preventDefault(); }"
+            ),
+            'oninput': "if(this.value.length>24){this.value=this.value.slice(0,24)}",
+            'oncompositionend': "if(this.value.length>24){this.value=this.value.slice(0,24)}",
         })
     )
     memo = forms.CharField(
@@ -219,7 +261,6 @@ class PlanForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 5,
-            'placeholder': 'メモを入力',
             'style': 'width: 15em; white-space: pre-wrap; word-break: break-all;'
         })
     )
