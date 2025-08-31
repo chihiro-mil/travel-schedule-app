@@ -321,6 +321,20 @@ html, body { margin: 0; }
     list-style: none;
 }
 
+.change-messages {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.alert {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: #e0ffff;
+    color: #007bff;
+}
+
 @media (max-width: 768px) {
     .change-form-group label,
     .change-row label {

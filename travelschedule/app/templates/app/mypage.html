@@ -11,6 +11,14 @@
 <body>
     <a href="{{ back_url|default:"#" }}"class="back-button">＜戻る</a>
 
+    {% if messages %}
+        <div class="change-messages">
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="change-container">
         <h1 class=change-title>マイページ設定</h1>
 

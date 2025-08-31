@@ -139,10 +139,14 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         return password1
     def clean(self):
         cleaned_data = super().clean()
-        password1 = cleaned_data.get('new_password1')
-        password2 = cleaned_data.get('new_password2')
+        old_password = cleaned_data.get('old_password')
+        new_password1 = cleaned_data.get('new_password1')
+        new_password2 = cleaned_data.get('new_password2')
         
-        if password1 and password2 and password1 != password2:
+        if old_password and new_password1 and old_password == new_password1:
+            self.add_error('new_password1', "新しいパスワードは現在のパスワードと同じですので変更できません。")
+        
+        if new_password1 and new_password2 and new_password1 != new_password2:
             self.add_error('new_password2', "新しいパスワードと確認用パスワードが一致していません。")
         return cleaned_data
     
