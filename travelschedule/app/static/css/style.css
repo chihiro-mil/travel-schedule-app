@@ -893,7 +893,7 @@ html, body { margin: 0; }
     justify-content: center;
     white-space: nowrap;
     max-width: none;
-    width: 400px;
+    width: 350px;
     margin: 20px auto;
     text-align: center;
     gap: 10px;
@@ -1021,6 +1021,7 @@ input[type="radio"]:checked + label.label {
     padding-bottom: 80px;
     max-width: 640px;
     margin: 0 auto;
+    padding-inline: 10px;
     width: 100%;
 }
 
@@ -1140,6 +1141,7 @@ input[type="radio"]:checked + label.label {
     .category-radio {
         display: flex;
         flex-wrap: nowrap;
+        width: 400px;
         gap: 12px;
         text-align: center;
     }
@@ -1185,6 +1187,9 @@ input[type="radio"]:checked + label.label {
     font-size: 14px;
     box-sizing: border-box;
     white-space: nowrap;
+    }
+    .link-formset-container {
+        margin-left: 15px;
     }
 }
 
