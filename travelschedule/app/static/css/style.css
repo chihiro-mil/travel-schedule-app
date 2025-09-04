@@ -52,12 +52,12 @@ html, body { margin: 0; }
     display: flex;
     justify-content: center;
     gap: 15px;
+    margin-bottom: 70px;
 }
 .nav-link a {
     padding: 10px 20px;
     text-decoration: none;
     color: #4169e1; 
-
 }
 
 @media (max-width: 768px) {
@@ -674,11 +674,12 @@ html, body { margin: 0; }
         top: 50%;
         transform: translateY(-50%);
         left: calc(50% + 75px);
+        white-space: nowrap;
         font-size: 10px;
         padding: 4px 6px;
-        width: 60px;
+        width: max-content;
+        max-width: 100%;
         text-align: center;
-        white-space: normal;
         line-height: 1.2;
         word-break: break-word;
         box-sizing: border-box;
@@ -902,9 +903,10 @@ html, body { margin: 0; }
     justify-content: center;
     white-space: nowrap;
     margin: 20px auto;
-    max-width: 100%;
     text-align: center;
     gap: 10px;
+    width: 80px;
+    flex-shrink: 0;
 }
 
 .category-radio label {
@@ -921,6 +923,7 @@ html, body { margin: 0; }
     font-size: 14px;
     transition: background-color 0.3s, color 0.3s;
     white-space: nowrap;
+    width: 90px;
 }
 
 .category-label input[type="radio"]{
@@ -1067,11 +1070,6 @@ input[type="radio"]:checked + label.label {
     justify-content: center;
     align-items: center;
 }
-.error-message {
-    color: #ff0000;
-    font-size: 0.9em;
-    margin-top: 4px;
-}
 
 .common-fields {
     text-align: center;
@@ -1090,7 +1088,7 @@ input[type="radio"]:checked + label.label {
 .picture-formset-container {
     display: grid;
     gap: 5px;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     justify-content: center;
     margin-top: 10px;
 }
@@ -1184,6 +1182,14 @@ input[type="radio"]:checked + label.label {
         font-size: 16px;
         border-radius: 6px;
     }
+    .error-message {
+    color: #ff0000;
+    font-size: 0.9em;
+    white-space: normal;
+    max-width: 120px;
+    display: inline-block;
+    margin-top: 4px;
+}
 }
 
 
@@ -1191,7 +1197,7 @@ input[type="radio"]:checked + label.label {
     .picture-formset-container {
     display: grid;
     gap: 5px;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     grid-auto-rows: auto;
     margin-top: 10px;
     grid-auto-columns: 350px;
@@ -1210,6 +1216,15 @@ input[type="radio"]:checked + label.label {
     }
     .link-formset-container {
         margin-left: 15px;
+    }
+    .error-message {
+        color: #ff0000;
+        font-size: 0.5em;
+        width: 100px;
+        white-space: normal;
+        word-break: break-word;
+        margin-left: 4px;
+        margin-top: 4px;
     }
 }
 
