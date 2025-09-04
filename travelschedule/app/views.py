@@ -283,7 +283,6 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         link_formset = LinkFormSet(request.POST, request.FILES, instance=plan, prefix='links')
         picture_formset = PictureFormSet(request.POST or None, request.FILES or None, instance=plan, prefix='pictures')
         
-        print("form.data =", form.data)
         
         for f in link_formset:
             f.empty_permitted = True
@@ -335,6 +334,14 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             return redirect('app:schedule_detail', schedule_id=schedule.id)
             
         else:
+            tm = []
+            for m in TransportationMethod.objects.all():
+                tm.append({
+                    'id': m.id,
+                    'label': m.transportation,
+                    'icon': m.transportation_icon_class,
+                })
+                
             return render(request, 'app/plan_form.html', {
                 'form': form, 
                 'link_formset': link_formset,
@@ -342,7 +349,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 'schedule': schedule,
                 'form_title': '予定編集' if plan else '予定追加',
                 'schedule_id': schedule_id,
-                'transportation_methods': TransportationMethod.objects.all(),
+                'transportation_methods': tm,
                 'selected_category': selected_category,
             })
     else:
@@ -456,12 +463,20 @@ def schedule_detail_view(request, schedule_id):
         
     sorted_dates = date_list
     
+    tm = []
+    for m in TransportationMethod.objects.all():
+        tm.append({
+            'id': m.id,
+            'label': m.transportation,
+            'icon': m.transportation_icon_class,
+        })
+
     context = {
         'schedule_id': schedule.id,
         'plans_by_date': plans_by_date,
         'sorted_dates': sorted_dates,
         'schedule': schedule,
-        'transportation_methods': TransportationMethod.objects.all(),
+        'transportation_methods': tm,
         'sorted_dates': sorted(plans_by_date.keys()),
     }
     return render(request, 'app/schedule_detail.html', context)

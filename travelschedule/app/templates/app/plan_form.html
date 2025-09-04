@@ -50,7 +50,10 @@
 
                             <div class="options-list">
                                 {% for method in transportation_methods %}
-                                    <div class="option-item" data-id="{{ method.id }}" data-label="{{ method.label }}" data-icon="{{ method.icon }}">
+                                    <div class="option-item"
+                                        data-id="{{ method.id }}"
+                                        data-label="{{ method.label }}"
+                                        data-icon="{{ method.icon }}">
                                         <i class="{{ method.icon }}"></i>
                                         <span class="transportation-label">{{ method.label }}</span>
                                     </div>
@@ -453,40 +456,33 @@
 
                     if (!selectedOption || !optionsList) return;
 
-                    /*開閉処理*/
-                    selectedOption.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        console.log("selectedOptionクリック:", selectedOption);
-                        console.log("optionsList要素:", optionsList);
-
-                        if (optionsList) {
-                            optionsList.classList.toggle('active');
-                            console.log("active切り替え後：", optionsList.className);
-                        } else {
-                            console.log("optionsList見つかりません");
-                        }
-                    });
-                    
-                    /*選択処理*/
-                    optionsList.querySelectorAll('.option-item').forEach(item => {
-                        item.addEventListener('click', () => {
-                            hiddenInput.value = item.dataset.id;
-                            selectedLabel.textContent = item.dataset.label;
-                            selectedIcon.className = item.dataset.icon;
-                            optionsList.classList.remove('active');
-                        });
-                    });
-
                     /*バリエーション後の移動手段復元*/
                     if (hiddenInput && hiddenInput.value) {
                         const matchedItem = Array.from(optionsList.querySelectorAll('.option-item'))
                             .find(item => item.dataset.id === hiddenInput.value);
-                        
                         if (matchedItem) {
-                            if (selectedLabel) selectedLabel.textContent = matchedItem.dataset.label;
-                            if (selectedIcon) selectedIcon.className = matchedItem.dataset.icon;
+                            selectedLabel.textContent = matchedItem.dataset.label;
+                            selectedIcon.className = matchedItem.dataset.icon;
                         }
                     }
+                    
+                    /*選択処理(古いイベントを消す、新しい要素に置き換え)*/
+                    optionsList.querySelectorAll('.option-item').forEach(item => {
+                        const newItem = item.cloneNode(true);
+                        item.parentNode.replaceChild(newItem, item);
+
+                        newItem.addEventListener('click', () => {
+                            hiddenInput.value = newItem.dataset.id;
+                            selectedLabel.textContent = newItem.dataset.label;
+                            selectedIcon.className = newItem.dataset.icon;
+                            optionsList.classList.remove('active');
+                        });
+                    });
+
+                    /*開閉処理*/
+                    selectedOption.addEventListener('click', () => {
+                        optionsList.classList.toggle('active');
+                    });
                 });
 
                 document.addEventListener('click', (e) => {
@@ -548,12 +544,12 @@
                 lastScrollTop = scrollTop <= 0 ? 0 :scrollTop;
             });
 
-            /*カテゴリ初期化*/
-            /*const checkedRadio = document.querySelector('input[name="action_category"]:checked');
-            console.log('checkedRadio is:', checkedRadio);
-            if (checkedRadio) {
-                checkedRadio.dispatchEvent(new Event('change'));
-            }*/
+            /*バリエーション後の移動手段復元*/
+            const hiddenInput = document.querySelector('.transportation-hidden-input');
+            if (hiddenInput && hiddenInput.value) {
+                console.log("バリエーション後の復元実行");
+                initTransportationSelect();
+            }
         });
         
     </script>
