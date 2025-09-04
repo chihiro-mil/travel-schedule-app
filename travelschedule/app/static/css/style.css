@@ -1636,12 +1636,14 @@ position: absolute;
 }
 
 .plan-close {
-    position: absolute;
+    position: fixed;
     top: 15px;
+    right: 16px;
     font-size: 30px;
+    font-weight: bold;
     color: white;
     cursor: pointer;
-    z-index: 2000;
+    z-index: 10000;
 }
 
 .modal-hidden {

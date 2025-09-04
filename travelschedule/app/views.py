@@ -4,11 +4,14 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Prefetch
+from django.db.models import  Q
+from django.db.models.functions import Coalesce
 from django.views.decorators.http import require_POST
 from django.utils.timezone import localtime
 from django.utils.dateparse import parse_date
 from django.forms import inlineformset_factory
 from app.models import Plan
+from django.utils import timezone
 
 
 from .forms import (
@@ -28,7 +31,7 @@ from .forms import (
 from .models import User, Schedule, Plan, Link, Picture, TransportationMethod
 
 from datetime import timedelta
-from datetime import datetime
+from datetime import datetime, time
 
 from collections import defaultdict
 
@@ -189,30 +192,34 @@ def edit_schedule_title(request):
             new_start = datetime.strptime(new_start_str, '%Y-%m-%d').date()
             new_end = datetime.strptime(new_end_str, '%Y-%m-%d').date()
             
-            delta = (new_start - old_start).days
-            
-            if delta != 0:
-                plans = Plan.objects.filter(schedule=schedule)
-                for plan in plans:
-                    if plan.start_datetime:
-                        plan.start_datetime += timedelta(days=delta)
-                    if plan.end_datetime:
-                        plan.end_datetime += timedelta(days=delta)
-                    plan.save()
-            
-            Plan.objects.filter(
-                schedule=schedule,
-                start_datetime__date__lt=new_start
-            ).delete()
-            Plan.objects.filter(
-                schedule=schedule,
-                end_datetime__date__gt=new_end
-            ).delete()
-        
             schedule.title = new_title
             schedule.trip_start_date = new_start
-            schedule.trip_end_date = new_end        
+            schedule.trip_end_date = new_end
             schedule.save()
+            
+            print("[PeriodChange]",
+                "old:", old_start, old_end,
+                "new:", schedule.trip_start_date, schedule.trip_end_date,
+                "shortened:", (schedule.trip_start_date > old_start) or (schedule.trip_end_date < old_end),
+                "plans_total(before):", Plan.objects.filter(schedule=schedule).count()
+                )
+            
+            shortened = (new_start > old_start) or (new_end < old_end)
+            if shortened:
+                start_naive =  datetime.combine(new_start, time.min)
+                end_naive = datetime.combine(new_end, time.max)
+                if timezone.is_naive(start_naive):
+                    new_start_dt = timezone.make_aware(start_naive)
+                    new_end_dt = timezone.make_aware(end_naive)
+                    new_start_dt = timezone.make_aware(start_naive) if timezone.is_naive(start_naive) else start_naive
+                    new_end_dt = timezone.make_aware(end_naive) if timezone.is_naive(end_naive) else end_naive
+                
+                    plans_to_delete = Plan.objects.filter(schedule=schedule).filter(
+                        Q(start_datetime__lt=new_start_dt) | 
+                        Q(end_datetime__gt=new_end_dt) | 
+                        (Q(end_datetime__isnull=True) & Q(start_datetime__gt=new_end_dt))
+                    )
+                    plans_to_delete.delete()
         
     return redirect('app:home')
 
