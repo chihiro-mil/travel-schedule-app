@@ -191,8 +191,9 @@ class PlanForm(forms.ModelForm):
     transportation = forms.ModelChoiceField(
         queryset=TransportationMethod.objects.all(),
         required=False,
-        widget=forms.Select(attrs={'style': 'display:none;'}),
-        empty_label=None
+        widget=forms.Select(attrs={'class': 'transport-select'}),
+        empty_label=None,
+        label=''
     )
     departure_location = forms.CharField(
         required=False,
@@ -336,6 +337,17 @@ class PlanForm(forms.ModelForm):
             
             self.fields['start_date'].input_fprmats = ['%Y-%m-%d']
             self.fields['end_date'].input_fprmats = ['%Y-%m-%d']
+            
+        cat = (
+            self.data.get('action_category')
+            or self.initial.get('action_category')
+            or getattr(self.instance, 'action_category', None)
+        )
+        if cat =='move':
+            self.fields['transportation'].required = True
+            self.fields['transportation'].widget.attrs.pop('style', None)
+        else:
+            self.fields['transportation'].required = False
     
     def clean(self):
         cleaned_data = super().clean()
@@ -359,6 +371,10 @@ class PlanForm(forms.ModelForm):
         elif not end_date:
             self.add_error('end_date', '')
         end_time = cleaned_data.get('end_time')
+        
+        if (cleaned_data.get('action_category') or self.data.get('action_category')) == 'move' \
+            and not cleaned_data.get('transportation'):
+                self.add_error('transportation', '移動手段を選択してください')
         
         
         start_datetime = None

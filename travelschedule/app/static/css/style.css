@@ -982,6 +982,10 @@ input[type="radio"]:checked + label.label {
 }
 
 
+.is-hidden {
+    display: none;
+}
+
 .custom-select-box {
     position: relative;
     max-width: 250px;
@@ -997,7 +1001,7 @@ input[type="radio"]:checked + label.label {
     border-radius: 4px;
     background-color: #fff;
 }
-.options-list{
+.options-list {
     display: none;
     position: absolute;
     width: 100%;
@@ -1007,6 +1011,10 @@ input[type="radio"]:checked + label.label {
     z-index: 10;
     max-height: 200px;
     overflow-y: auto;
+}
+
+#options-list.active {
+    display: block !important;
 }
 
 .option-item {
@@ -1066,7 +1074,6 @@ input[type="radio"]:checked + label.label {
 }
 
 .common-fields {
-    display: none;
     text-align: center;
     margin: 0 auto;
     padding: 20px 0;

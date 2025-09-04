@@ -38,27 +38,17 @@
             </div>
 
             <!--移動カテゴリ-->
-            <div class="category-fields" data-category="move" 
-                {% if selected_category == "move" %}style="display: block;"{% else %}style="display: none;"{% endif %}>
+            <div class="category-fields" data-category="move">
                 <div class="transportation-row">
                     <div class="form-group">
                         <label class-"transportation-title">移動手段</label>
                         <div class="custom-select-box">
-                            <div class="selected-option" id="selected-option">
-                                <i id="selected-icon" class="{% if form.instance.pk and form.instance.transportation %}{{ form.instance.transportation.icon }}{% endif %}"></i>
-                                <span id="selected-label">
-                                    {% if form.instance.pk and form.instance.transportation %}
-                                        {% with trans=form.instance.transportation %}
-                                            <i id="selected-icon" class="">{{ trans.icon }}</i>
-                                            <span id="selected-label">{{ trans.label }}</span>
-                                        {% endwith %}
-                                    {% else %}
-                                        <i id="selected-icon" class=""></i>
-                                        <span id="selected-label">選択してください</span>
-                                    {% endif %}
-                                </span>
+                            <div class="selected-option">
+                                <i class="selected-icon"></i>
+                                <span class="selected-label">選択してください</span>
                             </div>
-                            <div class="options-list" id="options-list">
+
+                            <div class="options-list">
                                 {% for method in transportation_methods %}
                                     <div class="option-item" data-id="{{ method.id }}" data-label="{{ method.label }}" data-icon="{{ method.icon }}">
                                         <i class="{{ method.icon }}"></i>
@@ -69,8 +59,11 @@
                                 {% if form.transportation.errors %}
                                     <div class="error-message">{{ form.transportation.errors.0 }}</div>
                                 {% endif %}
-                                <input type="hidden" name="transportation" id="transportation-hidden-input"
-                                    value="{% if form.instance.pk and form.instance.transportation %}{{ form.instance.transportation.id }}{% endif %}">
+                                <input type="hidden"
+                                    class="transportation-hidden-input"
+                                    name="transportation"
+                                    value="{% if form.data.transportation %}{{ form.data.transportation }}
+                                        {% elif form.instance.transportation %}{{ form.instance.transportation.id }}{% else %}{% endif %}">
                             </div>
                         </div>
                     </div>
@@ -150,8 +143,7 @@
 
             <!--観光地カテゴリ-->
 
-            <div class="category-fields" data-category="sightseeing"
-                {% if selected_category == "sightseeing" %}style="display: block;"{% else %}style="display: none;"{% endif %}>
+            <div class="category-fields" data-category="sightseeing">
                 <div class="form-group" id="sightseeing-name">
                     <label id="sightseeing-name-label">観光地名</label>
                     {{ form.name }}
@@ -208,8 +200,7 @@
 
 
             <!--食事カテゴリ-->
-            <div class="category-fields" data-category="meal"
-                {% if selected_category == "meal" %}style="display: block;"{% else %}style="display: none;"{% endif %}>
+            <div class="category-fields" data-category="meal">
                 <div class="form-group" id="meal-name">
                     <label id="meal-name-label">店名</label>
                     {{ form.name }}
@@ -261,8 +252,7 @@
 
             <!--宿泊カテゴリ-->
 
-            <div class="category-fields" data-category="stay"
-                {% if selected_category == "stay" %}style="display: block;"{% else %}style="display: none;"{% endif %}>
+            <div class="category-fields" data-category="stay">
                 <div class="form-group" id="stay-name">
                     <label id="stay-name-label">宿泊施設名</label>
                     {{ form.name }}
@@ -299,7 +289,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="common-fields">
+            <div class="common-fields is-hidden">
 
                 <div class="form-group">
                     <label for="{{ form.memo.id_for_label }}">メモ</label>{{ form.memo }}
@@ -355,8 +345,6 @@
                 <div class="form-group common-submit">
                     <button type="submit" class="btn-primary">保存</button>
                 </div>
-
-
             </div>
                 
         </form>
@@ -397,152 +385,121 @@
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
-            /*バリエーションエラーメッセージ表示*/
-            document.querySelectorAll('.category-fields').forEach(block => {
-                block.style.display = 'none';
+            /*参照をまとめて取る*/
+            const allCategoryForms = document.querySelectorAll('.category-fields');
+            const radios = document.querySelectorAll('input[name="action_category"]');
+            const commonFields = document.querySelector('.common-fields');
+            console.log("commonFields:", commonFields);
+
+            /*共通フォームの表示・非表示*/
+            const hideAndDisable = (block) => {
+                block.classList.add('is-hidden');
+                block.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
+            };
+            const showAndEnable = (block) => {
+                block.classList.remove('is-hidden');
+                block.querySelectorAll('input, select, textarea').forEach(el => el.disabled = false);
+            };
+
+            /*ページ読み込み時、全カテゴリと共通フォーム隠す*/
+            allCategoryForms.forEach(block => {
+                block.classList.add('is-hidden');
+                block.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
             });
+            if (commonFields) commonFields.classList.add('is-hidden');
 
-            const selectedCategory = '{{ selected_category|escapejs }}';
-            console.log("selectedCategory:", selectedCategory);
+            /*サーバーから復元される値を確認*/
+            const tplSelected = '{{ selected_category|default:""|escapejs }}'.trim();
+            const checkedRadio = document.querySelector('input[name="action_category"]:checked');
+            const selected = tplSelected || (checkedRadio && checkedRadio.value ) || null;
 
-            const target = document.querySelector(`.category-fields[data-category='${selectedCategory}']`);
-            if (target) {
-                target.style.display = 'block';
-            }
+            console.log("初期化チェック：", {tplSelected, checkedRadio, selected});
 
-            const categoryRadios = document.querySelectorAll('input[name="action_category"]');
-            const allCategoryForms = document.querySelectorAll('[data-category]');
-            const selectedOption = document.getElementById('selected-option');
-            const optionsList = document.getElementById('options-list');
-            const hiddenInput = document.getElementById('transportation-hidden-input');
-            const selectedIcon = document.getElementById('selected-icon');
-            const selectedLabel = document.getElementById('selected-label');
+            /*console.log('tplSelected:', tplSelected, 'checkedRadio:', checkedRadio, 'selected:', selected);*/
 
-            /*console.log("selectedOption:", selectedOption);
-            console.log("optionsList:", optionsList);
-            console.log("hiddenInput:", hiddenInput);
-            console.log("selectedLabel:", selectedLabel);*/
+            if (selected) {
+                const target = document.querySelector(`.category-fields[data-category="${selected}"]`);
+                if (target) {
+                    showAndEnable(target);
+                    console.log("初期化でカテゴリフォームを表示：", selected);
 
-            if (hiddenInput && hiddenInput.value) {
-                const matchedItem = Array.from(document.querySelectorAll(".option-item")).find(item => {
-                    return item.dataset.id === hiddenInput.value;
-                });
-                if(matchedItem) {
-                    selectedLabel.textContent = matchedItem.dataset.label;
-                    selectedIcon.className = matchedItem.dataset.icon;
+                    if (selected == "move") {
+                        initTransportationSelect();
+                        console.log("初期化で移動手段復元");
+                    }
+                }
+                if (commonFields) {
+                    commonFields.classList.remove('is-hidden');
+                    console.log("初期化でフォームを表示");
                 }
             }
 
-            if (selectedLabel && selectedLabel.textContent.trim() !=="" && hiddenInput) {
-                const selectedText = selectedLabel.textContent.trim();
-
-                const matchedItem = Array.from(document.querySelectorAll(".option-item")).find(item => {
-                    return item.dataset.label === selectedText;
-                });
-
-                if (matchedItem) {
-                    hiddenInput.value = matchedItem.dataset.id;
-                    selectedIcon.className = matchedItem.dataset.icon;
-                }
-            }
-
-            selectedOption.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const isVisible = window.getComputedStyle(optionsList).display !== "none";
-                optionsList.style.display = isVisible ? "none" : "block";
-            });
-
-            document.addEventListener("click", (e) => {
-                if (!e.target.closest('.custom-select-box')) {
-                    optionsList.style.display = "none";
-                }
-            });
-
-            document.querySelectorAll("#options-list .option-item").forEach(item => {
-                item.addEventListener("click", (e) => {
-                    const id = item.dataset.id;
-                    const label = item.dataset.label;
-                    const iconClass = item.dataset.icon;
-
-                    selectedLabel.textContent = label;
-                    hiddenInput.value =  id;
-
-                    selectedIcon.className = iconClass;
-
-                    optionsList.style.display = 'none';
-                });
-            });
-
-
-
-            allCategoryForms.forEach(function (block) {
-                block.style.display = "none";
-                block.querySelectorAll("input, select, textarea").forEach(el => el.disabled = true);
-            });
-
-
-            /*カテゴリのラジオボタンにchangeイベントつける*/
-            categoryRadios.forEach(function (radio) {
-                radio.addEventListener("change", function() {
-                    const selected = this.value;
-
-                    allCategoryForms.forEach(function (block) {
-                        if (block.dataset.category === selected) {
-                            block.style.display = "block";
-                            block.querySelectorAll("input, select, textarea").forEach(el => el.disabled = false);
+            /**ラジオ切り替え*/
+            radios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const sel = this.value;
+                    allCategoryForms.forEach(block => {
+                        if (block.dataset.category === sel) {
+                            showAndEnable(block);
                         } else {
-                            block.style.display = "none";
-                            block.querySelectorAll("input, select, textarea").forEach(el => el.disabled = true);
+                            hideAndDisable(block);
                         }
                     });
-                });
-            });
-            
-            const checkedRadio = document.querySelector('input[name="action_category"]:checked');
-            if (checkedRadio) {
-                const selected = checkedRadio.value;
-                checkedRadio.dispatchEvent(new Event("change"));
-            }
-
-            /*selectedOption.addEventListener('click', () => {
-                optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
-            });*/
-
-            /*document.querySelectorAll('.option-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const id = item.dataset.id;
-                    const label = item.dataset.label;
-                    const icon = item.dataset.icon;
-
-                    selectedIcon.className = icon;
-                    selectedLabel.textContent = label;
-                    hiddenInput.value = id;
-
-                    optionsList.style.display = 'none';
-                });
-            });
-
-            document.addEventListener('click', function (e) {
-                if (!e.target.closest('.custom-select-box')) {
-                    optionsList.style.display = 'none';
-                }
-            });*/
-
-            const commonFields = document.querySelector('.common-fields');
-
-            categoryRadios.forEach(function (radio) {
-                radio.addEventListener('change', function () {
-                    const selected = this.value;
-
-                    allCategoryForms.forEach(function (block) {
-                        block.style.display = (block.dataset.category === selected) ? 'block' : 'none';
-                    });
-
                     if (commonFields) {
-                        commonFields.style.display = 'block';
+                        commonFields.classList.remove('is-hidden');
+                        console.log("ラジオ切り替えで共通フォームを表示しました");
+                        console.log("共通フォームをremoveしました：", commonFields);
                     }
                 });
             });
+
+
+            /*移動手段セレクト*/
+            function initTransportationSelect() {
+                const selectBoxes = document.querySelectorAll('.custom-select-box');
+
+                selectBoxes.forEach(box => {
+                    const selectedOption = box.querySelector('.selected-option');
+                    const optionsList = box.querySelector('.options-list');
+                    const hiddenInput = box.querySelector('.transportation-hidden-input');
+                    const selectedLabel = box.querySelector('.selected-label');
+                    const selectedIcon = box.querySelector('.selected-icon');
+
+                    /*開閉処理*/
+                    selectedOption.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        optionsList.classList.toggle('active');
+                    });
+                    
+                    /*選択処理*/
+                    optionsList.querySelectorAll('.option-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            hiddenInput.value = item.dataset.id;
+                            selectedLabel.textContent = item.dataset.label;
+                            selectedIcon.className = item.dataset.icon;
+                            optionsList.classList.remove('active');
+                        });
+                    });
+
+                    /*バリエーション後の移動手段復元*/
+                    if (hiddenInput && hiddenInput.value) {
+                        const matchedItem = Array.from(optionsList.querySelectorAll('.option-item'))
+                            .find(item => item.dataset.id === hiddenInput.value);
+                        
+                        if (matchedItem) {
+                            if (selectedLabel) selectedLabel.textContent = matchedItem.dataset.label;
+                            if (selectedIcon) selectedIcon.className = matchedItem.dataset.icon;
+                        }
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.custom-select-box')) {
+                        document.querySelectorAll('.options-list')
+                            .forEach(list => list.classList.remove('active'));
+                    }
+                });
+            }
 
 
             const removeButtons = document.querySelectorAll('.remove-picture');
@@ -595,11 +552,11 @@
             });
 
             /*カテゴリ初期化*/
-            const checked = document.querySelector('input[name="action_category"]:checked');
+            /*const checkedRadio = document.querySelector('input[name="action_category"]:checked');
             console.log('checkedRadio is:', checkedRadio);
-            if (checked) {
-                checked.dispatchEvent(new Event('change'));
-            }
+            if (checkedRadio) {
+                checkedRadio.dispatchEvent(new Event('change'));
+            }*/
         });
         
     </script>

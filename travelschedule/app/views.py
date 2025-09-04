@@ -283,6 +283,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         link_formset = LinkFormSet(request.POST, request.FILES, instance=plan, prefix='links')
         picture_formset = PictureFormSet(request.POST or None, request.FILES or None, instance=plan, prefix='pictures')
         
+        print("form.data =", form.data)
+        
         for f in link_formset:
             f.empty_permitted = True
         for f in picture_formset:
