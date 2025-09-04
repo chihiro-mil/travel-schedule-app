@@ -389,7 +389,6 @@
             const allCategoryForms = document.querySelectorAll('.category-fields');
             const radios = document.querySelectorAll('input[name="action_category"]');
             const commonFields = document.querySelector('.common-fields');
-            console.log("commonFields:", commonFields);
 
             /*共通フォームの表示・非表示*/
             const hideAndDisable = (block) => {
@@ -408,31 +407,20 @@
             });
             if (commonFields) commonFields.classList.add('is-hidden');
 
-            /*サーバーから復元される値を確認*/
-            const tplSelected = '{{ selected_category|default:""|escapejs }}'.trim();
+            /*編集画面対応: 既存のカテゴリを復元*/
             const checkedRadio = document.querySelector('input[name="action_category"]:checked');
-            const selected = tplSelected || (checkedRadio && checkedRadio.value ) || null;
-
-            console.log("初期化チェック：", {tplSelected, checkedRadio, selected});
-
-            /*console.log('tplSelected:', tplSelected, 'checkedRadio:', checkedRadio, 'selected:', selected);*/
-
-            if (selected) {
+            if (checkedRadio) {
+                const selected = checkedRadio.value;
                 const target = document.querySelector(`.category-fields[data-category="${selected}"]`);
                 if (target) {
                     showAndEnable(target);
-                    console.log("初期化でカテゴリフォームを表示：", selected);
-
-                    if (selected == "move") {
+                    if (selected === "move") {
                         initTransportationSelect();
-                        console.log("初期化で移動手段復元");
                     }
                 }
-                if (commonFields) {
-                    commonFields.classList.remove('is-hidden');
-                    console.log("初期化でフォームを表示");
-                }
+                if (commonFields) commonFields.classList.remove('is-hidden');
             }
+
 
             /**ラジオ切り替え*/
             radios.forEach(radio => {
@@ -441,18 +429,16 @@
                     allCategoryForms.forEach(block => {
                         if (block.dataset.category === sel) {
                             showAndEnable(block);
+                            if (sel === "move") {
+                                initTransportationSelect();
+                            }
                         } else {
                             hideAndDisable(block);
                         }
                     });
-                    if (commonFields) {
-                        commonFields.classList.remove('is-hidden');
-                        console.log("ラジオ切り替えで共通フォームを表示しました");
-                        console.log("共通フォームをremoveしました：", commonFields);
-                    }
+                    if (commonFields) commonFields.classList.remove('is-hidden');
                 });
             });
-
 
             /*移動手段セレクト*/
             function initTransportationSelect() {
@@ -465,10 +451,20 @@
                     const selectedLabel = box.querySelector('.selected-label');
                     const selectedIcon = box.querySelector('.selected-icon');
 
+                    if (!selectedOption || !optionsList) return;
+
                     /*開閉処理*/
                     selectedOption.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        optionsList.classList.toggle('active');
+                        console.log("selectedOptionクリック:", selectedOption);
+                        console.log("optionsList要素:", optionsList);
+
+                        if (optionsList) {
+                            optionsList.classList.toggle('active');
+                            console.log("active切り替え後：", optionsList.className);
+                        } else {
+                            console.log("optionsList見つかりません");
+                        }
                     });
                     
                     /*選択処理*/
@@ -495,8 +491,9 @@
 
                 document.addEventListener('click', (e) => {
                     if (!e.target.closest('.custom-select-box')) {
-                        document.querySelectorAll('.options-list')
-                            .forEach(list => list.classList.remove('active'));
+                        document.querySelectorAll('.options-list').forEach(list => {
+                            list.classList.remove('active');
+                        });
                     }
                 });
             }

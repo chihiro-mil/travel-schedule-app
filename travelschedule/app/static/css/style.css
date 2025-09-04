@@ -1013,7 +1013,7 @@ input[type="radio"]:checked + label.label {
     overflow-y: auto;
 }
 
-#options-list.active {
+.options-list.active {
     display: block !important;
 }
 
