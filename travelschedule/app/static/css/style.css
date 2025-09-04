@@ -9,6 +9,7 @@ html, body { margin: 0; }
 
 .index-h1 {
     text-align: center;
+    font-size: 40px;
 }
 
 .index-h2 {
@@ -16,16 +17,20 @@ html, body { margin: 0; }
     color: #1e90ff;
     margin-top: 40px;
     margin-bottom: 40px;
+    font-size: 30px;
 }
 
 .large-text p {
     text-align: center;
     font-weight: bold;
+    font-size: 25px;
 }
 
 .small-text p {
     text-align: center;
     margin-top: 30px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .img img {
@@ -42,11 +47,13 @@ html, body { margin: 0; }
 }
 .application-link {
     display: inline-block;
-    border: 5px solid #1e90ff;
-    padding: 5px;
+    background-color: #0052cc;
+    padding: 15px 25px;
 }
 .application-link a {
     text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
 }
 .nav-link {
     display: flex;
@@ -57,19 +64,22 @@ html, body { margin: 0; }
 .nav-link a {
     padding: 10px 20px;
     text-decoration: none;
-    color: #4169e1; 
+    color: #0052cc;
+    font-size: 20px;
 }
 
 @media (max-width: 768px) {
     .index-h1 {
-        font-size: 20px;
+        font-size: 25px;
     }
     .index-h2 {
+        font-size: 22px;
+    }
+    .large-text p {
         font-size: 18px;
     }
-    .large-text,
-    .small-text {
-        font-size: 14px;
+    .small-text p {
+        font-size: 16px;
     }
     .nav-link {
         display: flex;
@@ -176,7 +186,7 @@ html, body { margin: 0; }
     margin-bottom: 20px;
     margin-top: 20px;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 22px;
 }
 
 .login-form label,
@@ -199,7 +209,7 @@ html, body { margin: 0; }
 
 .login-container {
     width: 100%;
-    max-width: 250px;
+    max-width: 500px;
     margin: 0 auto;
     text-align: center;
     padding: 20px;
@@ -207,7 +217,7 @@ html, body { margin: 0; }
 
 .login-title {
     text-align: center;
-    font-size: 25px;
+    font-size: 35px;
     font-weight: bold;
     margin-top: 30px;
     margin-bottom: 20px;
@@ -215,7 +225,7 @@ html, body { margin: 0; }
 
 .login-subtitle {
     text-align: center;
-    font-size: 20px;
+    font-size: 30px;
     font-weight: bold;
     margin-top: 30px;
     margin-bottom: 25px;
@@ -244,6 +254,24 @@ html, body { margin: 0; }
 .password-error {
     color: #ff0000;
 }
+
+@media (max-width: 768px) {
+    .login-container {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 20px;
+    }
+    .login-subtitle {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 25px;
+}
+}
+
 
 /*マイページ設定*/
 
