@@ -49,7 +49,8 @@ def register_view(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
-            return redirect('/app/login/')
+            login(request, user)
+            return redirect('app:home')
     else:
         form = RegisterForm()
     return render(request, 'app/register.html', {'form': form})
@@ -110,6 +111,7 @@ def change_email_view(request):
             return redirect('app:mypage')
     else:
         form = ChangeEmailForm(instance=request.user)
+        form.initial["email"] = ""
     return render(request, 'app/change_email.html', {'form': form})
     
 #パスワード変更画面

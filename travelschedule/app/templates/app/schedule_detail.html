@@ -156,6 +156,7 @@
         </div>
     {% endfor %}
 
+    <div id="modal-overlay" class="modal-overlay hidden"></div>
     <div id="deleteModal" class="delete-modal delete-modal-hidden">
         <div class="delete-modal-content">
             <p>この予定を削除してよろしいですか？</p>
@@ -216,6 +217,7 @@
             const deleteInput = document.getElementById('deletePlanIdInput');
             const deleteForm = document.getElementById('deleteForm');
             const cancelDeleteBtn = document.getElementById('cancelDelete');
+            const overlay = document.getElementById('modal-overlay');
 
             if (deleteModal) {
                 deleteModal.classList.add('delete-modal-hidden');
@@ -278,12 +280,30 @@
                     deleteInput.value = planId;
 
                     deleteModal.classList.remove('delete-modal-hidden');
+                    overlay.classList.remove('hidden');
+                    document.body.classList.add('modal-open');
                 });
             });
 
-            cancelDeleteBtn.addEventListener('click', () => {
+            function closeDeleteModal() {
                 deleteModal.classList.add('delete-modal-hidden');
-                deleteInput.value = ''
+                overlay.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+                if (deleteInput) deleteInput.value = '';
+            }
+
+            if (cancelDeleteBtn) {
+                cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', closeDeleteModal);
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !deleteModal.classList.contains('delete-modal-hidden')) {
+                    closeDeleteModal();
+                }
             });
 
 

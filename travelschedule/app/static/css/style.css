@@ -49,6 +49,7 @@ html, body { margin: 0; }
     display: inline-block;
     background-color: #0052cc;
     padding: 15px 25px;
+    border: 2px solid #000;
 }
 .application-link a {
     text-decoration: none;
@@ -120,17 +121,14 @@ html, body { margin: 0; }
     top: 20px;
     left: 100px;
     display: inline-block;
-    padding: 10px 15px;
-    background-color: #a9a9a9;
+    padding: 0;
+    background: none;
     color: #000;
-    text-decoration: none;
+    text-decoration: underline;
     border: none;
-    font-size: 14px;
+    font-size: 20px;
     cursor: pointer;
     transition: background-color 0.2s ease;
-}
-.back-button:active {
-    background-color: #696969;
 }
 
 .register-title {
@@ -235,12 +233,15 @@ html, body { margin: 0; }
     background-color: #1e90ff;
     color: #fff;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
     padding: 10px 24px;
+    margin-bottom: 15px;
 }
 
 .register-link a {
-    color: #808080;
+    color: #696969;
+    font-size: 18px;
+    margin-top: 20px;
 }
 
 .login-error-message {
@@ -281,15 +282,33 @@ html, body { margin: 0; }
 }
 
 .user-title {
-    font-size: 20px;
+    font-size: 25px;
     margin-top: 30px;
 }
 
+.username-text {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    font-size: 25px;
+}
+
 .user-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 50%;
+    margin: 10px auto;
     margin-top: 15px;
     margin-bottom: 10px;
-    padding: 8px 16px;
+    padding: 12px 16px;
     font-size: 16px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 20px;
 }
 
 .change-title-form {
@@ -298,7 +317,7 @@ html, body { margin: 0; }
 }
 
 .change-title {
-    font-size: 30px;
+    font-size: 35px;
     margin-top: 15px;
     margin-bottom: 40px;
 }
@@ -378,6 +397,17 @@ html, body { margin: 0; }
         padding: 10px 20px;
         color: #fff;
     }
+    .user-title {
+    font-size: 20px;
+    }
+    .change-title {
+        font-size: 25px;
+    }
+    .username-text {
+    margin-top: 10px;
+    margin-bottom: 25px;
+    font-size: 18px;
+}
 }
 
 /*フッター*/
@@ -424,9 +454,8 @@ html, body { margin: 0; }
 }
 
 .footer-nav li i {
-    font-size: 18px;
+    font-size: 25px;
     display: block;
-    margin-bottom: 4px;
 }
 
 .footer-nav li a {
@@ -459,11 +488,16 @@ html, body { margin: 0; }
 }
 
 .no-schedule-message {
+    border: 2px solid #007bff;
+    background-color: #e6f2ff;
     padding: 12px;
+    border-radius: 4px;
     margin-top: 12px;
-    color: #007bff;
-    font-size: 18px;
+    margin: 20px auto;
+    color: #004080;
+    font-size: 20px;
     text-align: center;
+    max-width: 80%;
 }
 
 .home-center {
@@ -480,7 +514,11 @@ html, body { margin: 0; }
 .home-title {
     font-weight: bold;
     color: #000;
-    font-size: 20px;
+    font-size: 30px;
+}
+
+.house-icon {
+    font-size: 25px;
 }
 
 .sort-button-wrapper{
@@ -495,7 +533,7 @@ html, body { margin: 0; }
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     padding: 6px 10px;
-    font-size: 14px;
+    font-size: 16px;
     border-radius: 6px;
     cursor: pointer;
 }
@@ -649,6 +687,10 @@ html, body { margin: 0; }
 
 }
 
+.delete-schedule-btn{
+    color: #ff0000;
+}
+
 .schedule-form-group {
     display: flex;
     flex-direction: column;
@@ -718,10 +760,14 @@ html, body { margin: 0; }
         align-items: center;
     }
     .home-title {
-        font-size: 16px;
+        font-size: 20px;
+    }
+    .house-icon {
+        font-size: 15px;
     }
     .no-schedule-message{
-        font-size: 12px;
+        font-size: 18px;
+        max-width: 65%;
     }
     .schedule-card {
         width: 100%;
@@ -737,12 +783,16 @@ html, body { margin: 0; }
     .back-button {
         left: 10px;
         padding-left: 10px;
+        font-size: 15px;
     }
     #editModal .modal-content {
         font-size: 11px;
     }
     #editModal .label {
         font-size: 14px;
+    }
+    .footer-nav li i {
+    font-size: 20px;
     }
 }
 
@@ -1595,9 +1645,16 @@ position: absolute;
     padding: 8px 12px;
     cursor: pointer;
     font-size: 14px;
-    color: #333;
     text-decoration: none;
     box-sizing: border-box;
+}
+
+.kebab-plan-btn {
+    color: #000;
+}
+
+.delete-plan-btn {
+    color: #ff0000;
 }
 
 .plan-kebab-dropdown a {
@@ -1626,6 +1683,16 @@ position: absolute;
 
 .delete-modal-hidden {
     display: none;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
 }
 
 /*予定詳細　写真*/
