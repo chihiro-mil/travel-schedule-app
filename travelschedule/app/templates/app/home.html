@@ -179,6 +179,7 @@
             </div>
         </div>
     {% endfor %}
+    <div id="modal-overlay" class="modal-overlay hidden"></div>
 
 
 
@@ -380,27 +381,48 @@
 
             /*消去モーダル*/
 
+            const overlay = document.getElementById('modal-overlay');
+
+            function closeDeleteModal() {
+                if (deleteModal && !deleteModal.classList.contains('hidden')) {
+                    deleteModal.classList.add('hidden');
+                }
+                if (overlay) overlay.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+                const input = document.getElementById('deleteScheduleId');
+                if (input) input.value = '';
+            }
+            
             document.querySelectorAll(".delete-schedule-btn").forEach(button => {
                 button.addEventListener("click", () => {
                     const scheduleId = button.dataset.scheduleId;
                     document.getElementById("deleteScheduleId").value = scheduleId;
-                    document.getElementById("deleteModal").classList.remove("hidden");
+                    deleteModal.classList.remove('hidden');
+
+                    if (overlay) overlay.classList.remove('hidden');
+                    document.body.classList.add('modal-open');
                 });
             });
 
             const deleteModalCloseBtn = document.getElementById("deleteModalClose");
             if (deleteModalCloseBtn) {
-                deleteModalCloseBtn.addEventListener("click", () => {
-                    document.getElementById("deleteModal").classList.add("hidden");
-                });
+                deleteModalCloseBtn.addEventListener("click", closeDeleteModal);
             }
 
             const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
             if (cancelDeleteBtn) {
-                cancelDeleteBtn.addEventListener("click", () => {
-                    document.getElementById("deleteModal").classList.add("schedule-delete-modal", "hidden");
-                });
+                cancelDeleteBtn.addEventListener("click", closeDeleteModal);
             }
+
+            if (overlay) {
+                overlay.addEventListener('click', closeDeleteModal);
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !deleteModal.classList.contains('hidden')) {
+                    closeDeleteModal();
+                }
+            });
 
             /*予定追加モーダルキャンセルボタン*/
             const addModal = document.getElementById("modal");

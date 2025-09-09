@@ -36,10 +36,18 @@ html, body { margin: 0; }
 .img img {
     text-align: center;
 }
+
+.center-img {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+    gap: 20px;
+}
+
 .screenshot {
-    width: 80%;
-    max-width: 700px;
-    height: auto;
+    width: auto;
+    height: 500px;
+    object-fit: contain;
 }
 
 .center-box {
@@ -96,6 +104,17 @@ html, body { margin: 0; }
         padding: 0;
         text-decoration: underline;
     }
+    .center-img {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .screenshot {
+    width: 80%;
+    height: auto;
+    max-width: 350px;
+    }
 }
 
 
@@ -133,7 +152,7 @@ html, body { margin: 0; }
 
 .register-title {
     text-align: center;
-    font-size: 25px;
+    font-size: 30px;
     font-weight: bold;
     margin-top: 30px;
     margin-bottom: 20px;
@@ -1512,7 +1531,7 @@ plan-image.thumbnail {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scroll-snap-type: x mandatory;
-        padding: 8px 4px;
+        padding: 8px 20px;
     }
     .plan-card {
         --card-font: 13px;

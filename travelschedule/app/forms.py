@@ -36,10 +36,10 @@ class RegisterForm(forms.ModelForm):
     
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
-            'placeholder': '英数字＋６文字以上',
+            'placeholder': '英数字＋８文字以上',
             'class': 'input-field'
         }),
-        min_length=6, 
+        min_length=8, 
         label="パスワード"
     )
     
@@ -134,8 +134,8 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         password1 = self.cleaned_data.get('new_password1')
         if not re.match(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+$', password1):
             raise ValidationError("パスワードは英字と数字を含めてください。")
-        if len(password1) < 6:
-            raise ValidationError("パスワードは６文字以上で入力してください。")
+        if len(password1) < 8:
+            raise ValidationError("パスワードは８文字以上で入力してください。")
         return password1
     def clean(self):
         cleaned_data = super().clean()
