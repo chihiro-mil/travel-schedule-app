@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
 </head>
-<body>
+<body class="schedule-body">
     <a href="{% url 'app:home' %}" class="back-button">＜戻る</a>
     <h2>{{ schedule.title|break_every|safe }} 予定表</h2>
 
@@ -28,16 +28,20 @@
 
             {% for plan in plans_by_date|get_item:date %}
                 {% if plan.action_category == "move" %}
-                    <div class="plan-card move nest-{{ plan.nest_level }}">
+                    <div class="plan-card move {% if plan.nest_level > 0 %}plan-overlap{% endif %}">
                 {% elif plan.action_category == "sightseeing" %}
-                    <div class="plan-card sightseeing nest-{{ plan.nest_level }}">
+                    <div class="plan-card sightseeing {% if plan.nest_level > 0 %}plan-overlap{% endif %}">
                 {% elif plan.action_category == "meal" %}
-                    <div class="plan-card meal nest-{{ plan.nest_level }}">
+                    <div class="plan-card meal {% if plan.nest_level > 0 %}plan-overlap{% endif %}">
                 {% elif plan.action_category == "stay" %}
-                    <div class="plan-card stay nest-{{ plan.nest_level }}">
+                    <div class="plan-card stay {% if plan.nest_level > 0 %}plan-overlap{% endif %}">
                 {% else %}
                     <div class="plan-card nest-{{ plan.nest_level }}">
                 {% endif %}
+
+                    {% if plan.nest_level > 0 %}
+                        <div class="overlap-message">※この予定は他の予定と重なっています</div>
+                    {% endif %}
 
                 <div class="plan-kebab-menu">
                     <i class="fas fa-ellipsis-v plan-kebab-icon"></i>

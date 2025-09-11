@@ -105,15 +105,25 @@ html, body { margin: 0; }
         text-decoration: underline;
     }
     .center-img {
-        flex-direction: column;
         align-items: center;
-        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .screenshot-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: nowrap;
     }
 
     .screenshot {
-    width: 80%;
-    height: auto;
-    max-width: 350px;
+    width: 45%;
+    height: 300px;
+    max-width: 180px;
+    object-fit: cover;
+    object-position: top;
+    aspect-ratio: 9 / 16;
     }
 }
 
@@ -294,6 +304,11 @@ html, body { margin: 0; }
 
 
 /*マイページ設定*/
+
+.mypage-body .footer-nav li:nth-child(2) {
+    visibility: hidden;
+    pointer-events: none;
+}
 
 .change-container {
     padding: 40px 20px;
@@ -560,7 +575,7 @@ html, body { margin: 0; }
 .schedule-card {
     position: relative;
     width: 90%;
-    max-width: 400px;
+    max-width: 450px;
     margin: 0 auto 16px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -575,6 +590,7 @@ html, body { margin: 0; }
     align-items: center;
     justify-content: space-between;
     padding: 0 12px;
+    font-size: 20px;
 }
 
 .schedule-card-wrapper {
@@ -587,6 +603,21 @@ html, body { margin: 0; }
     display: inline;
     color: inherit;
     text-decoration: underline;
+}
+
+.schedule-card > .schedule-link {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    pointer-events: auto;
+}
+
+.no-link {
+    position: relative;
+    z-index: 20;
 }
 
 .schedule-add-modal form {
@@ -636,10 +667,14 @@ html, body { margin: 0; }
     font-size: 18px;
     color: #555;
     display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     cursor: pointer;
     top: 10px;
-    right: 20px;
+    right: 10px;
+    width: 25px;
+    height: 40px;
     z-index: 10;
 }
 
@@ -812,6 +847,9 @@ html, body { margin: 0; }
     }
     .footer-nav li i {
     font-size: 20px;
+    }
+    .schedule-header {
+        font-size: 15px;
     }
 }
 
@@ -1327,11 +1365,15 @@ input[type="radio"]:checked + label.label {
 
 /*予定詳細画面*/
 
+.schedule-body {
+    padding-bottom: 106px;
+}
 
 h2 {
     text-align: center;
     margin-top: 30px;
     margin-bottom: 20px;
+    font-size: 30px;
 }
 
 .day-block {
@@ -1361,12 +1403,12 @@ h2 {
 }
 
 .day-tab {
-    padding: 6px 12px;
+    padding: 8px 18px;
     background-color: #f0f0f0;
     border: 1px solid#bbb;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 18px;
     white-space: nowrap;
     transition: all 0.3s ease;
 }
@@ -1405,10 +1447,18 @@ h2 {
     margin-bottom: 16px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
+
+.overlap-message {
+    color: #d00;
+    font-size: 12px;
+    padding: 4px 6px;
+}
+
 .plan-card.move {
     background-color: #add8e6;
 }
-.plan-card.move.nest-1 {
+
+.plan-card.move.plan-overlap {
     transform: translateX(25px) !important;
     border: 2px solid #000 !important;
     background-color: #add8e6;
@@ -1417,7 +1467,7 @@ h2 {
 .plan-card.sightseeing {
     background-color: #f0e68c;
 }
-.plan-card.sightseeing.nest-1 {
+.plan-card.sightseeing.plan-overlap {
     transform: translateX(25px) !important;
     border: 2px solid #000 !important;
     background-color: #f0e68c;
@@ -1426,7 +1476,7 @@ h2 {
 .plan-card.meal {
     background-color: #f08080;
 }
-.plan-card.meal.nest-1 {
+.plan-card.meal.plan-overlap {
     transform: translateX(25px) !important;
     border: 2px solid #000 !important;
     background-color: #f08080;
@@ -1435,7 +1485,7 @@ h2 {
 .plan-card.stay {
     background-color: #90ee90;
 }
-.plan-card.stay.nest-1 {
+.plan-card.stay.plan-overlap {
     transform: translateX(25px) !important;
     border: 2px solid #000 !important;
     background-color: #90ee90;
@@ -1523,6 +1573,10 @@ plan-image.thumbnail {
 
 
 @media (max-width: 768px) {
+
+    h2 {
+        font-size: 20px;
+    }
     .day-tabs {
         display: flex;
         flex-wrap: nowrap;
@@ -1533,6 +1587,16 @@ plan-image.thumbnail {
         scroll-snap-type: x mandatory;
         padding: 8px 20px;
     }
+    .day-tab {
+    padding: 6px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid#bbb;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
     .plan-card {
         --card-font: 13px;
         --card-pad: 10px;
@@ -1616,11 +1680,14 @@ plan-image.thumbnail {
         width: 70px;
         height: auto;
     }
-    .plan-card.move.nest-1,
-    .plan-card.sightseeing.nest-1,
-    .plan-card.meal.nest-1,
-    .plan-card.stay.nest-1 {
+    .plan-card.move.plan-overlap,
+    .plan-card.sightseeing.plan-overlap,
+    .plan-card.meal.plan-overlap,
+    .plan-card.stay.plan-overlap {
         transform: translateX(15px) !important;
+    }
+    .overlap-message {
+        font-size: 10px;
     }
 }
 

@@ -35,7 +35,10 @@
         <div class="schedule-card-wrapper" style="position: relative;">
 
             <div class="schedule-card">
-                <div class="kebab-menu">
+
+                <a href="{% url 'app:schedule_detail' schedule.id %}" class="schedule-link"></a>
+
+                <div class="kebab-menu no-link">
                     <i class="fas fa-ellipsis-v kebab-icon"></i>
                     <div class="kebab-dropdown hidden">
 
@@ -47,7 +50,7 @@
                             タイトル<br>旅行期間の変更
                         </button>
 
-                        <button class="delete-schedule-btn" 
+                        <button class="delete-schedule-btn no-link" 
                                 data-schedule-id="{{ schedule.id }}">
                             予定表を削除
                         </button>
@@ -55,11 +58,7 @@
                 </div>
 
                 <div class="schedule-header">
-                    <strong>
-                        <a href="{% url 'app:schedule_detail' schedule.id %}" class="schedule-link">
-                            {{ schedule.title|break_every|safe }}
-                        </a>
-                    </strong>
+                    <strong>{{ schedule.title|break_every|safe }}</strong>
                 </div>
                 <p>{{ schedule.trip_start_date }} ～ {{ schedule.trip_end_date }}</p>
             </div>
