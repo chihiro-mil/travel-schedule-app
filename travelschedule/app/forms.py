@@ -478,7 +478,7 @@ class LinkForm(forms.ModelForm):
             'url': forms.URLInput(attrs={
                 'class': 'form-control',
                 'placeholder': '例：https://example.com'
-            }),
+            })
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -490,7 +490,15 @@ class BaseLinkFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for form in self.forms:
-            form.empty_permitted = True
+            if not form.instance.pk:
+                form.empty_permitted = True
+    
+    def clean(self):
+        super().clean()
+        for form in self.forms:
+            if form.cleaned_data.get('DELETE'):
+                pass
+
 
 
 #写真フォーム用

@@ -1283,6 +1283,20 @@ input[type="radio"]:checked + label.label {
     color: #ff0000;
 }
 
+.form-group.link-formset-container {
+    display: block;
+    text-align: center;
+}
+
+.link-form-block {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 5px auto;
+    max-width: 500px;
+}
+
 /*ＰＣサイズ用*/
 @media screen and (min-width: 768px) {
     .page-title {

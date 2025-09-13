@@ -199,13 +199,6 @@ def edit_schedule_title(request):
             schedule.trip_end_date = new_end
             schedule.save()
             
-            print("[PeriodChange]",
-                "old:", old_start, old_end,
-                "new:", schedule.trip_start_date, schedule.trip_end_date,
-                "shortened:", (schedule.trip_start_date > old_start) or (schedule.trip_end_date < old_end),
-                "plans_total(before):", Plan.objects.filter(schedule=schedule).count()
-                )
-            
             shortened = (new_start > old_start) or (new_end < old_end)
             if shortened:
                 start_naive =  datetime.combine(new_start, time.min)
@@ -240,10 +233,6 @@ PictureFormSet = inlineformset_factory(
     Plan, Picture, form=PictureForm, formset=BasePictureFormSet,
     extra=10, can_delete=True
 )
-LinkFormSet = inlineformset_factory(
-    Plan, Link, form=LinkForm, formset=BaseLinkFormSet,
-    extra=5, can_delete=True
-)
 
 #予定追加・編集画面
 @login_required
@@ -253,18 +242,16 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
 
     trip_choices = generate_trip_date_choices(schedule)
     
-    saved_link_count = Link.objects.filter(plan=plan).count()
-    link_extra = max(0, 5 - saved_link_count)
-    
+    extra_links = 1
     LinkFormSet = inlineformset_factory(
         Plan,
         Link,
         form=LinkForm,
         formset=BaseLinkFormSet,
-        extra=link_extra,
+        extra=extra_links,
         max_num=5,
         validate_max=True,
-        can_delete=True,
+        can_delete=True
     )
     
     saved_picture_count = Picture.objects.filter(plan=plan).count()
@@ -289,12 +276,9 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             trip_dates=trip_choices
         )
         
-        link_formset = LinkFormSet(request.POST, request.FILES, instance=plan, prefix='links')
+        link_formset = LinkFormSet(request.POST or None, request.FILES or None, instance=plan, prefix='links')
         picture_formset = PictureFormSet(request.POST or None, request.FILES or None, instance=plan, prefix='pictures')
         
-        
-        for f in link_formset:
-            f.empty_permitted = True
         for f in picture_formset:
             f.empty_permitted = True
 
@@ -302,13 +286,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         
         if form.is_valid() and link_formset.is_valid() and picture_formset.is_valid():
             
-            #for key, value in form.cleaned_data.items():
-            
             plan_instance = form.save(commit=False)
-            
             plan_instance.schedule = schedule
-            
-            
             plan_instance.save()
                     
                     
@@ -316,10 +295,20 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             
             for obj in link_formset.deleted_objects:
                 obj.delete()
+                
+            for form in link_formset:
+                if form.instance.pk:
+                    url_value = form.cleaned_data.get('url') if form.is_valid() else form.data.get(form.add_prefix('url'))
+                    if not url_value:
+                        form.instance.delete()
+                
             for link in link_instances:
-                link.plan = plan_instance
-                link.action_category = plan_instance.action_category
-                link.save()
+                if link.url and link.url.strip():
+                    link.plan = plan_instance
+                    link.action_category = plan_instance.action_category
+                    link.save()
+            
+            
             
             for obj in picture_formset.deleted_forms:
                 if obj.cleaned_data.get('DELETE') and obj.instance.pk:
@@ -376,8 +365,10 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             form = PlanForm(instance=plan, trip_dates=trip_choices, initial=initial)
             
             link_formset = LinkFormSet(
+                request.POST or None,
+                request.FILES or None,
                 instance=plan,
-                prefix='links'
+                prefix='links',
             )
             
             picture_formset = PictureFormSet(instance=plan, prefix='pictures')
@@ -396,7 +387,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 
                 
             form = PlanForm(trip_dates=trip_choices, initial=initial)
-            link_formset = LinkFormSet(instance=plan, prefix='links')
+            link_formset = LinkFormSet(request.POST or None, request.FILES or None, instance=plan, prefix='links')
             picture_formset = PictureFormSet(instance=plan, prefix='pictures')
             
         tm = []

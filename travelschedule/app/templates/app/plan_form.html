@@ -306,13 +306,30 @@
                             <div class="link-form-block">
                                 {{ form.id }}
                                 {{ form.url }}
-                                {% if form.DELETE %}
-                                    <label>削除： {{ form.DELETE }}</label>
-                                {% endif %}
+                                <input type="checkebox"
+                                        name="{{ form.DELETE.html_name }}"
+                                        id="{{ form.DELETE.id_for_label }}"
+                                        style="display:none;">
+
+                                <button type="button" class="remove-link">削除</button>
                             </div>
                         {% endfor %}
                     </div>
                 </div>
+
+                <script type="text/template" id="empty-link-template">
+                    <div class="link-form-block">
+                        {{ link_formset.empty_form.id }}
+                        {{ link_formset.empty_form.url }}
+                        <input type="checkebox"
+                                name="{{ link_formset.empty_form.DELETE.html_name }}"
+                                id="{{ link_formset.empty_form.DELETE.id_for_label }}"
+                                hidden>
+                        <button type="button" class="remove-link">削除</button>
+                    </div>
+                </script>
+
+                <button type="button" id="add-link">＋ 追加</button>
 
                 <h4>写真(最大１０枚)</h4>
                 <div class="form-group picture-formset-container">
@@ -550,8 +567,61 @@
                 console.log("バリエーション後の復元実行");
                 initTransportationSelect();
             }
+
+            /*リンク*/
+            const container = document.getElementById('link-form-container');
+            const addBtn = document.getElementById('add-link');
+            const totalInput = document.getElementById('id_links-TOTAL_FORMS');
+            const maxFormsEl = document.getElementById('id_links-MAX_NUM_FORMS');
+            const MAX = maxFormsEl ? parseInt(maxFormsEl.value, 10) : 5;
+
+            const template = document.getElementById('empty-link-template').textContent.trim();
+
+            function visibleCount() {
+                return container.querySelectorAll('.link-form-block:not([data-deleted="1"])').length;
+            }
+
+            function updateAddState() {
+                const total = parseInt(totalInput.value, 10);
+                addBtn.disabled = total >= MAX;
+            }
+
+            addBtn.addEventListener('click', function () {
+                let index = parseInt(totalInput.value, 10);
+                if (index >= MAX) return;
+                
+                const html = template.replace(/__prefix__/g, index);
+                const wrap = document.createElement('div');
+                wrap.className = 'link-form-block';
+                wrap.innerHTML = html;
+                container.appendChild(wrap);
+
+                totalInput.value = index + 1;
+                updateAddState();
+            });
+
+            container.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-link'))  {
+                    const block = e.target.closest('.link-form-block');
+                    if (!block) return;
+
+                    const deleteInput = block.querySelector('input[name$="-DELETE"]');
+                    if (deleteInput) {
+                        deleteInput.checked = true;
+                        deleteInput.value = "on";
+                    }
+                    
+                    const urlInput = block.querySelector('input[name$="-url"]');
+                    if (urlInput) {
+                        urlInput.value = "";
+                    }
+                    
+                    updateAddState();
+                }
+            });
+
+            updateAddState();
         });
-        
     </script>
 </body>
 </html>
