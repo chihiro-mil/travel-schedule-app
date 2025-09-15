@@ -957,11 +957,6 @@ html, body { margin: 0; }
         width: 80px;
         height: 64px;
     }
-    .remove-picture {
-        font-size: 14px;
-        top: 0;
-        right: 0;
-    }
 }
 
 /*予定表追加 画面*/
@@ -1020,15 +1015,6 @@ html, body { margin: 0; }
     object-fit: cover;
 }
 
-.remove-picture {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    cursor: pointer;
-    display: none;
-    font-size: 16px;
-    color: #696969;
-}
 .category-radio input[type="radio"]{
     display: none;
 }
@@ -1228,19 +1214,6 @@ input[type="radio"]:checked + label.label {
     margin-top: 10px;
 }
 
-.picture-form {
-    box-sizing: border-box;
-    position: relative;
-}
-
-.picture-form input[type="file"] {
-    width: 100%;
-    min-width: 350px;
-    padding: 6px;
-    font-size: 14px;
-    box-sizing: border-box;
-    white-space: nowrap;
-}
 
 .image-preview-wrapper {
     position: relative;
@@ -1256,20 +1229,19 @@ input[type="radio"]:checked + label.label {
     display: block;
 }
 
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .remove-picture {
-    display: inline-block;
-    top: 5px;
-    right: 5px;
+    background: none;
+    border: none;
     color: #ff0000;
     font-size: 18px;
     cursor: pointer;
-    z-index: 10;
-}
-
-.current-image a {
-    display: inline-block;
-    max-width: 100%;
-    word-break: break-all;
+    position: static;
 }
 
 .preview-image {
@@ -1277,10 +1249,6 @@ input[type="radio"]:checked + label.label {
     height: auto;
     display: block;
     margin-top: 5px;
-}
-
-.image-note {
-    color: #ff0000;
 }
 
 .form-group.link-formset-container {
@@ -1354,14 +1322,6 @@ input[type="radio"]:checked + label.label {
     -webkit-overflow-scrolling: touch;
     width: 100%;
     justify-content: start;
-    }
-    .picture-form input[type="file"] {
-    width: 100%;
-    min-width: 340px;
-    padding: 6px;
-    font-size: 14px;
-    box-sizing: border-box;
-    white-space: nowrap;
     }
     .link-formset-container {
         margin-left: 15px;

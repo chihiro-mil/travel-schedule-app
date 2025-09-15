@@ -331,35 +331,75 @@
 
                 <button type="button" id="add-link">＋ 追加</button>
 
-                <h4>写真(最大１０枚)</h4>
-                <div class="form-group picture-formset-container">
+                <h4>写真<br>(最大１０枚)</h4>
+                <div class="form-group picture-formset-container" id="picture-form-container">
                     {{ picture_formset.management_form }}
                     {% for form in picture_formset %}
-                        <div class="picture-form" data-index="{{ forloop.counter0 }}">
+                        <div class="picture-form-block">
                             {{ form.id }}
 
-                            {% if form.instance.pk and form.instance.image %}
-                                <div class="image-preview-wrapper">
-                                    <p class="current-image">現在の画像： </p>
-                                    <img src="{{ form.instance.image.url }}" alt="登録済み画像" class="preview-image">
-                                    <span class="remove-picture" title="削除">&times;</span>
-                                </div>
-                            {% endif %}
+                            <div class="image-preview-wrapper"
+                                    {% if form.instance.pk and form.instance.image %}
+                                        style="display:block;"
+                                    {% else %}
+                                        style="display:none;"
+                                    {% endif %}>
+                                <img
+                                    src="{% if form.instance.pk and form.instance.image %}{{ form.instance.image.url }}{% else %}{% endif %}"
+                                    alt="画像"
+                                    class="preview-image">
+                            </div>
 
-                            {{ form.image }}
+                            <div class="file-input-wrapper"
+                                    {% if form.instance.pk and form.instance.image %}
+                                        style="display:none;"
+                                    {% else %}
+                                        style="display:block;"
+                                    {% endif %}>
+                                {{ form.image }}
+                            </div>
 
-                            {% if form.instance.pk and form.instance.image %}
-                                <p class="image-note">※新しい画像を選択すると、上書きされます</p>
-                            {% endif %}
+                            <input type="checkebox"
+                                name="{{ form.DELETE.html_name }}"
+                                id="{{ form.DELETE.id_for_label }}"
+                                style="display:none;">
 
-                                {% if form.DELETE %}
-                                    <div style="display: none;">
-                                        {{ form.DELETE }}
-                                    </div>
-                                {% endif %}
+                            <button type="button" class="remove-picture"
+                                    {% if form.instance.pk and form.instance.image %}
+                                        style="display:inline-block;"
+                                    {% else %}
+                                        style="display:none;"
+                                    {% endif %}>
+                                <i class="fas fa-xmark"></i>
+                            </button>
                         </div>
                     {% endfor %}
                 </div>
+
+                <script type="text/template" id="empty-picture-template">
+                    <div class="picture-form-block">
+                        {{ picture_formset.empty_form.id }}
+
+                        <div class="image-preview-wrapper" style="display:none;">
+                            <img src="" alt="プレビュー" class="preview-image">
+                        </div>
+
+                        <div class="file-input-wrapper">
+                            {{ picture_formset.empty_form.image }}
+                        </div>
+
+                        <input type="checkebox"
+                                name="{{ picture_formset.empty_form.DELETE.html_name }}"
+                                id="{{ picture_formset.empty_form.DELETE.id_for_label }}"
+                                style="display:none;">
+
+                        <button type="button" class="remove-picture" style="display:none;">
+                            <i class="fas fa-xmark"></i>
+                        </button>
+                    </div>
+                </script>
+
+                <button type="button" id="add-picture">＋ 追加</button>
 
 
                 <div class="form-group common-submit">
@@ -510,42 +550,7 @@
                     }
                 });
             }
-
-
-            const removeButtons = document.querySelectorAll('.remove-picture');
-            removeButtons.forEach(function(button) {
-                button.addEventListener('click', function () {
-                    const pictureForm = button.closest('.picture-form');
-
-                    const idInput = pictureForm.querySelector('input[name$="-id"]');
-                    if (idInput && idInput.value === ""){
-                        return;
-                    }
-                    const preview = pictureForm.querySelector('.image-preview-wrapper');
-                    if(preview) {
-                        preview.style.display = 'none';
-                    }
-
-                    const del = pictureForm.querySelector('input[type="checkbox"][name$="-DELETE"]');
-                    if (del) {
-                        del.checked = true;
-                    }
-                });
-            });
-
-            const imageInputs = document.querySelectorAll('input[type="file"][name$="-image"]');
-            imageInputs.forEach(function (input) {
-                input.addEventListener('change', function () {
-                    const pictureForm = input.closest('.picture-form');
-                    const del = pictureForm.querySelector('input[type="checkbox"][name$="-DELETE"]');
-                    if (del) {
-                        del.checked = false;
-                    }
-                });
-            });
     
-
-
             /*フッタースクロール機能*/
             let lastScrollTop = 0;
             const footer = document.querySelector('.footer-nav');
@@ -615,12 +620,129 @@
                     if (urlInput) {
                         urlInput.value = "";
                     }
-                    
                     updateAddState();
+                }
+                updateAddState();
+            });
+
+            /*写真*/
+            const pictureContainer = document.getElementById('picture-form-container');
+            const pictureAddBtn = document.getElementById('add-picture');
+            const pictureTotalInput = document.getElementById('id_pictures-TOTAL_FORMS');
+            const pictureMaxFormsEl = document.getElementById('id_pictures-MAX_NUM_FORMS');
+            const PICTURE_MAX = pictureMaxFormsEl ? parseInt(pictureMaxFormsEl.value, 10) : 10;
+
+            const pictureTemplate = document.getElementById('empty-picture-template').textContent.trim();
+
+            /*現在の表示枚数を数える*/
+            function visibleCount() {
+                return pictureContainer.querySelectorAll('.picture-form-block:not([data-deleted="1"])').length;
+            }
+
+            /*追加ボタンの有効/無効を制御*/
+            function updatePictureAddState() {
+                const total = parseInt(pictureTotalInput.value, 10);
+                pictureAddBtn.disabled = total >= PICTURE_MAX;
+            }
+
+            /*プレビュー表示処理*/
+            function showPreview(fileInput) {
+                const block = fileInput.closest('.picture-form-block');
+                const previewWrapper = block.querySelector('.image-preview-wrapper');
+                const previewImage = block.querySelector('.preview-image');
+                const removeBtn = block.querySelector('.remove-picture');
+
+                if (fileInput.files && fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewImage.src = e.target.result;
+                        previewWrapper.style.display = 'block';
+                        removeBtn.style.display = 'inline-block';
+                        block.querySelector('.file-input-wrapper').style.display = 'none';
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                }
+            }
+            
+            /*新しいフォームを追加*/
+            pictureAddBtn.addEventListener('click', function () {
+                let index = parseInt(pictureTotalInput.value, 10);
+                if (index >= PICTURE_MAX) return;
+                
+                const html = pictureTemplate.replace(/__prefix__/g, index);
+                const wrap = document.createElement('div');
+                wrap.className = 'picture-form-block';
+                wrap.innerHTML = html;
+
+                pictureContainer.appendChild(wrap);
+                pictureTotalInput.value = index + 1;
+
+                const newInput = wrap.querySelector('input[type="file"]');
+                if (newInput) {
+                    newInput.addEventListener('change', function () {
+                        showPreview(newInput);
+                    });
+                }
+                updatePictureAddState();
+            });
+
+            /*コンテナ全体でイベント委譲*/
+            pictureContainer.addEventListener('click', function (e) {
+                const removeButton = e.target.closest('button.remove-picture');
+                if (removeButton)  {
+                    const block = removeButton.closest('.picture-form-block');
+                    if (!block) return;
+
+                    /*deleteフラグon*/
+                    const deleteInput = block.querySelector('input[name$="-DELETE"]');
+                    if (deleteInput) {
+                        deleteInput.checked = true;
+                        deleteInput.value = "on";
+                    }
+
+                    /*ファイル入力クリア*/
+                    const pictureInput = block.querySelector('input[name$="-image"]');
+                    if (pictureInput) {
+                        pictureInput.value = "";
+                    }
+
+                    /*プレビュー削除*/
+                    const preview = block.querySelector('.preview-image');
+                    if (preview) {
+                        preview.src ="";
+                    }
+
+                    /*プレビュー領域を非表示*/
+                    const previewWrapper = block.querySelector('.image-preview-wrapper');
+                    if (previewWrapper) {
+                        previewWrapper.style.display = 'none';
+                    }
+
+                    /*ファイル選択欄を表示*/
+                    const fileWrapper = block.querySelector('.file-input-wrapper');
+                    if (fileWrapper) {
+                        fileWrapper.style.display = 'block';
+                    }
+
+                    /*ボタン非表示*/
+                    const removeBtn = block.querySelector('.remove-picture');
+                    if (removeBtn) {
+                        removeBtn.style.display = 'none';
+                    }
+
+                    block.classList.add("empty-picture");
+                    updatePictureAddState();
                 }
             });
 
-            updateAddState();
+            /*初期ロード時のfile inputにプレビュー表示を付与*/
+            pictureContainer.querySelectorAll('input[type="file"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    showPreview(input);
+                });
+            });
+            updatePictureAddState();
+
         });
     </script>
 </body>

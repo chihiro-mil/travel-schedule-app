@@ -228,12 +228,6 @@ def delete_schedule(request, schedule_id):
         return redirect('app:home')
     return redirect('app:home')
 
-
-PictureFormSet = inlineformset_factory(
-    Plan, Picture, form=PictureForm, formset=BasePictureFormSet,
-    extra=10, can_delete=True
-)
-
 #予定追加・編集画面
 @login_required
 def plan_create_or_edit_view(request, schedule_id, plan_id=None):
@@ -253,16 +247,14 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         validate_max=True,
         can_delete=True
     )
-    
-    saved_picture_count = Picture.objects.filter(plan=plan).count()
-    picture_extra = max(0, 10 - saved_picture_count)
-    
+
+    extra_pictures = 1
     PictureFormSet = inlineformset_factory(
         Plan,
         Picture,
         form=PictureForm,
         formset=BasePictureFormSet,
-        extra=picture_extra,
+        extra=extra_pictures,
         max_num=10,
         validate_max=True,
         can_delete=True,
