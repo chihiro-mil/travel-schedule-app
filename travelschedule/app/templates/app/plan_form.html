@@ -298,8 +298,8 @@
                     <label for="{{ form.memo.id_for_label }}">メモ</label>{{ form.memo }}
                 </div>
 
-                <h4>ＵＲＬ<br>(最大５件)</h4>
                 <div class="form-group link-formset-container">
+                    <label class="url-label">ＵＲＬ(最大５件)</label>
                     {{ link_formset.management_form }}
                     <div id="link-form-container">
                         {% for form in link_formset %}
@@ -331,49 +331,51 @@
 
                 <button type="button" id="add-link">＋ 追加</button>
 
-                <h4>写真<br>(最大１０枚)</h4>
                 <div class="form-group picture-formset-container" id="picture-form-container">
+                    <label class="picture-label">写真(最大１０枚)</label>
                     {{ picture_formset.management_form }}
-                    {% for form in picture_formset %}
-                        <div class="picture-form-block">
-                            {{ form.id }}
+                    <div id="picture-inputs">
+                        {% for form in picture_formset %}
+                            <div class="picture-form-block">
+                                {{ form.id }}
 
-                            <div class="image-preview-wrapper"
-                                    {% if form.instance.pk and form.instance.image %}
-                                        style="display:block;"
-                                    {% else %}
-                                        style="display:none;"
-                                    {% endif %}>
-                                <img
-                                    src="{% if form.instance.pk and form.instance.image %}{{ form.instance.image.url }}{% else %}{% endif %}"
-                                    alt="画像"
-                                    class="preview-image">
+                                <div class="image-preview-wrapper"
+                                        {% if form.instance.pk and form.instance.image %}
+                                            style="display:block;"
+                                        {% else %}
+                                            style="display:none;"
+                                        {% endif %}>
+                                    <img
+                                        src="{% if form.instance.pk and form.instance.image %}{{ form.instance.image.url }}{% else %}{% endif %}"
+                                        alt="画像"
+                                        class="preview-image">
+                                </div>
+
+                                <div class="file-input-wrapper"
+                                        {% if form.instance.pk and form.instance.image %}
+                                            style="display:none;"
+                                        {% else %}
+                                            style="display:block;"
+                                        {% endif %}>
+                                    {{ form.image }}
+                                </div>
+
+                                <input type="checkebox"
+                                    name="{{ form.DELETE.html_name }}"
+                                    id="{{ form.DELETE.id_for_label }}"
+                                    style="display:none;">
+
+                                <button type="button" class="remove-picture"
+                                        {% if form.instance.pk and form.instance.image %}
+                                            style="display:inline-block;"
+                                        {% else %}
+                                            style="display:none;"
+                                        {% endif %}>
+                                    <i class="fas fa-xmark"></i>
+                                </button>
                             </div>
-
-                            <div class="file-input-wrapper"
-                                    {% if form.instance.pk and form.instance.image %}
-                                        style="display:none;"
-                                    {% else %}
-                                        style="display:block;"
-                                    {% endif %}>
-                                {{ form.image }}
-                            </div>
-
-                            <input type="checkebox"
-                                name="{{ form.DELETE.html_name }}"
-                                id="{{ form.DELETE.id_for_label }}"
-                                style="display:none;">
-
-                            <button type="button" class="remove-picture"
-                                    {% if form.instance.pk and form.instance.image %}
-                                        style="display:inline-block;"
-                                    {% else %}
-                                        style="display:none;"
-                                    {% endif %}>
-                                <i class="fas fa-xmark"></i>
-                            </button>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
 
                 <script type="text/template" id="empty-picture-template">

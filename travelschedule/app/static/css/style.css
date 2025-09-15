@@ -299,9 +299,18 @@ html, body { margin: 0; }
     font-weight: bold;
     margin-top: 30px;
     margin-bottom: 25px;
-}
+    }
 }
 
+@media screen and (min-width: 768px) {
+    .login-form input[type="email"],
+    .login-form input[type="password"] {
+        font-size: 18px;
+        padding: 10px;
+        width: 100%;
+        max-width: 300px;
+    }
+}
 
 /*マイページ設定*/
 
@@ -1176,8 +1185,9 @@ input[type="radio"]:checked + label.label {
     width: 110px;
     text-align: left;
     vertical-align: top;
-    margin-right: 5px;
+    margin-right: 10px;
     margin-left: 50px;
+    white-space: nowrap;
 }
 
 .form-group input,
@@ -1206,15 +1216,6 @@ input[type="radio"]:checked + label.label {
     color: #fff;
 }
 
-.picture-formset-container {
-    display: grid;
-    gap: 5px;
-    grid-template-columns: 1fr;
-    justify-content: center;
-    margin-top: 10px;
-}
-
-
 .image-preview-wrapper {
     position: relative;
     display: inline-block;
@@ -1223,11 +1224,6 @@ input[type="radio"]:checked + label.label {
     margin-bottom: 10px;
 }
 
-.image-preview-wrapper img {
-    max-width: 120px;
-    height: auto;
-    display: block;
-}
 
 .file-input-wrapper {
     display: flex;
@@ -1237,32 +1233,62 @@ input[type="radio"]:checked + label.label {
 
 .remove-picture {
     background: none;
-    border: none;
+    border: 1px solid #333;
+    width: 30px;
+    height: 30px;
     color: #ff0000;
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: bold;
     cursor: pointer;
     position: static;
 }
 
 .preview-image {
     max-width: 120px;
-    height: auto;
+    max-height: 120px;
     display: block;
     margin-top: 5px;
 }
 
 .form-group.link-formset-container {
-    display: block;
-    text-align: center;
+    display: block !important;
+    text-align: center !important;
+    margin-bottom: 20px;
 }
 
-.link-form-block {
-    display: inline-flex;
+.form-group.link-formset-container .url-label {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.form-group.picture-formset-container {
+    display: block !important;
+    text-align: center !important;
+    margin-bottom: 20px;
+}
+
+.form-group.picture-formset-container .picture-label {
+    display: block !important;
+    margin-bottom: 12px;
+}
+
+.link-formset-container .link-form-block,
+.picture-formset-container .picture-form-block {
+    display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin: 5px auto;
-    max-width: 500px;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+#add-link,
+#add-picture {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.remove-link {
+    background-color: #e53935;
+    color: #fff;
 }
 
 /*ＰＣサイズ用*/
@@ -1289,7 +1315,7 @@ input[type="radio"]:checked + label.label {
         border-radius: 10px;
     }
     .plan-form-container label {
-        font-size: 18px;
+        font-size: 20px;
     }
     .plan-form-container {
         max-width: 480px;
@@ -1306,22 +1332,45 @@ input[type="radio"]:checked + label.label {
     max-width: 120px;
     display: inline-block;
     margin-top: 4px;
+    }
+    .plan-form-container input[type="text"],
+    .plan-form-container textarea {
+        width: 250px;
+        padding: 5px 10px;
+        font-size: 15px;
+    }
+    .plan-form-container input[type="time"],
+    .plan-form-container select {
+        width: 110px;
+        font-size: 15px;
+        padding: 4px 6px;
+    }
+    .plan-form-container input[type="url"] {
+        width: 200px;
+        max-width: 100%;
+        font-size: 15px;
+        padding: 6px;
+    }
+    #add-link,
+    #add-picture {
+        padding: 6px 14px;
+        font-size: 15px;
+    }
+    .remove-link {
+    padding: 6px 12px;
+    font-size: 14px;
 }
+
 }
 
 
 @media (max-width: 768px) {
-    .picture-formset-container {
-    display: grid;
-    gap: 5px;
-    grid-template-columns: 1fr;
-    grid-auto-rows: auto;
-    margin-top: 10px;
-    grid-auto-columns: 350px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-    justify-content: start;
+    .form-group.link-formset-container .url-label,
+    .form-group.picture-formset-container .picture-label {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 auto 10px auto !important;
+        text-align: center !important;
     }
     .link-formset-container {
         margin-left: 15px;
@@ -1334,6 +1383,15 @@ input[type="radio"]:checked + label.label {
         word-break: break-word;
         margin-left: 4px;
         margin-top: 4px;
+    }
+    .remove-picture {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+    }
+    .preview-image {
+    max-width: 90px;
+    max-height: 90px;
     }
 }
 
@@ -1539,10 +1597,16 @@ h2 {
     vertical-align: top;
 }
 
-plan-image.thumbnail {
+.plan-image.thumbnail {
     width: 60px;
     height: auto;
     object-fit: cover;
+}
+
+.picture-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    justify-items: center;
 }
 
 
@@ -1592,6 +1656,7 @@ plan-image.thumbnail {
     .plan-card .plan-links,
     .plan-card .plan-pictures {
         width: 100%;
+        margin-top: 10px;
     }
     .plan-card .transportation-row { 
         gap: 8px; 
