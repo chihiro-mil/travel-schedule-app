@@ -25,40 +25,46 @@
 
             
                 <div class="register-form-group">
-                    <label for="{{ form.username.id_for_label }}">
+                    <label for="{{ form.username.id_for_label }}" class="form-register-label">
                         {{ form.username.label }}
                         <span class="required-label">必須</span>
                     </label>
-                    <div class="form-input">{{ form.username }}</div>
+                    <div class="form-input">{{ form.username }}
+                        <small class="help-text">※１文字２０文字以下</samll>
+                    </div>
                     {% if form.username.errors %}
                         <div class="error">{{ form.username.errors.0 }}</div>
                     {% endif %}
                 </div>
 
                 <div class="register-form-group">
-                    <label for="{{ form.email.id_for_label }}">
+                    <label for="{{ form.email.id_for_label }}" class="form-register-label">
                         {{ form.email.label }}
                         <span class="required-label">必須</span>
                     </label>
-                    <div class="form-input">{{ form.email }}</div>
+                    <div class="form-input">{{ form.email }}
+                        <small class="help-text">※〇〇〇＠〇〇.〇〇</samll>
+                    </div>
                     {% if form.email.errors %}
                         <div class="error">{{ form.email.errors.0 }}</div>
                     {% endif %}
                 </div>
 
                 <div class="register-form-group">
-                    <label for="{{ form.password.id_for_label }}">
+                    <label for="{{ form.password.id_for_label }}" class="form-register-label">
                         {{ form.password.label }}
                         <span class="required-label">必須</span>
                     </label>
-                    <div class="form-input">{{ form.password }}</div>
+                    <div class="form-input">{{ form.password }}
+                        <small class="help-text">※英数字＋８文字以上</samll>
+                    </div>
                     {% if form.password.errors %}
                         <div class="error">{{ form.password.errors.0 }}</div>
                     {% endif %}
                 </div>
 
                 <div class="register-form-group">
-                    <label for="{{ form.password_confirm.id_for_label }}">{{ form.password_confirm.label }}</label>
+                    <label for="{{ form.password_confirm.id_for_label }}" class="form-register-label">{{ form.password_confirm.label }}</label>
                     <div class="form-input">{{ form.password_confirm }}</div>
                     {% if form.password_confirm.errors %}
                         <div class="error">{{ form.password_confirm.errors.0 }}</div>

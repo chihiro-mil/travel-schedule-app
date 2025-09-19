@@ -24,6 +24,8 @@ html, body { margin: 0; }
     text-align: center;
     font-weight: bold;
     font-size: 25px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .small-text p {
@@ -31,6 +33,8 @@ html, body { margin: 0; }
     margin-top: 30px;
     font-size: 20px;
     font-weight: bold;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .img img {
@@ -57,7 +61,7 @@ html, body { margin: 0; }
     display: inline-block;
     background-color: #0052cc;
     padding: 15px 25px;
-    border: 2px solid #000;
+    border-radius: 5px;
 }
 .application-link a {
     text-decoration: none;
@@ -86,9 +90,13 @@ html, body { margin: 0; }
     }
     .large-text p {
         font-size: 18px;
+        margin-left: 15px;
+    margin-right: 15px;
     }
     .small-text p {
         font-size: 16px;
+        margin-left: 15px;
+    margin-right: 15px;
     }
     .nav-link {
         display: flex;
@@ -201,6 +209,25 @@ html, body { margin: 0; }
     cursor: pointer;
     font-size: 18px;
     padding: 10px 24px;
+    border: none;
+    border-radius: 5px;
+}
+
+.form-register-label {
+    color: #000;
+}
+
+.help-text {
+    display: block;
+    font-size: 14px;
+    color: #444;
+    margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+    .help-text {
+    font-size: 12px;
+    }
 }
 
 /*ログイン画面*/
@@ -265,6 +292,8 @@ html, body { margin: 0; }
     font-size: 20px;
     padding: 10px 24px;
     margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
 }
 
 .register-link a {
@@ -409,6 +438,8 @@ html, body { margin: 0; }
 .errorlist {
     color: #ff0000;
     list-style: none;
+    text-align: center;
+    padding: 0;
 }
 
 .change-messages {
@@ -450,7 +481,14 @@ html, body { margin: 0; }
     margin-top: 10px;
     margin-bottom: 25px;
     font-size: 18px;
-}
+    }
+    .errorlist {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 /*フッター*/
@@ -535,8 +573,7 @@ html, body { margin: 0; }
     background-color: #e6f2ff;
     padding: 12px;
     border-radius: 4px;
-    margin-top: 12px;
-    margin: 20px auto;
+    margin: 80px auto;
     color: #004080;
     font-size: 20px;
     text-align: center;
@@ -800,6 +837,25 @@ html, body { margin: 0; }
     color: #fff;
 }
 
+.delete-confirm-yes {
+    background-color: #ff0000;
+    color: #ffffff;
+    border: none;
+    padding: 13px 27px;
+    border-radius: 4px;
+    font-size: 15px;
+}
+
+.delete-confirm-no {
+    background-color: #e0e0e0e0;
+    color: #000;
+    border: none;
+    padding: 13px 20px;
+    border-radius: 4px;
+    font-size: 15px;
+    margin-left: 10px;
+}
+
 @media (max-width: 768px) {
 
     .sort-button {
@@ -831,6 +887,7 @@ html, body { margin: 0; }
     .no-schedule-message{
         font-size: 18px;
         max-width: 65%;
+        margin: 60px auto;
     }
     .schedule-card {
         width: 100%;
@@ -894,6 +951,10 @@ html, body { margin: 0; }
     display: block;
 }
 
+.modal-content input[type="date"] {
+    font-size: 20px;
+    padding: 8px;
+}
 
 .close {
     color: #aaa;
@@ -965,6 +1026,17 @@ html, body { margin: 0; }
     .image-preview{
         width: 80px;
         height: 64px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .modal-content {
+        width: 400px;
+        max-width: 600px;
+    }
+    .schedule-add-modal .calendar-wrapper,
+    .schedule-add-modal .home-required-wrapper {
+        justify-content: center;
     }
 }
 
@@ -1232,15 +1304,14 @@ input[type="radio"]:checked + label.label {
 }
 
 .remove-picture {
-    background: none;
-    border: 1px solid #333;
-    width: 30px;
-    height: 30px;
-    color: #ff0000;
-    font-size: 20px;
-    font-weight: bold;
+    background: #e53935;
+    font-size: 14px;
+    padding: 6px 10px;
+    color: #ffffff;
+    font-size: 14px;
+    height: 40px;
     cursor: pointer;
-    position: static;
+    line-height: 1;
 }
 
 .preview-image {
@@ -1277,7 +1348,7 @@ input[type="radio"]:checked + label.label {
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 #add-link,
@@ -1385,8 +1456,8 @@ input[type="radio"]:checked + label.label {
         margin-top: 4px;
     }
     .remove-picture {
-        width: 20px;
-        height: 20px;
+        padding: 6px 8px;
+        height: 25px;
         font-size: 12px;
     }
     .preview-image {
@@ -1396,6 +1467,14 @@ input[type="radio"]:checked + label.label {
 }
 
 /*予定詳細画面*/
+
+.schedule-title {
+    display: inline-block;
+    text-align: left;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin-top: 15px;
+}
 
 .schedule-body {
     padding-bottom: 106px;
@@ -1544,6 +1623,7 @@ h2 {
     white-space: pre-wrap;
     word-break: break-all;
     width: 15em;
+    font-size: 18px;
 }
 
 .plan-links {
@@ -1613,7 +1693,7 @@ h2 {
 @media (max-width: 768px) {
 
     h2 {
-        font-size: 20px;
+        font-size: 18px;
     }
     .day-tabs {
         display: flex;

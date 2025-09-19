@@ -14,7 +14,9 @@
 </head>
 <body class="schedule-body">
     <a href="{% url 'app:home' %}" class="back-button">＜戻る</a>
-    <h2>{{ schedule.title|break_every|safe }} 予定表</h2>
+    <h2>
+        <span class="schedule-title">{{ schedule.title|break_every|safe }} 予定表</span>
+    </h2>
 
     <div class="day-tabs">
         {% for date in sorted_dates %}
@@ -168,8 +170,8 @@
                 {% csrf_token %}
                 <input type="hidden" name="plan_id" id="deletePlanIdInput">
                 <div class="modal-buttons" style="text-align: center; margin-top: 10px;">
-                    <button type="submit" id="confirmDelete">はい</button>
-                    <button type="button" id="cancelDelete">いいえ</button>
+                    <button type="submit" id="confirmDelete" class="delete-confirm-yes">はい</button>
+                    <button type="button" id="cancelDelete" class="delete-confirm-no">いいえ</button>
                 </div>
             </form>
         </div>

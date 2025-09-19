@@ -11,6 +11,8 @@ from django.utils import timezone
 from django.contrib.auth.forms import PasswordChangeForm
 from django.forms import BaseInlineFormSet
 from django.forms import inlineformset_factory
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.password_validation import validate_password
 
 
 
@@ -20,33 +22,22 @@ class RegisterForm(forms.ModelForm):
         max_length=20, 
         label='ユーザー名', 
         help_text='',
-        widget=forms.TextInput(attrs={
-            'placeholder': '１文字２０文字以下',
-            'class': 'input-field'
-        })
+        widget=forms.TextInput
     )
     
     email = forms.EmailField(
         label='メールアドレス', 
-        widget=forms.TextInput(attrs={
-            'placeholder': '〇〇〇＠〇〇.〇〇',
-            'class': 'input-field'
-        })
+        widget=forms.TextInput
     )
     
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            'placeholder': '英数字＋８文字以上',
-            'class': 'input-field'
-        }),
+        widget=forms.PasswordInput,
         min_length=8, 
         label="パスワード"
     )
     
     password_confirm = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            'class': 'input-field'
-        }), 
+        widget=forms.PasswordInput, 
         label='パスワード(確認用)'
     )
     
@@ -73,8 +64,8 @@ class RegisterForm(forms.ModelForm):
     
     def clean_password(self):
         password = self.cleaned_data['password']
-        if not re.match(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+$', password):
-            raise ValidationError("パスワードは英字と数字を含めてください。")
+        if len(password) < 8 or not re.search(r'[A-Za-z]', password) or not re.search(r'\d', password):
+            raise forms.ValidationError("パスワードは英字と数字を含む８文字以上で入力してください。")
         return password
     
     def clean(self):
@@ -130,13 +121,42 @@ class ChangeEmailForm(forms.ModelForm):
         self.fields['email'].initial = ''
         
 class CustomPasswordChangeForm(PasswordChangeForm):
+    def clean_old_password(self):
+        old_password = self.cleaned_data.get('old_password')
+        if not self.user.check_password(old_password):
+            raise ValidationError("元のパスワードが間違っています。")
+        return old_password
+    
     def clean_new_password1(self):
-        password1 = self.cleaned_data.get('new_password1')
-        if not re.match(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+$', password1):
-            raise ValidationError("パスワードは英字と数字を含めてください。")
-        if len(password1) < 8:
-            raise ValidationError("パスワードは８文字以上で入力してください。")
-        return password1
+        password = self.cleaned_data.get('new_password1')
+        if len(password) < 8:
+            raise ValidationError("このパスワードは短すぎます。")
+        
+        if not any(c.isalpha() for c in password) or not any(c.isalpha() for c in password):
+            raise ValidationError("このパスワードは英字と数字を含めてください。")
+        
+        if password.lower() in ["password", "password123", "12345678"]:
+            raise ValidationError("このパスワードは一般的すぎます。")
+
+        return password
+    
+    def clean_new_password2(self):
+        password2 = self.cleaned_data.get('new_password2')
+        
+        if not password2:
+            raise ValidationError("確認用のパスワードを入力してください。")
+        
+        if len(password2) < 8:
+            raise ValidationError("このパスワードは短すぎます。")
+        
+        if not any(c.isalpha() for c in password2) or not any(c.isalpha() for c in password2):
+            raise ValidationError("このパスワードは英字と数字を含めてください。")
+        
+        if password2.lower() in ["password", "password123", "12345678"]:
+            raise ValidationError("このパスワードは一般的すぎます。")
+
+        return password2
+
     def clean(self):
         cleaned_data = super().clean()
         old_password = cleaned_data.get('old_password')
@@ -144,7 +164,7 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         new_password2 = cleaned_data.get('new_password2')
         
         if old_password and new_password1 and old_password == new_password1:
-            self.add_error('new_password1', "新しいパスワードは現在のパスワードと同じですので変更できません。")
+            self.add_error('new_password1', "新しいパスワードは現在のパスワードと同じにできません。")
         
         if new_password1 and new_password2 and new_password1 != new_password2:
             self.add_error('new_password2', "新しいパスワードと確認用パスワードが一致していません。")
@@ -155,11 +175,17 @@ class ScheduleForm(forms.ModelForm):
     class Meta:
         model = Schedule
         fields = ['title', 'trip_start_date', 'trip_end_date']
-        
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'maxlength': 20,
+                'class': 'trip-title',
+                'style': 'width: 10em; white-space: pre-wrap; word-break: break-all;'
+            }),
+        }
     def clean_title(self):
         title = self.cleaned_data['title']
-        if len(title) > 50:
-            raise forms.ValidationError("タイトルは50文字以内で入力してください。")
+        if len(title) > 20:
+            raise forms.ValidationError("タイトルは20文字以内で入力してください。")
         return title
     
     def clean(self):
@@ -265,6 +291,7 @@ class PlanForm(forms.ModelForm):
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
+            'maxlength': 150,
             'rows': 5,
             'style': 'width: 15em; white-space: pre-wrap; word-break: break-all;'
         })

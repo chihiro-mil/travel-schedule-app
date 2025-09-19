@@ -371,7 +371,7 @@
                                         {% else %}
                                             style="display:none;"
                                         {% endif %}>
-                                    <i class="fas fa-xmark"></i>
+                                    削除
                                 </button>
                             </div>
                         {% endfor %}
@@ -396,7 +396,7 @@
                                 style="display:none;">
 
                         <button type="button" class="remove-picture" style="display:none;">
-                            <i class="fas fa-xmark"></i>
+                            削除
                         </button>
                     </div>
                 </script>
@@ -622,6 +622,9 @@
                     if (urlInput) {
                         urlInput.value = "";
                     }
+
+                    block.style.display = "none";
+                    
                     updateAddState();
                 }
                 updateAddState();
