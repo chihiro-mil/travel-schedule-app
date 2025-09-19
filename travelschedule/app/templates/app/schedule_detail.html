@@ -75,12 +75,12 @@
                         <div class="time-block">
                             <div class="time-label">
                                 {% if plan.action_category == "move" %}
-                                    <span class="label">発：</span>
+                                    <span class="label">発</span>
                                     <span class="time">{{ plan.start_datetime|localtime|date:"H:i" }}</span>
                                     <span class="location">{{ plan.departure_location }}</span>
                                 {% elif plan.action_category == "sightseeing" or plan.action_category == "meal" %}
                                     {% if plan.start_datetime %}
-                                        <span class="label">開始：</span>
+                                        <span class="label">開始</span>
                                         <span class="time">{{ plan.start_datetime|localtime|date:"H:i" }}</span>
                                     {% endif %}
                                     {% if plan.departure_location %}
@@ -90,38 +90,31 @@
                                         <span class="location">{{ plan.name }}</span>
                                     {% endif %}
                                 {% elif plan.action_category == "stay" %}
-                                    {% if plan.start_datetime %}
-                                        <span class="label">着：</span>
+                                    {% if plan.display_type ==  "checkin" %}
+                                        <span class="label">チェック<br>イン</span>
                                         <span class="time">{{ plan.start_datetime|localtime|date:"H:i" }}</span>
-                                    {% endif %}
-                                    {% if plan.departure_location %}
-                                        {{ plan.departure_location }}
-                                    {% endif %}
-                                    {% if plan.name %}
-                                        <span class="location">{{ plan.name }}</span>
+                                        {% if plan.name %}<span class="location">{{ plan.name }}</span>{% endif %}
                                     {% endif %}
                                 {% endif %}
                             </div>
                             <div class="time-label">
                                 {% if plan.action_category == "move" %}
-                                    <span class="label">着：</span>
+                                    <span class="label">着</span>
                                     <span class="time">{{ plan.end_datetime|localtime|date:"H:i" }}</span>
                                     <span class="location">{{ plan.arrival_location }}</span>
                                 {% elif plan.action_category == "sightseeing" or plan.action_category == "meal" %}
                                     {% if plan.end_datetime %}
-                                        <span class="label">終了：</span>
+                                        <span class="label">終了</span>
                                         <span class="time">{{ plan.end_datetime|localtime|date:"H:i" }}</span>
                                     {% endif %}
                                     {% if plan.arrival_location %}
                                         {{ plan.arrival_location }}
                                     {% endif %}
                                 {% elif plan.action_category == "stay" %}
-                                    {% if plan.end_datetime %}
-                                        <span class="label">発：</span>
+                                    {% if plan.display_type ==  "checkout" %}
+                                        <span class="label">チェック<br>アウト</span>
                                         <span class="time">{{ plan.end_datetime|localtime|date:"H:i" }}</span>
-                                    {% endif %}
-                                    {% if plan.arrival_location %}
-                                        {{ plan.arrival_location }}
+                                        {% if plan.name %}<span class="location">{{ plan.name }}</span>{% endif %}
                                     {% endif %}
                                 {% endif %}
                             </div>

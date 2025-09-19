@@ -12,6 +12,7 @@ from django.utils.dateparse import parse_date
 from django.forms import inlineformset_factory
 from app.models import Plan
 from django.utils import timezone
+from copy import deepcopy
 
 
 from .forms import (
@@ -421,20 +422,40 @@ def schedule_detail_view(request, schedule_id):
     plans_by_date = defaultdict(list)
     
     for plan in plans:
-        if plan.start_datetime and plan.end_datetime:
-            current_date = localtime(plan.start_datetime).date()
-            end_date = localtime(plan.end_datetime).date()
+        if not plan.start_datetime or not plan.end_datetime:
+            continue
+        start_date = localtime(plan.start_datetime).date()
+        end_date = localtime(plan.end_datetime).date()
+        
+        if plan.action_category == 'stay':
+            ci = deepcopy(plan)
+            ci.display_type = 'checkin'
+            ci.display_datetime = plan.start_datetime
+            ci.is_stay_display = True
+            plans_by_date[start_date].append(ci)
             
+            co = deepcopy(plan)
+            co.display_type = 'checkout'
+            co.display_datetime = plan.end_datetime
+            co.is_stay_display = True
+            plans_by_date[end_date].append(co)
+            
+        else:
+            current_date = start_date
             while current_date <= end_date:
                 plans_by_date[current_date].append(plan)
                 current_date += timedelta(days=1)
         
         for date, day_plans in plans_by_date.items():
-            sorted_day_plans = sorted(day_plans, key=lambda p: p.start_datetime)
+            sorted_day_plans = sorted(day_plans, key=lambda plan: getattr(plan, 'display_datetime', plan.start_datetime))
 
             active_ends = []
             for plan in sorted_day_plans:
                 plan.nest_level = 0
+                
+                if getattr(plan, 'is_stay_display', False):
+                    continue
+                
                 for end in active_ends:
                     if plan.start_datetime < end:
                         plan.nest_level += 1
