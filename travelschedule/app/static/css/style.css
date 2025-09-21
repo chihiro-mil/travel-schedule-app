@@ -829,6 +829,33 @@ html, body { margin: 0; }
     border-radius: 4px;
 }
 
+.flatpickr-current-month {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: auto !important;
+    left: 35%;
+}
+
+.flatpickr-monthDropdown-months {
+    width: auto !important;
+    min-width: 60px;
+    flex: 1;
+    height: 10px;
+}
+
+.flatpickr-year-select {
+    width: auto !important;
+    min-width: 70px;
+    font-size: 18px;
+    margin-right: 20%;
+    margin-top: 4px;
+    border: none;
+    height: 20px;
+}
+
+
 .schedule-edit-save {
     background-color: #1e90ff;
     cursor: pointer;
@@ -1618,12 +1645,13 @@ h2 {
 }
 
 .plan-memo {
-    margin-top: 6px;
+        margin-top: 6px;
     color: #333;
-    white-space: pre-wrap;
-    word-break: break-all;
+    white-space: pre-line;
+    word-break: break-word;
     width: 15em;
-    font-size: 18px;
+    max-width: 100%;
+    font-size: 18px
 }
 
 .plan-links {
@@ -1759,7 +1787,6 @@ h2 {
         margin-bottom: 0px;
         display: inline-block;
         max-width: 100%;
-        white-space: pre-wrap;
         word-break: break-word;
     }
     .plan-card .label {

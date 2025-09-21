@@ -8,11 +8,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home page</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <link rel="stylesheet" href="{% static "css/style.css" %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static "app/flatpickr/flatpickr.min.css" %}">
+    <script src="{% static 'app/flatpickr/flatpickr.min.js' %}"></script>
+    <script src="{% static 'app/flatpickr/ja.js' %}"></script>
+    <script src="{% static 'app/flatpickr-yearSelect/flatpickr-year-select-plugin.js' %}"></script>
 </head>
 <body>
 
@@ -114,9 +115,9 @@
 
                 <label>旅行期間 <span class="home-required-label">必須</span></label>
                 <div class="calendar-wrapper">
-                    <input type="text" id="dateRange" name="trip_period" placeholder="日付を選択" readonly>
-                    <input type="hidden" name="trip_start_date">
-                    <input type="hidden" name="trip_end_date">
+                    <input type="text" id="dateRange" name="trip_period" placeholder="日付を選択" readonly class="flatpickr-input">
+                    <input type="hidden" id="add_start_date" name="trip_start_date" value="">
+                    <input type="hidden" id="add_end_date" name="trip_end_date" value="">
                 </div><br>
 
                 {% if form.trip_start_date.errors %}
@@ -146,10 +147,10 @@
 
                 <div class="schedule-form-group">
                     <label for="editTripRange">旅行期間</label>
-                    <input type="text" id="editTripRange" placeholder="旅行期間を選択" readonly>
+                    <input type="text" id="editTripRange" placeholder="旅行期間を選択" readonly class="flatpickr-input">
                     
-                    <input type="hidden" name="start_date" id="trip_start_date">
-                    <input type="hidden" name="end_date" id="trip_end_date">
+                    <input type="hidden" id="edit_start_date" name="start_date" value="">
+                    <input type="hidden" id="edit_end_date" name="end_date" value="">
                 </div>
                 <p class="trip-warning">
                     ※旅行期間を短く変更すると、期間外の予定は自動的に削除されます。<br>宿泊など期間をまたぐ予定も一部が期間外になると削除されます。<br>削除された予定は元に戻せません。
@@ -157,7 +158,7 @@
                     <span class="trip-warning-example">（例：旅行期間を8/1～8/4➡8/2～8/3に変更は、<br>8/1と8/4の予定や8/1～8/4の宿泊予定は削除）</span>
                 </p>
 
-                <button type="submit" class="schedule-edit-save">保存</button>
+                <button type="submit" class="editSaveBtn schedule-edit-save">保存</button>
             </form>
         </div>
     </div>
@@ -181,6 +182,7 @@
 
 
 
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const deleteModal = document.getElementById("deleteModal");
@@ -188,39 +190,98 @@
                 deleteModal.classList.add("schedule-delete-modal", "hidden");
             }
 
-            /*旅行期間編集用flatpickr*/
-            const rangeInput = document.getElementById("editTripRange");
-            const hiddenStart = document.getElementById("trip_start_date");
-            const hiddenEnd = document.getElementById("trip_end_date");
+            /*旅行期間追加用flatpickr*/
 
-            if (rangeInput && hiddenStart && hiddenEnd) {
-                flatpickr(rangeInput, {
+            function initAddRangePicker() {
+                const input = document.querySelector("#dateRange");
+                if (!input) return;
+
+                const addStart = document.getElementById("add_start_date");
+                const addEnd = document.getElementById("add_end_date");
+                const thisYear = new Date().getFullYear();
+
+                flatpickr(input, {
                     mode: "range",
                     dateFormat: "Y-m-d",
                     altInput: true,
                     altFormat: "Y年n月j日",
                     locale: "ja",
+                    mondthSelectorType: "static",
+                    plugins: [
+                        new yearSelectPlugin({
+                            shorthand:false,
+                            dateFormat:"Y",
+                            theme:"light"
+                        }),
+                    ],
 
                     defaultDate: [
-                        hiddenStart.value || rangeInput.dataset.start || null,
-                        hiddenEnd.value || rangeInput.dataset.end || null
+                        addStart.value || input.dataset.start || null,
+                        addEnd.value || input.dataset.end || null
                     ].filter(Boolean),
 
                     onChange(selectedDates, _str, instance) {
                         if (selectedDates.length === 2) {
-                            hiddenStart.value = instance.formatDate(selectedDates[0], "Y-m-d");
-                            hiddenEnd.value = instance.formatDate(selectedDates[1], "Y-m-d");
+                            addStart.value = instance.formatDate(selectedDates[0], "Y-m-d");
+                            addEnd.value = instance.formatDate(selectedDates[1], "Y-m-d");
                         } else {
-                            hiddenStart.value = "";
-                            hiddenEnd.value = "";
+                            addStart.value = "";
+                            addEnd.value = "";
                         }
                     }
                 });
             }
 
+            initAddRangePicker();
+
+            /*旅行期間編集用flatpickr*/
+            function initEditRangePicker() {
+                const input = document.querySelector("#editTripRange");
+                if (!input) return;
+
+                const editStart = document.getElementById("edit_start_date");
+                const editEnd = document.getElementById("edit_end_date");
+                const hiddenStart = document.getElementById("edit_start_date");
+                const hiddenEnd = document.getElementById("edit_end_date");
+                const thisYear = new Date().getFullYear();
+
+                flatpickr(input, {
+                    mode: "range",
+                    dateFormat: "Y-m-d",
+                    altInput: true,
+                    altFormat: "Y年n月j日",
+                    locale: "ja",
+                    mondthSelectorType: "static",
+                    plugins: [
+                        new yearSelectPlugin({
+                            shorthand:false,
+                            dateFormat:"Y",
+                            theme:"light"
+                        }),
+                    ],
+
+                    defaultDate: [
+                        editStart.value || null,
+                        editEnd.value || null
+                    ],
+
+                    onChange: function(selectedDates, dateStr, instance) {
+                        if (selectedDates.length === 2) {
+                            const start = instance.formatDate(selectedDates[0], "Y-m-d");
+                            const end = instance.formatDate(selectedDates[1], "Y-m-d");
+                            hiddenStart.value = start;
+                            hiddenEnd.value = end;
+                        } else {
+                            editStart.value = "";
+                            editEnd.value = "";
+                        }
+                    }
+                });
+            }
+            initEditRangePicker();
 
             /*予定表追加モーダル用カレンダー*/
-                const modal = document.getElementById("modal");
+            const modal = document.getElementById("modal");
             const openBtn = document.getElementById("openModalBtn");
             const closeBtn = document.getElementById("closeModalBtn");
 
@@ -234,19 +295,13 @@
                     modal.classList.remove("hidden");
                 }
 
-                const startInput = document.querySelector('input[name="start_date"]');
-                const endInput = document.querySelector('input[name="end_date"]');
-
-                console.log("startInput", startInput);
-                console.log("endInput", endInput);
+                const hiddenStart = document.querySelector('input[name="start_date"]');
+                const hiddenEnd = document.querySelector('input[name="end_date"]');
 
 
-                if (startInput && endInput) {
-                    const originalStart = startInput.dataset.original;
-                    const originalEnd = endInput.dataset.original;
-
-                    console.log('originalStart', originalStart);
-                    console.log('originalEnd', originalEnd);
+                if (hiddenStart && hiddenEnd) {
+                    const originalStart = hiddenStart.dataset.original;
+                    const originalEnd = hiddenEnd.dataset.original;
                 }
 
                 closeBtn.onclick = function () {
@@ -254,19 +309,6 @@
                 };
             }
 
-            let fp = flatpickr("#dateRange", {
-                mode: "range",
-                dateFormat: "Y-m-d",
-                locale: "ja",
-                onChange: function(selectedDates, dateStr, instance) {
-                    if (selectedDates.length === 2){
-                        const start = selectedDates[0];
-                        const end = selectedDates[1];
-                        document.querySelector('input[name="trip_start_date"]').value = instance.formatDate(start, "Y-m-d");
-                        document.querySelector('input[name="trip_end_date"]').value = instance.formatDate(end, "Y-m-d");
-                    }
-                }
-            });
 
             /*ケバブメニュー開閉*/
             document.querySelectorAll(".schedule-card-wrapper").forEach(wrapper => {
@@ -316,8 +358,8 @@
 
                     document.getElementById("editScheduleId").value = scheduleId;
                     document.getElementById("editTitle").value = title;
-                    document.getElementById("trip_start_date").value = start;
-                    document.getElementById("trip_end_date").value = end;
+                    document.getElementById("edit_start_date").value = start;
+                    document.getElementById("edit_end_date").value = end;
 
                     const rangeInput = document.getElementById("editTripRange");
                     if (rangeInput && start && end) {
@@ -337,7 +379,6 @@
 
             document.querySelectorAll(".edit-schedule-btn").forEach(function (button) {
                 button.addEventListener("click", function () {
-                    console.log("タイトル編集");
                     const scheduleId = this.dataset.scheduleId;
                     const title = this.dataset.title;
                     const start = this.dataset.start;
@@ -346,36 +387,36 @@
                     document.getElementById("editScheduleId").value = scheduleId;
                     document.getElementById("editTitle").value = title;
 
-                    const hiddenStart = document.getElementById("trip_start_date");
-                    const hiddenEnd = document.getElementById("trip_end_date");
-                    hiddenStart.value = start;
-                    hiddenEnd.value = end;
+                    const hiddenStart = document.getElementById("edit_start_date");
+                    const hiddenEnd = document.getElementById("edit_end_date");
+                    hiddenStart.value = start || "";
+                    hiddenEnd.value = end || "";
 
                     const rangeInput = document.getElementById("editTripRange");
-                    if (rangeInput && rangeInput._flatpickr) {
-                        rangeInput._flatpickr.setDate([start,end], true);
+                    if (rangeInput && start && end) {
+                        rangeInput._flatpickr.setDate([start, end], true);
                     }
+
                     document.getElementById("editModal").classList.remove("schedule-edit-modal", "hidden");
+                });
+
+                /*保存ボタンタップ後　flatpickrの値をhiddnに反映*/
+
+                const editForm = document.getElementById("editModalForm");
+
+                editForm.addEventListener("submit", function (e) {
+                    const rangeInput = document.getElementById("editTripRange");
+                    const hiddenStart = document.getElementById("edit_start_date");
+                    const hiddenEnd = document.getElementById("edit_end_date");
+
+                    if (rangeInput._flatpickr && rangeInput._flatpickr.selectedDates.langth === 2) {
+                        const [start, end] = rangeInput.value.split(" ～ ");
+                        hiddenStart.value = start;
+                        hiddenEnd.value = end;
+                    }
                 });
             });
 
-            /*保存ボタンタップ後　flatpickrの値をhiddnに反映*/
-            const saveBtn = document.getElementById("editSaveBtn");
-            if (saveBtn) {
-                saveBtn.addEventListener("click", function () {
-                    const rangeInput = document.getElementById("editTripRange");
-                    const hiddenStart = document.getElementById("trip_start_date");
-                    const hiddenEnd = document.getElementById("trip_end_date");
-
-                    if (rangeInput && rangeInput._flatpickr) {
-                        const dates = rangeInput._flatpickr.selectedDates;
-                        if (dates.length === 2) {
-                            hiddenStart.value = dates[0].toISOString().split("T")[0];
-                            hiddenEnd.value = dates[1].toISOString().split("T")[0];
-                        }
-                    }
-                });
-            }
 
             /*消去モーダル*/
 
