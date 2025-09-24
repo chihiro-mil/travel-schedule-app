@@ -14,6 +14,9 @@
     <div class="change-container">
         <h1 class="change-title">ユーザー名変更</h1>
 
+        <div class=user-title>現在のユーザー名</div>
+        <p class="username-text">{{ user.username }}</p>
+        
         <form method='POST'>
             {% csrf_token %}
             <div class="change-row">

@@ -97,7 +97,7 @@ def change_username_view(request):
             messages.success(request, 'ユーザー名を変更しました')
             return redirect('app:mypage')
     else:
-        form = ChangeUsernameForm(instance=request.user)
+        form = ChangeUsernameForm()
     return render(request, 'app/change_username.html', {'form': form})
 
 #メールアドレス変更画面

@@ -20,14 +20,11 @@
     {% endif %}
 
     <div class="change-container">
-        <h1 class=change-title>マイページ設定</h1>
+        <h1 class=mypage-change-title>マイページ設定</h1>
 
-        <div class=user-title>現在のユーザー名</div>
-        <p class="username-text">{{ user.username }}</p>
-
-        <a href="{% url 'app:change_username' %}"><button class="user-button">ユーザー名変更</button></a><br><br>
-        <a href="{% url 'app:change_email' %}"><button class="user-button">メールアドレス変更</button></a><br><br>
-        <a href="{% url 'app:change_password' %}"><button class="user-button">パスワード変更</button></a><br><br>
+        <a href="{% url 'app:change_username' %}" class="user-button">ユーザー名変更</a><br><br>
+        <a href="{% url 'app:change_email' %}" class="user-button">メールアドレス変更</a><br><br>
+        <a href="{% url 'app:change_password' %}" class="user-button">パスワード変更</a><br><br>
 
 
     </div>

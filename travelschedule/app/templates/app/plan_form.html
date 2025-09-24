@@ -269,8 +269,8 @@
                 </div>
 
                 <div class="form-group" id="stay-start-date">
-                    <label id="stay-date-label">滞在日</label>
-                    {{ form.start_date }}～{{ form.end_date }}
+                    <label id="stay-start-date-label">チェックイン</label>
+                    {{ form.start_date }}
                     {% if form.start_date.errors %}
                         <div class="error-message">
                             {% for error in form.start_date.errors %}
@@ -281,11 +281,35 @@
                 </div>
 
                 <div class="form-group" id="stay-start-time">
-                    <label id="stay-time-label">滞在時間</label>
-                    {{ form.start_time }}～{{ form.end_time }}
+                    <label id="stay-start-time-label">チェックイン<br>時間</label>
+                    {{ form.start_time }}
                     {% if form.start_time.errors %}
                         <div class="error-message">
                             {% for error in form.start_time.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group" id="stay-end-date">
+                    <label id="stay-end-date-label">チェックアウト</label>
+                    {{ form.end_date }}
+                    {% if form.end_date.errors %}
+                        <div class="error-message">
+                            {% for error in form.end_date.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group" id="stay-end-time">
+                    <label id="stay-end-time-label">チェックアウト<br>時間</label>
+                    {{ form.end_time }}
+                    {% if form.end_time.errors %}
+                        <div class="error-message">
+                            {% for error in form.end_time.errors %}
                                 <p>{{ error }}</p>
                             {% endfor %}
                         </div>

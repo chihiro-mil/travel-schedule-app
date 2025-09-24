@@ -14,6 +14,9 @@
     <div class="change-container">
         <h1 class=change-title>メールアドレス変更</h1>
 
+        <div class=user-title>現在のメールアドレス</div>
+        <p class="username-text">{{ user.email }}</p>
+        
         <form method='POST'>
             {% csrf_token %}
             <div class="change-row">

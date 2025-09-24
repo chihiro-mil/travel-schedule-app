@@ -375,12 +375,16 @@ html, body { margin: 0; }
     margin-bottom: 10px;
     padding: 12px 16px;
     font-size: 16px;
-    background: #f8f9fa;
+    background: #e0e0e0;
     border: 1px solid #ddd;
     border-radius: 8px;
-    color: #007bff;
+    color: #0000cc;
     text-decoration: none;
     font-size: 20px;
+}
+
+a.user-button {
+    text-decoration: none;
 }
 
 .change-title-form {
@@ -394,12 +398,20 @@ html, body { margin: 0; }
     margin-bottom: 40px;
 }
 
+.mypage-change-title {
+    font-size: 35px;
+    margin-top: 15px;
+    margin-bottom: 70px;
+}
+
 .change-submit-button {
     margin-top: 15px;
     padding: 10px 24px;
     font-size: 16px;
     background-color: #1e90ff;
     color: #fff;
+    border: none;
+    border-radius: 6px;
 }
 
 
@@ -476,6 +488,10 @@ html, body { margin: 0; }
     }
     .change-title {
         font-size: 25px;
+    }
+    .mypage-change-title {
+        font-size: 25px;
+        margin-bottom: 45px;
     }
     .username-text {
     margin-top: 10px;
@@ -573,7 +589,7 @@ html, body { margin: 0; }
     background-color: #e6f2ff;
     padding: 12px;
     border-radius: 4px;
-    margin: 80px auto;
+    margin: 250px auto;
     color: #004080;
     font-size: 20px;
     text-align: center;
@@ -914,7 +930,7 @@ html, body { margin: 0; }
     .no-schedule-message{
         font-size: 18px;
         max-width: 65%;
-        margin: 60px auto;
+        margin: 200px auto;
     }
     .schedule-card {
         width: 100%;
@@ -1092,6 +1108,7 @@ html, body { margin: 0; }
     color: #000;
     padding: 10px 20px;
     border-radius: 6px;
+    border: none;
 }
 
 .category-fields,
@@ -1233,6 +1250,21 @@ input[type="radio"]:checked + label.label {
     border-radius: 4px;
     background-color: #fff;
 }
+
+@media screen and (min-width: 768px) {
+    .selected-option {
+    margin-left: 16px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        vertical-align: middle;
+        margin-left: 19px;
+    }
+    #id_memo {
+        margin-right: -26px;;
+    }
+}
 .options-list {
     display: none;
     position: absolute;
@@ -1294,7 +1326,6 @@ input[type="radio"]:checked + label.label {
 .form-group textarea {
     vertical-align: middle;
 }
-
 .form-group.common-submit {
     display: flex;
     justify-content: center;
@@ -1313,6 +1344,8 @@ input[type="radio"]:checked + label.label {
     font-size: 18px;
     padding: 10px 20px;
     color: #fff;
+    border: none;
+    border-radius: 6px;
 }
 
 .image-preview-wrapper {
@@ -1339,6 +1372,8 @@ input[type="radio"]:checked + label.label {
     height: 40px;
     cursor: pointer;
     line-height: 1;
+    border: none;
+    border-radius: 6px;
 }
 
 .preview-image {
@@ -1378,6 +1413,14 @@ input[type="radio"]:checked + label.label {
     margin-top: 10px;
 }
 
+.link-formset-container .link-form-block {
+    margin-left: 100px;
+}
+
+.picture-formset-container .picture-form-block {
+    margin-left: 125px;
+}
+
 #add-link,
 #add-picture {
     margin-top: 5px;
@@ -1387,6 +1430,8 @@ input[type="radio"]:checked + label.label {
 .remove-link {
     background-color: #e53935;
     color: #fff;
+    border: none;
+    border-radius: 6px;
 }
 
 /*ＰＣサイズ用*/
@@ -1422,6 +1467,7 @@ input[type="radio"]:checked + label.label {
         padding: 10px 24px;
         font-size: 16px;
         border-radius: 6px;
+        border: none;
     }
     .error-message {
     color: #ff0000;
@@ -1457,17 +1503,33 @@ input[type="radio"]:checked + label.label {
     .remove-link {
     padding: 6px 12px;
     font-size: 14px;
-}
+    }
 
 }
 
 
 @media (max-width: 768px) {
+
+    .link-formset-container .link-form-block {
+    margin-left: -15px;
+    }
+    .picture-formset-container .picture-form-block {
+        margin-left: 50px;
+    }
+    .picture-inputs {
+        margin-left: 10px;
+    }
+    .form-group.link-formset-container {
+    display: block !important;
+    text-align: center !important;
+    margin-bottom: 20px;
+    margin-left: -3px;
+    }
     .form-group.link-formset-container .url-label,
     .form-group.picture-formset-container .picture-label {
         display: block !important;
-        width: 100% !important;
-        margin: 0 auto 10px auto !important;
+        /*width: 100% !important;*/
+        /*margin: 0 auto 10px auto !important;*/
         text-align: center !important;
     }
     .link-formset-container {
@@ -1490,6 +1552,11 @@ input[type="radio"]:checked + label.label {
     .preview-image {
     max-width: 90px;
     max-height: 90px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        vertical-align: middle;
     }
 }
 
@@ -1636,7 +1703,6 @@ h2 {
     border-radius: 10px;
     margin: 10px 0;
 }
-
 
 
 .plan-name {
