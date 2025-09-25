@@ -1259,7 +1259,6 @@ input[type="radio"]:checked + label.label {
     .form-group select,
     .form-group textarea {
         vertical-align: middle;
-        margin-left: 19px;
     }
     #id_memo {
         margin-right: -26px;;
@@ -1388,6 +1387,7 @@ input[type="radio"]:checked + label.label {
     text-align: center !important;
     margin-bottom: 20px;
     margin-left: 50px;
+    gap: 12px;
 }
 
 .form-group.link-formset-container .url-label {
@@ -1428,18 +1428,13 @@ input[type="radio"]:checked + label.label {
 .link-form-block .link-inputs {
     display: flex;
     flex-direction: column;
+    min-height: 70px;
 }
 
 .picture-form-block {
     margin-top: 10px;
 }
 
-.link-form-block {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    margin-top: 10px;
-}
 
 .link-inputs {
     display: flex;
@@ -1448,21 +1443,17 @@ input[type="radio"]:checked + label.label {
     flex: 1;
 }
 
-#link-form-container input[type="hidden"] {
+/*#link-form-container .link-form-block > input[type="hidden"] {
     display: none !important;
-    visibility: hidden !important;
-    position: absolute !important;
-}
-
-.link-form-block > input[type="hidden"] {
-    display: none;
+    height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
-}
+    border: 0 !important;
+}*/
 
-#link-form-container .link-form-block:first-child {
+/*#link-form-container .link-form-block:first-child {
     margin-top: 0px;
-}
+}*/
 
 /*.picture-formset-container .picture-form-block {
     margin-left: 125px;
@@ -1569,6 +1560,23 @@ input[type="radio"]:checked + label.label {
         width: 300px;
         box-sizing: border-box;
     }
+    .link-formset-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .link-form-block {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: start;
+        margin: 0 0 12px 0;
+        min-height: auto;
+        padding: 0;
+    }
+
+    .link-form-block:last-child {
+        margin-bottom: 0;
+    }
 
 }
 
@@ -1581,8 +1589,21 @@ input[type="radio"]:checked + label.label {
     /*.picture-formset-container .picture-form-block {
         margin-left: 50px;
     }*/
-    #link-form-container {
+    /*#link-form-container {
         margin-left: 10px;
+    }*/
+
+    .link-form-block {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: start;
+        margin: 0;
+        min-height: auto;
+        padding: 0;
+    }
+
+    .link-form-block:last-child {
+        margin-bottom: 0;
     }
     .form-group.link-formset-container .url-label {
         display: block;
@@ -1634,7 +1655,6 @@ input[type="radio"]:checked + label.label {
     display: flex;
     align-items: flex-start;
     gap: 0;
-    margin-bottom: 5px;
     }
 
     .link-inputs {
