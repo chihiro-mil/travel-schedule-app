@@ -81,12 +81,13 @@ class Plan(models.Model):
 #リンクテーブル
 class Link(models.Model):
     plan = models.ForeignKey('Plan', on_delete=models.CASCADE, related_name='links')
-    url = models.URLField(max_length=255)
+    title = models.CharField(max_length=16, blank=True, default='')
+    url = models.URLField(max_length=255, blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.url
+        return self.url or self.title or ''
     
 #写真テーブル
 class Picture(models.Model):

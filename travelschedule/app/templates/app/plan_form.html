@@ -327,9 +327,12 @@
                     {{ link_formset.management_form }}
                     <div id="link-form-container">
                         {% for form in link_formset %}
+                            {{ form.id }}
                             <div class="link-form-block">
-                                {{ form.id }}
-                                {{ form.url }}
+                                <div class="link-inputs">
+                                    {{ form.title }}
+                                    {{ form.url }}
+                                </div>
                                 <input type="checkebox"
                                         name="{{ form.DELETE.html_name }}"
                                         id="{{ form.DELETE.id_for_label }}"
@@ -342,9 +345,12 @@
                 </div>
 
                 <script type="text/template" id="empty-link-template">
+                    {{ link_formset.empty_form.id }}
                     <div class="link-form-block">
-                        {{ link_formset.empty_form.id }}
-                        {{ link_formset.empty_form.url }}
+                        <div class="link-inputs">
+                            {{ link_formset.empty_form.title }}
+                            {{ link_formset.empty_form.url }}
+                        </div>
                         <input type="checkebox"
                                 name="{{ link_formset.empty_form.DELETE.html_name }}"
                                 id="{{ link_formset.empty_form.DELETE.id_for_label }}"

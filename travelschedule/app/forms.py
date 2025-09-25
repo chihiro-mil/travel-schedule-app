@@ -500,12 +500,17 @@ class PlanForm(forms.ModelForm):
 class LinkForm(forms.ModelForm):
     class Meta:
         model = Link
-        fields = ['url']
+        fields = ['title', 'url']
         widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'タイトル(任意・16文字まで)',
+                'maxlength': 16,
+            }),
             'url': forms.URLInput(attrs={
                 'class': 'form-control',
                 'placeholder': '例：https://example.com'
-            })
+            }),
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

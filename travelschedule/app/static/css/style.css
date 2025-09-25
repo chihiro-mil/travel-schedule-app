@@ -1387,11 +1387,13 @@ input[type="radio"]:checked + label.label {
     display: block !important;
     text-align: center !important;
     margin-bottom: 20px;
+    margin-left: 50px;
 }
 
 .form-group.link-formset-container .url-label {
     display: block;
     margin-bottom: 12px;
+    margin-left: -2px;
 }
 
 .form-group.picture-formset-container {
@@ -1405,7 +1407,6 @@ input[type="radio"]:checked + label.label {
     margin-bottom: 12px;
 }
 
-.link-formset-container .link-form-block,
 .picture-formset-container .picture-form-block {
     display: flex;
     justify-content: center;
@@ -1414,24 +1415,84 @@ input[type="radio"]:checked + label.label {
 }
 
 .link-formset-container .link-form-block {
-    margin-left: 100px;
+    display: flex;
+    gap: 8px;
 }
 
-.picture-formset-container .picture-form-block {
+.picture-form-block .file-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.link-form-block .link-inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.picture-form-block {
+    margin-top: 10px;
+}
+
+.link-form-block {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.link-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+#link-form-container input[type="hidden"] {
+    display: none !important;
+    visibility: hidden !important;
+    position: absolute !important;
+}
+
+.link-form-block > input[type="hidden"] {
+    display: none;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#link-form-container .link-form-block:first-child {
+    margin-top: 0px;
+}
+
+/*.picture-formset-container .picture-form-block {
     margin-left: 125px;
+}*/
+
+
+#picture-inputs .picture-form-block:not(:first-of-type) {
+    margin-left: -5px;
 }
 
-#add-link,
 #add-picture {
     margin-top: 5px;
     margin-bottom: 20px;
 }
 
-.remove-link {
+#add-link {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.link-form-block .remove-link {
+    justify-self: end;
+    margin-right: 150px;
     background-color: #e53935;
     color: #fff;
     border: none;
     border-radius: 6px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    text-align: center;
 }
 
 /*ＰＣサイズ用*/
@@ -1504,17 +1565,29 @@ input[type="radio"]:checked + label.label {
     padding: 6px 12px;
     font-size: 14px;
     }
+    #link-form-container .form-control {
+        width: 300px;
+        box-sizing: border-box;
+    }
 
 }
 
 
 @media (max-width: 768px) {
 
-    .link-formset-container .link-form-block {
+    /*.link-formset-container .link-form-block {
     margin-left: -15px;
-    }
-    .picture-formset-container .picture-form-block {
+    }*/
+    /*.picture-formset-container .picture-form-block {
         margin-left: 50px;
+    }*/
+    #link-form-container {
+        margin-left: 10px;
+    }
+    .form-group.link-formset-container .url-label {
+        display: block;
+        margin-bottom: 12px;
+        margin-left: -1px;
     }
     .picture-inputs {
         margin-left: 10px;
@@ -1523,7 +1596,6 @@ input[type="radio"]:checked + label.label {
     display: block !important;
     text-align: center !important;
     margin-bottom: 20px;
-    margin-left: -3px;
     }
     .form-group.link-formset-container .url-label,
     .form-group.picture-formset-container .picture-label {
@@ -1558,6 +1630,19 @@ input[type="radio"]:checked + label.label {
     .form-group textarea {
         vertical-align: middle;
     }
+    .link-form-block {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 5px;
+    }
+
+    .link-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    }
+
 }
 
 /*予定詳細画面*/
@@ -1711,18 +1796,19 @@ h2 {
 }
 
 .plan-memo {
-        margin-top: 6px;
-    color: #333;
+    margin-top: 6px;
+    color: #000000;
     white-space: pre-line;
     word-break: break-word;
     width: 15em;
     max-width: 100%;
-    font-size: 18px
+    font-size: 20px
 }
 
 .plan-links {
     margin-top: 6p;
     max-width: 280px;
+    font-size: 20px;
 }
 .plan-links ul {
     padding-left: 18px;
@@ -1854,6 +1940,13 @@ h2 {
         display: inline-block;
         max-width: 100%;
         word-break: break-word;
+        font-size: 16px;
+    }
+    .plan-memo {
+        padding-left: 9px;
+    }
+    .plan-links {
+        font-size: 16px;
     }
     .plan-card .label {
         display: inline-block;
