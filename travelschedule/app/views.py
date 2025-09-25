@@ -256,7 +256,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         form=PictureForm,
         formset=BasePictureFormSet,
         extra=extra_pictures,
-        max_num=10,
+        max_num=6,
         validate_max=True,
         can_delete=True,
     )

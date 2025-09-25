@@ -362,7 +362,7 @@
                 <button type="button" id="add-link">＋ 追加</button>
 
                 <div class="form-group picture-formset-container" id="picture-form-container">
-                    <label class="picture-label">写真(最大１０枚)</label>
+                    <label class="picture-label">写真(最大６枚)</label>
                     {{ picture_formset.management_form }}
                     <div id="picture-inputs">
                         {% for form in picture_formset %}
@@ -665,7 +665,7 @@
             const pictureAddBtn = document.getElementById('add-picture');
             const pictureTotalInput = document.getElementById('id_pictures-TOTAL_FORMS');
             const pictureMaxFormsEl = document.getElementById('id_pictures-MAX_NUM_FORMS');
-            const PICTURE_MAX = pictureMaxFormsEl ? parseInt(pictureMaxFormsEl.value, 10) : 10;
+            const PICTURE_MAX = pictureMaxFormsEl ? parseInt(pictureMaxFormsEl.value, 10) : 6;
 
             const pictureTemplate = document.getElementById('empty-picture-template').textContent.trim();
 
