@@ -131,7 +131,8 @@
                                         {% for link in plan.links.all %}
                                             {% if link.url %}
                                                 <li>
-                                                    <a href="{{ link.url }}" target="_blank">
+                                                    <a href="{{ link.url }}" target="_blank"
+                                                        class="{% if link.title %}link-title{% else %}link-url{% endif %}">
                                                         {{ link.title|default:link.url }}
                                                     </a>
                                                 </li>

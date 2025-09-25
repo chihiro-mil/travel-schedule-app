@@ -1834,14 +1834,6 @@ h2 {
     padding-left: 18px;
 }
 
-.plan-links a {
-    display: inline-block;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
 .transportation-icon {
     width: 60px;
     text-align: center;
@@ -1889,6 +1881,21 @@ h2 {
     object-fit: cover;
 }
 
+@media screen and (min-width: 768px) {
+    .link-title {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        word-break: break-word;
+    }
+    .link-url {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        max-width: 100%;
+    }
+}
 
 @media (max-width: 768px) {
 
@@ -1981,6 +1988,13 @@ h2 {
     .plan-card .plan-links,
     .plan-card .plan-pictures {
         margin-top: 0px;
+    }
+    .plan-links a {
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .plan-card picture-grid img {
         max-width: 100%;
