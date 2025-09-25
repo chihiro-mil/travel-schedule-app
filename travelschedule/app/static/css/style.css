@@ -1873,6 +1873,7 @@ h2 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
+    gap: 5px;
 }
 
 .picture-grid .thumbnail img {
@@ -2014,6 +2015,7 @@ h2 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         justify-items: center;
+        gap: 3px;
     }
     .thumbnail {
         width: 100%;
