@@ -515,10 +515,10 @@ a.user-button {
     width: 100%;
 }
 
-.disabled-link {
+/*.disabled-link {
     color: #aaa;
     pointer-events: none;
-}
+}*/
 
 .footer-nav {
     position: fixed;
@@ -569,9 +569,7 @@ a.user-button {
 }
 
 .footer-nav .disabled-link {
-    color: #999;
-    pointer-events: none;
-    opacity: 0.5;
+    display: none;
 }
 
 /*home画面*/
