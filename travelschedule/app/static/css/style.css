@@ -1442,7 +1442,7 @@ input[type="radio"]:checked + label.label {
 .link-form-block .link-inputs {
     display: flex;
     flex-direction: column;
-    min-height: 70px;
+    width: 100%;
 }
 
 .picture-form-block {
@@ -1489,8 +1489,6 @@ input[type="radio"]:checked + label.label {
 }
 
 .link-form-block .remove-link {
-    justify-self: end;
-    margin-right: 150px;
     background-color: #e53935;
     color: #fff;
     border: none;
@@ -1671,11 +1669,25 @@ input[type="radio"]:checked + label.label {
     gap: 0;
     }
 
+    .form-group input[type="text"] {
+        flex: 0.9;
+    }
+
     .link-inputs {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 4px;
     }
+    .link-inputs input[type="text"],
+    .link-inputs input[type="url"] {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .link-inputs .remove-link {
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+
 
 }
 
@@ -1749,8 +1761,7 @@ h2 {
 }
 
 .fa-solid {
-    margin-right: 8px;
-    font-size: 16px;
+    margin-right: 4px;
 }
 
 .location {
@@ -1769,11 +1780,12 @@ h2 {
     border-radius: 8px;
     padding: 10px 40px 10px 40px;
     margin-bottom: 16px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 6px rgba(250, 52, 62, 0.05);
 }
 
 .overlap-message {
-    color: #d00;
+    color: #b30000;
+    font-weight: bold;
     font-size: 12px;
     padding: 4px 6px;
 }
@@ -1846,6 +1858,8 @@ h2 {
 }
 .plan-links ul {
     padding-left: 18px;
+    list-style: none;
+    padding-left: 0;
 }
 
 .transportation-icon {
@@ -1872,7 +1886,9 @@ h2 {
 .time-label .label {
     margin-left: 10px;
 }
-
+.plan-title {
+    margin-left: 10px;
+}
 .time-label .location {
     margin-left: 10px;
 }
@@ -1958,7 +1974,6 @@ h2 {
     .plan-card .plan-links,
     .plan-card .plan-pictures {
         width: 100%;
-        margin-top: 10px;
     }
     .plan-card .transportation-row { 
         gap: 8px; 
@@ -2020,7 +2035,8 @@ h2 {
         writing-mode: horizontal-tb;
         display: inline-block;
         white-space: nowrap;
-        margin-left: -12px;
+        margin-left: -5px;
+        padding: 0;
     }
     .time-label {
         font-size: 16px;
