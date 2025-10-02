@@ -327,26 +327,27 @@
                     {{ link_formset.management_form }}
                     <div id="link-form-container">
                         {% for form in link_formset %}
-                            {{ form.id }}
-                            <div class="link-form-block">
-                                <div class="link-inputs">
-                                    {{ form.title }}
-                                    {{ form.url }}
+                            {% if not form.empty_form %}
+                                <div class="link-form-block">
+                                    {{ form.id }}
+                                    <div class="link-inputs">
+                                        {{ form.title }}
+                                        {{ form.url }}
+                                    </div>
+                                    <input type="checkebox"
+                                            name="{{ form.DELETE.html_name }}"
+                                            id="{{ form.DELETE.id_for_label }}"
+                                            style="display:none;">
+                                    <button type="button" class="remove-link">削除</button>
                                 </div>
-                                <input type="checkebox"
-                                        name="{{ form.DELETE.html_name }}"
-                                        id="{{ form.DELETE.id_for_label }}"
-                                        style="display:none;">
-
-                                <button type="button" class="remove-link">削除</button>
-                            </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
 
                 <script type="text/template" id="empty-link-template">
-                    {{ link_formset.empty_form.id }}
                     <div class="link-form-block">
+                        {{ link_formset.empty_form.id }}
                         <div class="link-inputs">
                             {{ link_formset.empty_form.title }}
                             {{ link_formset.empty_form.url }}
@@ -606,58 +607,76 @@
             }
 
             /*リンク*/
-            const container = document.getElementById('link-form-container');
-            const addBtn = document.getElementById('add-link');
-            const totalInput = document.getElementById('id_links-TOTAL_FORMS');
-            const maxFormsEl = document.getElementById('id_links-MAX_NUM_FORMS');
-            const MAX = maxFormsEl ? parseInt(maxFormsEl.value, 10) : 5;
+            const linkContainer = document.getElementById('link-form-container');
+            const linkAddBtn = document.getElementById('add-link');
+            const linkTotalInput = document.getElementById('id_links-TOTAL_FORMS');
+            const LINK_MAX = 5;
+            const templateHTML = document.getElementById('empty-link-template').textContent;
 
-            const template = document.getElementById('empty-link-template').textContent.trim();
-
-            function visibleCount() {
-                return container.querySelectorAll('.link-form-block:not([data-deleted="1"])').length;
+            /*表示されているフォーム数を返す*/
+            function visibleLinkCount() {
+                return linkContainer.querySelectorAll('.link-form-block:not([data-deleted="1"])').length;
             }
 
-            function updateAddState() {
-                const total = parseInt(totalInput.value, 10);
-                addBtn.disabled = total >= MAX;
+            /*linkTotalInput.value = visibleLinkCount();*/
+
+            function updateLinkAddState() {
+                linkAddBtn.disabled = visibleLinkCount() >= LINK_MAX;
             }
 
-            addBtn.addEventListener('click', function () {
-                let index = parseInt(totalInput.value, 10);
-                if (index >= MAX) return;
-                
-                const html = template.replace(/__prefix__/g, index);
-                const wrap = document.createElement('div');
-                wrap.className = 'link-form-block';
-                wrap.innerHTML = html;
-                container.appendChild(wrap);
+            /*既存ブロックにdata-index付与*/
+            function bootstrapBlockIndex() {
+                linkContainer.querySelectorAll('.link-form-block').forEach(block => {
+                    if (block.dataset.index) return;
+                    const anyInput = block.querySelector('input[name^="links-"]');
+                    const m = anyInput && anyInput.name.match(/links-(\d+)-/);
+                    if (m) block.dataset.index = m[1];
+                });
+            }
 
-                totalInput.value = index + 1;
-                updateAddState();
+            /*初期化　トータルは生成済の枠の総数*/
+            bootstrapBlockIndex();
+            linkTotalInput.value = linkContainer.querySelectorAll('.link-form-block').length;
+            updateLinkAddState();
+
+            /*追加処理*/
+            linkAddBtn.addEventListener('click', function () {
+                if ( visibleLinkCount() >= LINK_MAX) return;
+
+                const index = parseInt(linkTotalInput.value, 10);
+                const html = templateHTML.replace(/__prefix__/g, index);
+
+                const tpl = document.createElement('template');
+                tpl.innerHTML = html.trim();
+                const newBlock = tpl.content.querySelector('.link-form-block');
+                newBlock.dataset.index = String(index);
+                linkContainer.appendChild(newBlock);
+
+                linkTotalInput.value = index + 1;
+                updateLinkAddState();
             });
 
-            container.addEventListener('click', function (e) {
-                if (e.target.classList.contains('remove-link'))  {
-                    const block = e.target.closest('.link-form-block');
-                    if (!block) return;
+            /*削除処理*/
+            linkContainer.addEventListener('click', function (e) {
+                if (!e.target.classList.contains('remove-link')) return;
 
-                    const deleteInput = block.querySelector('input[name$="-DELETE"]');
-                    if (deleteInput) {
-                        deleteInput.checked = true;
-                        deleteInput.value = "on";
-                    }
-                    
-                    const urlInput = block.querySelector('input[name$="-url"]');
-                    if (urlInput) {
-                        urlInput.value = "";
-                    }
+                const targetBlock = e.target.closest('.link-form-block');
+                console.log("削除対象block:", targetBlock);
+                if (!targetBlock) return;
 
-                    block.style.display = "none";
-                    
-                    updateAddState();
+                const idx = Number(targetBlock.dataset.index ?? '-1');
+                const del = targetBlock.querySelector('input[name$="-DELETE"]');
+
+                if (idx === 0) {
+                    targetBlock.querySelectorAll('input[type="text"], input[type="url"]').forEach(i => i.value = '');
+                    if (del) { del.checked = false; del.value = ""; }
+                } else {
+                    targetBlock.querySelectorAll('input[type="text"], input[type="url"]').forEach(i => i.value = '');
+                    if (del) { del.checked = true; del.value = "on"; }
+                    targetBlock.style.display = 'none';
+                    targetBlock.dataset.deleted = '1';
                 }
-                updateAddState();
+                updateLinkAddState();
             });
 
             /*写真*/
