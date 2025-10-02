@@ -332,7 +332,9 @@
                                     {{ form.id }}
                                     <div class="link-inputs">
                                         {{ form.title }}
+                                        {{ form.title.errors }}
                                         {{ form.url }}
+                                        {{ form.url.errors }}
                                     </div>
                                     <input type="checkebox"
                                             name="{{ form.DELETE.html_name }}"
@@ -661,7 +663,6 @@
                 if (!e.target.classList.contains('remove-link')) return;
 
                 const targetBlock = e.target.closest('.link-form-block');
-                console.log("削除対象block:", targetBlock);
                 if (!targetBlock) return;
 
                 const idx = Number(targetBlock.dataset.index ?? '-1');

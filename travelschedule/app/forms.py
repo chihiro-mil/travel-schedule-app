@@ -528,8 +528,19 @@ class BaseLinkFormSet(BaseInlineFormSet):
     def clean(self):
         super().clean()
         for form in self.forms:
+            if not hasattr(form, "cleaned_data"):
+                continue
+            
             if form.cleaned_data.get('DELETE'):
-                pass
+                continue
+            
+            title = form.cleaned_data.get("title")
+            url = form.cleaned_data.get("url")
+            
+            if not title and not url:
+                continue
+            if title and not url:
+                form.add_error("url", "ＵＲＬを入力してください。")
 
 
 
