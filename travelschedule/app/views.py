@@ -249,7 +249,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         can_delete=True
     )
 
-    extra_pictures = 1
+    extra_pictures = 0
     PictureFormSet = inlineformset_factory(
         Plan,
         Picture,

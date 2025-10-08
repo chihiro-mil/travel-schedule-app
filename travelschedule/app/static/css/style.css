@@ -1486,9 +1486,9 @@ input[type="radio"]:checked + label.label {
 }*/
 
 
-#picture-inputs .picture-form-block:not(:first-of-type) {
+/*#picture-inputs .picture-form-block:not(:first-of-type) {
     margin-left: -5px;
-}
+}*/
 
 #add-picture {
     margin-top: 5px;

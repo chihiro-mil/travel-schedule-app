@@ -369,7 +369,8 @@
                     {{ picture_formset.management_form }}
                     <div id="picture-inputs">
                         {% for form in picture_formset %}
-                            <div class="picture-form-block">
+                            <div class="picture-form-block"
+                                data-has-image="{% if form.instance.pk and form.instance.image %}1{% else %}0{% endif %}">
                                 {{ form.id }}
 
                                 <div class="image-preview-wrapper"
@@ -384,12 +385,13 @@
                                         class="preview-image">
                                 </div>
 
-                                <div class="file-input-wrapper"
-                                        {% if form.instance.pk and form.instance.image %}
-                                            style="display:none;"
-                                        {% else %}
-                                            style="display:block;"
-                                        {% endif %}>
+                                <div class="file-input-wrapper" 
+                                    data-has-image="{% if form.instance.pk and form.instance.image %}1{% else %}0{% endif %}"
+                                    {% if form.instance.pk and form.instance.image %}
+                                        style="display:none;"
+                                    {% else %}
+                                        style="display:block;"
+                                    {% endif %}>
                                     {{ form.image }}
                                 </div>
 
@@ -681,24 +683,31 @@
             });
 
             /*写真*/
-            const pictureContainer = document.getElementById('picture-form-container');
+            const pictureList = document.querySelector('#picture-form-container #picture-inputs');
             const pictureAddBtn = document.getElementById('add-picture');
             const pictureTotalInput = document.getElementById('id_pictures-TOTAL_FORMS');
-            const pictureMaxFormsEl = document.getElementById('id_pictures-MAX_NUM_FORMS');
-            const PICTURE_MAX = pictureMaxFormsEl ? parseInt(pictureMaxFormsEl.value, 10) : 6;
-
-            const pictureTemplate = document.getElementById('empty-picture-template').textContent.trim();
-
-            /*現在の表示枚数を数える*/
-            function visibleCount() {
-                return pictureContainer.querySelectorAll('.picture-form-block:not([data-deleted="1"])').length;
-            }
+            const PICTURE_MAX = 6;
+            const pictureTemplateHTML = document.getElementById('empty-picture-template').innerHTML;
 
             /*追加ボタンの有効/無効を制御*/
             function updatePictureAddState() {
-                const total = parseInt(pictureTotalInput.value, 10);
-                pictureAddBtn.disabled = total >= PICTURE_MAX;
+                const blocks = pictureList.querySelectorAll('.picture-form-block');
+                console.log("blocks.length", blocks.length);
+
+                console.log("PICTURE_MAX", PICTURE_MAX);
+                let visibleCount = 0;
+                blocks.forEach(block => {
+                    const del = block.querySelector('input[name$="-DELETE"]');
+                    if (!del || !del.checked) visibleCount++;
+                });
+
+                pictureAddBtn.disabled = visibleCount >= PICTURE_MAX;
+
+                console.log("blocks.length", blocks.length, "visibleCount", "/MAX", PICTURE_MAX);
+
+                return visibleCount;
             }
+
 
             /*プレビュー表示処理*/
             function showPreview(fileInput) {
@@ -706,98 +715,107 @@
                 const previewWrapper = block.querySelector('.image-preview-wrapper');
                 const previewImage = block.querySelector('.preview-image');
                 const removeBtn = block.querySelector('.remove-picture');
+                const fileWrapper = block.querySelector('.file-input-wrapper');
 
                 if (fileInput.files && fileInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
-                        previewImage.src = e.target.result;
-                        previewWrapper.style.display = 'block';
-                        removeBtn.style.display = 'inline-block';
-                        block.querySelector('.file-input-wrapper').style.display = 'none';
+                        if (previewImage) previewImage.src = e.target.result;
+                        if (previewWrapper) previewWrapper.style.display = 'block';
+                        if (removeBtn) removeBtn.style.display = 'inline-block';
+                        if (fileWrapper) fileWrapper.style.display = 'none';
                     };
                     reader.readAsDataURL(fileInput.files[0]);
                 }
             }
-            
+
             /*新しいフォームを追加*/
-            pictureAddBtn.addEventListener('click', function () {
-                let index = parseInt(pictureTotalInput.value, 10);
-                if (index >= PICTURE_MAX) return;
-                
-                const html = pictureTemplate.replace(/__prefix__/g, index);
+
+            function onAddPicture() {
+                console.log("onAddPicture");
+                const count = updatePictureAddState();
+                if (count >= PICTURE_MAX) return;
+
+                const index = parseInt(pictureTotalInput.value, 10);
                 const wrap = document.createElement('div');
-                wrap.className = 'picture-form-block';
-                wrap.innerHTML = html;
+                wrap.innerHTML = pictureTemplateHTML.replace(/__prefix__/g, index);
+                const block = wrap.firstElementChild;
 
-                pictureContainer.appendChild(wrap);
-                pictureTotalInput.value = index + 1;
+                pictureList.appendChild(block);
 
-                const newInput = wrap.querySelector('input[type="file"]');
-                if (newInput) {
-                    newInput.addEventListener('change', function () {
-                        showPreview(newInput);
+                const fileInput = block.querySelector('input[type="file"]');
+                if (fileInput)  { 
+                    fileInput.addEventListener('change', function () { 
+                        const f = this.files && this.files[0];
+                        if (!f) return;
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            block.querySelector('.preview-image').src = e.target.result;
+                            block.querySelector('.image-preview-wrapper').style.display = 'block';
+                            block.querySelector('.file-input-wrapper').style.display = 'none';
+                            const rm = block.querySelector('.remove-picture');
+                            if (rm) rm.style.display = 'inline-block';
+                        };
+                        reader.readAsDataURL(f); 
                     });
                 }
+
+                const rmBtn = block.querySelector('.remove-picture');
+                if (rmBtn) {
+                    rmBtn.addEventListener('click', function () {
+                        const del = block.querySelector('input[name$="-DELETE"]');
+                        if (del) { del.checked = true; del.value = 'on'; }
+                        block.style.display = 'none';
+                        updatePictureAddState();
+                    });
+                }
+                pictureTotalInput.value = index + 1;
+                updatePictureAddState();
+            }
+
+            pictureList.addEventListener('click', function (e) {
+                const btn = e.target.closest('button.remove-picture');
+                if (!btn) return;
+                const block = btn.closest('.picture-form-block');
+                const del = block.querySelector('input[name$="-DELETE"]');
+                if (del) { del.checked = true; del.value = 'on'; }
+                block.style.display = 'none';
                 updatePictureAddState();
             });
 
-            /*コンテナ全体でイベント委譲*/
-            pictureContainer.addEventListener('click', function (e) {
+            if (pictureAddBtn && !pictureAddBtn.dataset.bound) {
+                pictureAddBtn.dataset.bound = '1';
+                pictureAddBtn.addEventListener('click', onAddPicture);
+                console.log("追加ボタンにクリックイベント登録");
+            }
+            updatePictureAddState();
+
+
+            /*削除処理*/
+            pictureList.addEventListener('click', function (e) {
                 const removeButton = e.target.closest('button.remove-picture');
-                if (removeButton)  {
-                    const block = removeButton.closest('.picture-form-block');
-                    if (!block) return;
+                if (!removeButton) return;
 
-                    /*deleteフラグon*/
-                    const deleteInput = block.querySelector('input[name$="-DELETE"]');
-                    if (deleteInput) {
-                        deleteInput.checked = true;
-                        deleteInput.value = "on";
-                    }
+                const block = removeButton.closest('.picture-form-block');
+                if (!block) return;
 
-                    /*ファイル入力クリア*/
-                    const pictureInput = block.querySelector('input[name$="-image"]');
-                    if (pictureInput) {
-                        pictureInput.value = "";
-                    }
-
-                    /*プレビュー削除*/
-                    const preview = block.querySelector('.preview-image');
-                    if (preview) {
-                        preview.src ="";
-                    }
-
-                    /*プレビュー領域を非表示*/
-                    const previewWrapper = block.querySelector('.image-preview-wrapper');
-                    if (previewWrapper) {
-                        previewWrapper.style.display = 'none';
-                    }
-
-                    /*ファイル選択欄を表示*/
-                    const fileWrapper = block.querySelector('.file-input-wrapper');
-                    if (fileWrapper) {
-                        fileWrapper.style.display = 'block';
-                    }
-
-                    /*ボタン非表示*/
-                    const removeBtn = block.querySelector('.remove-picture');
-                    if (removeBtn) {
-                        removeBtn.style.display = 'none';
-                    }
-
-                    block.classList.add("empty-picture");
-                    updatePictureAddState();
+                const deleteInput = block.querySelector('input[name$="-DELETE"]');
+                if (deleteInput) {
+                    deleteInput.checked = true;
+                    deleteInput.value = "on";
                 }
+
+                block.style.display = 'none';
+                updatePictureAddState();
             });
 
             /*初期ロード時のfile inputにプレビュー表示を付与*/
-            pictureContainer.querySelectorAll('input[type="file"]').forEach(input => {
+            pictureList.querySelectorAll('input[type="file"]').forEach(input => {
                 input.addEventListener('change', function() {
                     showPreview(input);
                 });
             });
             updatePictureAddState();
-
         });
     </script>
 </body>
