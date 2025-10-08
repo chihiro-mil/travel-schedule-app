@@ -606,7 +606,6 @@
             /*バリエーション後の移動手段復元*/
             const hiddenInput = document.querySelector('.transportation-hidden-input');
             if (hiddenInput && hiddenInput.value) {
-                console.log("バリエーション後の復元実行");
                 initTransportationSelect();
             }
 
@@ -692,9 +691,7 @@
             /*追加ボタンの有効/無効を制御*/
             function updatePictureAddState() {
                 const blocks = pictureList.querySelectorAll('.picture-form-block');
-                console.log("blocks.length", blocks.length);
 
-                console.log("PICTURE_MAX", PICTURE_MAX);
                 let visibleCount = 0;
                 blocks.forEach(block => {
                     const del = block.querySelector('input[name$="-DELETE"]');
@@ -702,8 +699,6 @@
                 });
 
                 pictureAddBtn.disabled = visibleCount >= PICTURE_MAX;
-
-                console.log("blocks.length", blocks.length, "visibleCount", "/MAX", PICTURE_MAX);
 
                 return visibleCount;
             }
@@ -732,7 +727,6 @@
             /*新しいフォームを追加*/
 
             function onAddPicture() {
-                console.log("onAddPicture");
                 const count = updatePictureAddState();
                 if (count >= PICTURE_MAX) return;
 
@@ -786,7 +780,6 @@
             if (pictureAddBtn && !pictureAddBtn.dataset.bound) {
                 pictureAddBtn.dataset.bound = '1';
                 pictureAddBtn.addEventListener('click', onAddPicture);
-                console.log("追加ボタンにクリックイベント登録");
             }
             updatePictureAddState();
 
