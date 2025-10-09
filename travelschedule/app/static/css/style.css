@@ -366,7 +366,7 @@ button, input[type="button"], input[type="submit"] {
 }
 
 .user-title {
-    font-size: 25px;
+    font-size: 30px;
     margin-top: 30px;
 }
 
@@ -392,7 +392,7 @@ button, input[type="button"], input[type="submit"] {
     border-radius: 8px;
     color: #0000cc;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 30px;
 }
 
 a.user-button {
@@ -411,7 +411,7 @@ a.user-button {
 }
 
 .mypage-change-title {
-    font-size: 35px;
+    font-size: 40px;
     margin-top: 15px;
     margin-bottom: 70px;
 }
@@ -430,7 +430,7 @@ a.user-button {
 .change-row label {
     margin-bottom: 35px;
     margin-top: 20px;
-    font-size: 25px;
+    font-size: 30px;
 }
 
 .change-row input {
@@ -516,6 +516,24 @@ a.user-button {
         padding: 0;
         margin-left: auto;
         margin-right: auto;
+    }
+    .user-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 50%;
+    margin: 10px auto;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    font-size: 16px;
+    background: #e0e0e0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    color: #0000cc;
+    text-decoration: none;
+    font-size: 20px;
     }
 }
 
@@ -629,7 +647,7 @@ a.user-button {
 .home-title {
     font-weight: bold;
     color: #000;
-    font-size: 30px;
+    font-size: 40px;
 }
 
 .house-icon {
@@ -671,6 +689,10 @@ a.user-button {
     align-items: center;
     justify-content: space-between;
     padding: 0 12px;
+    font-size: 30px;
+}
+
+.schedule-card p {
     font-size: 20px;
 }
 
@@ -960,9 +982,12 @@ a.user-button {
         width: 100%;
         max-width: 300px;
         padding: 8px;
-        font-size: 12px;
+        font-size: 18px;
         margin: 0 auto 14px;
     }
+    .schedule-card p {
+    font-size: 15px;
+}
     .schedule-card-wrapper {
         display: flex;
         justify-content: center;
@@ -1205,10 +1230,11 @@ a.user-button {
 
 
 .category-label {
-    padding: 10px 15px;
+    padding: 10px 0px;
     border: 1px;
     border-radius: 8px;
     cursor: pointer;
+    white-space: nowrap;
     transition: background-color 0.3s;
 }
 
@@ -1518,14 +1544,14 @@ input[type="radio"]:checked + label.label {
 /*ＰＣサイズ用*/
 @media screen and (min-width: 768px) {
     .page-title {
-        font-size: 30px;
+        font-size: 40px;
         margin-bottom: 12px;
     }
     .category-radio {
         display: flex;
         flex-wrap: nowrap;
-        width: 400px;
-        gap: 12px;
+        width: 1000px;
+        gap: 15px;
         text-align: center;
         font-weight: 500;
     }
@@ -1728,7 +1754,7 @@ h2 {
     text-align: center;
     margin-top: 30px;
     margin-bottom: 20px;
-    font-size: 30px;
+    font-size: 40px;
 }
 
 .day-block {
@@ -1874,6 +1900,7 @@ h2 {
     margin-top: 6p;
     max-width: 280px;
     font-size: 20px;
+    margin-left: 10px;
 }
 .plan-links ul {
     padding-left: 18px;
@@ -1884,11 +1911,11 @@ h2 {
 .transportation-icon {
     width: 60px;
     text-align: center;
-    font-size: 20px;
+    font-size: 30px;
 }
 
 .category-label {
-    font-size: 10px;
+    font-size: 20px;
     clear: #444;
     display: block;
 }
@@ -1929,6 +1956,9 @@ h2 {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+.plan-card .plan-pictures {
+    width: 100%;
 }
 
 @media screen and (min-width: 768px) {
@@ -2000,6 +2030,7 @@ h2 {
     .plan-card .transportation-icon {
         width: 24px;
         text-align: center;
+        font-size: 20px;
     }
     .plan-card .time-block { 
         gap: 0px; 
@@ -2023,6 +2054,7 @@ h2 {
     }
     .plan-links {
         font-size: 16px;
+        margin-left: 10px;
     }
     .plan-card .label {
         display: inline-block;
