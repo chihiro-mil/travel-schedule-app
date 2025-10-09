@@ -767,11 +767,44 @@
                 updatePictureAddState();
             }
 
+            /*削除処理*/
             pictureList.addEventListener('click', function (e) {
                 const btn = e.target.closest('button.remove-picture');
                 if (!btn) return;
+
                 const block = btn.closest('.picture-form-block');
+                if (!block) return;
+
+                const allBlocks = Array.from(pictureList.querySelectorAll('.picture-form-block'));
+                const firstBlock = allBlocks[0];
+
                 const del = block.querySelector('input[name$="-DELETE"]');
+
+                if (block === firstBlock) {
+                    if (del) {
+                        del.checked = false;
+                        del.value = '';
+                    }
+
+                    const previewWrapper = block.querySelector('.image-preview-wrapper');
+                    const previewImage = block.querySelector('.preview-image');
+                    const fileWrapper = block.querySelector('.file-input-wrapper');
+                    const removeBtn = block.querySelector('.remove-picture');
+                    const fileInput = block.querySelector('input[type="file"]');
+
+                    if (previewWrapper) previewWrapper.style.display = 'none';
+                    if (previewImage) previewImage.src = '';
+                    if (removeBtn) removeBtn.style.display = 'none';
+                    if (fileWrapper) fileWrapper.style.setProperty('display', 'flex', 'important');
+                    if (fileInput) fileInput.value = '';
+
+                    block.style.display = 'flex';
+                    block.dataset.hasImage = "0";
+
+                    updatePictureAddState();
+                    return;
+                }
+
                 if (del) { del.checked = true; del.value = 'on'; }
                 block.style.display = 'none';
                 updatePictureAddState();
@@ -782,25 +815,6 @@
                 pictureAddBtn.addEventListener('click', onAddPicture);
             }
             updatePictureAddState();
-
-
-            /*削除処理*/
-            pictureList.addEventListener('click', function (e) {
-                const removeButton = e.target.closest('button.remove-picture');
-                if (!removeButton) return;
-
-                const block = removeButton.closest('.picture-form-block');
-                if (!block) return;
-
-                const deleteInput = block.querySelector('input[name$="-DELETE"]');
-                if (deleteInput) {
-                    deleteInput.checked = true;
-                    deleteInput.value = "on";
-                }
-
-                block.style.display = 'none';
-                updatePictureAddState();
-            });
 
             /*初期ロード時のfile inputにプレビュー表示を付与*/
             pictureList.querySelectorAll('input[type="file"]').forEach(input => {
