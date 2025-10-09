@@ -185,7 +185,7 @@ button, input[type="button"], input[type="submit"] {
     font-size: 30px;
     font-weight: bold;
     margin-top: 30px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     padding-top: 40px;
 }
 
@@ -242,6 +242,26 @@ button, input[type="button"], input[type="submit"] {
     }
 }
 
+@media screen and (min-width: 768px) {
+    .register-title {
+        text-align: center;
+        font-size: 40px;
+        font-weight: bold;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        padding-top: 40px;
+    }
+    .register-button {
+        background-color: #1e90ff;
+        color: #fff;
+        cursor: pointer;
+        font-size: 20px;
+        padding: 10px 24px;
+        border: none;
+        border-radius: 5px;
+    }
+}
+
 /*ログイン画面*/
 
 .login-form .login-form-group,
@@ -252,14 +272,14 @@ button, input[type="button"], input[type="submit"] {
     margin-bottom: 20px;
     margin-top: 20px;
     font-weight: bold;
-    font-size: 22px;
+    font-size: 30px;
 }
 
 .login-form label,
 .register-form label {
     display: block;
     white-space: nowrap;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .login-form input,
@@ -283,7 +303,7 @@ button, input[type="button"], input[type="submit"] {
 
 .login-title {
     text-align: center;
-    font-size: 35px;
+    font-size: 40px;
     font-weight: bold;
     margin-top: 30px;
     margin-bottom: 20px;
@@ -291,7 +311,7 @@ button, input[type="button"], input[type="submit"] {
 
 .login-subtitle {
     text-align: center;
-    font-size: 30px;
+    font-size: 35px;
     font-weight: bold;
     margin-top: 30px;
     margin-bottom: 25px;
@@ -310,7 +330,7 @@ button, input[type="button"], input[type="submit"] {
 
 .register-link a {
     color: #696969;
-    font-size: 18px;
+    font-size: 20px;
     margin-top: 20px;
 }
 
@@ -327,6 +347,21 @@ button, input[type="button"], input[type="submit"] {
 }
 
 @media (max-width: 768px) {
+    .register-link a {
+        color: #696969;
+        font-size: 18px;
+        margin-top: 20px;
+    }
+    .login-form .login-form-group,
+    .register-form .register-form-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+        margin-top: 20px;
+        font-weight: bold;
+        font-size: 20px;
+    }
     .login-container {
         width: 100%;
         max-width: 300px;
@@ -335,11 +370,11 @@ button, input[type="button"], input[type="submit"] {
         padding: 20px;
     }
     .login-subtitle {
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 30px;
-    margin-bottom: 25px;
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        margin-top: 30px;
+        margin-bottom: 25px;
     }
 }
 
@@ -742,6 +777,7 @@ a.user-button {
     text-align: center;
     width: 100%;
     margin-bottom: 4px;
+    font-size: 30px;
 }
 
 .schedule-add-modal .calendar-wrapper,
@@ -764,6 +800,7 @@ a.user-button {
     color: #ff0000;
     font-size: 11px;
     margin-left: 5px;
+    font-size: 20px;
 }
 
 .kebab-menu {
@@ -942,6 +979,13 @@ a.user-button {
 
 @media (max-width: 768px) {
 
+    .schedule-add-modal label {
+        display: block;
+        text-align: center;
+        width: 100%;
+        margin-bottom: 4px;
+        font-size: 15px;
+    }
     .editSaveBtn.schedule-edit-save {
         font-size: 14px;
         color: #fff;
@@ -1008,6 +1052,12 @@ a.user-button {
     }
     .schedule-header {
         font-size: 15px;
+    }
+    .schedule-add-modal .home-required-label {
+        color: #ff0000;
+        font-size: 11px;
+        margin-left: 5px;
+        font-size: 12px;
     }
 }
 
@@ -1305,9 +1355,6 @@ input[type="radio"]:checked + label.label {
 }
 
 @media screen and (min-width: 768px) {
-    .selected-option {
-    margin-left: 16px;
-    }
     .form-group input,
     .form-group select,
     .form-group textarea {
@@ -1590,6 +1637,7 @@ input[type="radio"]:checked + label.label {
         width: 250px;
         padding: 5px 10px;
         font-size: 15px;
+        flex: 1;
     }
     .plan-form-container input[type="time"],
     .plan-form-container select {
@@ -1940,6 +1988,8 @@ h2 {
 }
 .time-label .location {
     margin-left: 10px;
+    font-size: 25px;
+    font-weight: bold;
 }
 .time-block .label,
 .time-block .time,
@@ -2072,8 +2122,10 @@ h2 {
         margin-right: 5px;
     }
     .plan-card .location {
-        white-space: per-wrap;
+        white-space: pre-wrap;
         word-break: break-word;
+        font-size: 18px;
+        font-weight: bold;
     }
     .plan-card .plan-links,
     .plan-card .plan-pictures {
