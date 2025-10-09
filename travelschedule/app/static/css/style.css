@@ -1934,6 +1934,8 @@ h2 {
 }
 .plan-title {
     margin-left: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
 }
 .time-label .location {
     margin-left: 10px;
