@@ -1935,7 +1935,8 @@ h2 {
 .plan-title {
     margin-left: 10px;
     margin-bottom: 10px;
-    font-size: 18px;
+    font-size: 25px;
+    font-weight: bold;
 }
 .time-label .location {
     margin-left: 10px;
@@ -2037,6 +2038,12 @@ h2 {
     .plan-card .time-block { 
         gap: 0px; 
         margin-bottom: 0px;
+    }
+    .plan-title {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
     }
     .plan-card .plan-memo,
     .plan-card .time-label {
