@@ -318,13 +318,13 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                     obj.instance.delete()
                     
             for form in picture_formset:
-                if not form.cleaned_data:
-                    continue
-                
-                if form.cleaned_data.get('DELETE'):
-                    continue
-                
-                if not form.cleaned_data.get('image'):
+                image = form.cleaned_data.get('image')
+                instance = form.instance
+                if instance.pk and not image:
+                    instance.delete()
+                    
+            for form in picture_formset:
+                if not form.cleaned_data or form.cleaned_data.get('DELETE'):
                     continue
                 
                 picture = form.save(commit=False)
