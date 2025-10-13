@@ -510,6 +510,15 @@ def schedule_detail_view(request, schedule_id):
 def plan_delete_view(request, plan_id):
     if request.method == 'POST':
         plan = get_object_or_404(Plan, id=plan_id)
-        schedule_id = plan.schedule.id
+        schedule = plan.schedule
+        
+        if plan.start_datetime:
+            trip_start = schedule.trip_start_date
+            deleted_date = localtime(plan.start_datetime).date()
+            selected_day = (deleted_date - trip_start).days + 1
+        else:
+            selected_day = 1
+            
         plan.delete()
-        return redirect('app:schedule_detail', schedule_id =  schedule_id)
+        
+        return redirect(f"{reverse('app:schedule_detail', args=[schedule.id])}?selected_day={selected_day}")
