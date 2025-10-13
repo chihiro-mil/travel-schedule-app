@@ -80,7 +80,12 @@
                                     <span class="location">{{ plan.departure_location }}</span>
                                 {% elif plan.action_category == "sightseeing" or plan.action_category == "meal" %}
                                     {% if plan.name %}
-                                        <div class="plan-title">{{ plan.name }}</div>
+                                        {% if plan.action_category == "sightseeing" %}
+                                            <span class="label">観光地</span>
+                                        {% elif plan.action_category == "meal" %}
+                                            <span class="label">店名</span>
+                                        {% endif %}
+                                        <span class="plan-title">{{ plan.name }}</span>
                                     {% endif %}
                                     {% if plan.start_datetime %}
                                         <span class="label">開始</span>
@@ -89,6 +94,7 @@
                                 {% elif plan.action_category == "stay" %}
                                     {% if plan.display_type ==  "checkin" %}
                                         {% if plan.name %}
+                                            <span class="label">宿泊先</span>
                                             <div class="plan-title">{{ plan.name }}</div>
                                         {% endif %}
                                         <span class="label">チェックイン</span>
@@ -122,12 +128,14 @@
 
                             {% if plan.memo %}
                                 <div class="plan-memo">
+                                    <span class="label">＜メモ＞</span>
                                     <p>{{ plan.memo}}</p>
                                 </div>
                             {% endif %}
 
                             {% if plan.links.all %}
                                 <div class="plan-links">
+                                    <span class="label">＜ＵＲＬ＞</span>
                                     <ul>
                                         {% for link in plan.links.all %}
                                             {% if link.url %}
