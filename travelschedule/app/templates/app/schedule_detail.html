@@ -252,6 +252,30 @@
                 });
             });
 
+            /*保存後、該当日を自動で表示する処理*/
+            const params = new URLSearchParams(window.location.search);
+            const selectedDay = params.get("selected_day");
+
+            if (selectedDay) {
+                tabs.forEach(t => t.classList.remove('active'));
+                blocks.forEach(b => b.classList.remove('active'));
+
+                const activeTab = document.querySelector(`.day-tab[data-day="${selectedDay}"]`);
+                const activeBlock = document.querySelector(`.day-block[data-day="${selectedDay}"]`);
+                    
+                if (activeTab && activeBlock) {
+                    activeTab.classList.add('active');
+                    activeBlock.classList.add('active');
+                }
+            } else {
+                const firstTab = document.querySelector('.day-tab');
+                const firstBlock = document.querySelector('.day-block');
+                if (firstTab && firstBlock) {
+                    firstTab.classList.add('active');
+                    firstBlock.classList.add('active');
+                }
+            }
+
             /*ケバブメニュー開閉*/
             const kebabIcons = document.querySelectorAll('.plan-kebab-icon');
 

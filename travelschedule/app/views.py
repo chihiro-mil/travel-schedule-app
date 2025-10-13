@@ -13,6 +13,7 @@ from django.forms import inlineformset_factory
 from app.models import Plan
 from django.utils import timezone
 from copy import deepcopy
+from django.urls import reverse
 
 
 from .forms import (
@@ -234,6 +235,8 @@ def delete_schedule(request, schedule_id):
 def plan_create_or_edit_view(request, schedule_id, plan_id=None):
     schedule = get_object_or_404(Schedule, id=schedule_id)
     plan = get_object_or_404(Plan, id=plan_id)if plan_id else None
+    
+    selected_day = None
 
     trip_choices = generate_trip_date_choices(schedule)
     
@@ -282,6 +285,13 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             plan_instance = form.save(commit=False)
             plan_instance.schedule = schedule
             plan_instance.save()
+            
+            if plan_instance.start_datetime:
+                trip_start = schedule.trip_start_date
+                saved_date = localtime(plan_instance.start_datetime).date()
+                selected_day = (saved_date - trip_start).days + 1
+            else:
+                selected_day = 1
                     
                     
             link_instances = link_formset.save(commit=False)
@@ -322,7 +332,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 picture.plan = plan_instance
                 picture.save()
                 
-            return redirect('app:schedule_detail', schedule_id=schedule.id)
+                
+            return redirect(f"{reverse('app:schedule_detail', args=[schedule_id])}?selected_day={selected_day}")
             
         else:
             tm = []
