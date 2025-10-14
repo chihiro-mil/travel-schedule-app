@@ -311,24 +311,23 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                     link.action_category = plan_instance.action_category
                     link.save()
             
-            
-            
-            for obj in picture_formset.deleted_forms:
-                if obj.cleaned_data.get('DELETE') and obj.instance.pk:
-                    obj.instance.delete()
                     
             for form in picture_formset:
-                image = form.cleaned_data.get('image')
                 instance = form.instance
-                if instance.pk and not image:
+                delete_flag = form.cleaned_data.get('DELETE', False)
+                
+                if delete_flag and instance.pk:
                     instance.delete()
-                    
-            for form in picture_formset:
-                if not form.cleaned_data or form.cleaned_data.get('DELETE'):
                     continue
                 
+                image = form.cleaned_data.get('image')
+                if not delete_flag:
+                    if instance.pk and not image:
+                        existing = Picture.objects.filter(pk=instance.pk).first()
+                        if existing:
+                            instance.image = existing.image
+                
                 picture = form.save(commit=False)
-                    
                 picture.plan = plan_instance
                 picture.save()
                 

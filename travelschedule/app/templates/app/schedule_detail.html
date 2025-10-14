@@ -170,9 +170,11 @@
                                 <div class="plan-pictures">
                                     <div class="picture-grid">
                                         {% for picture in plan.pictures.all %}
-                                            <a href="{{ picture.image.url }}" class="thumbnail" data-image-url="{{ picture.image.url}}">
-                                                <img src="{{ picture.image.url }}" alt="plan image" class="plan-image thumbnail">
-                                            </a>
+                                            {% if picture.image %}
+                                                <a href="{{ picture.image.url }}" class="thumbnail" data-image-url="{{ picture.image.url}}">
+                                                    <img src="{{ picture.image.url }}" alt="plan image" class="plan-image thumbnail">
+                                                </a>
+                                            {% endif %}
                                         {% endfor %}
                                     </div>
                                 </div>
