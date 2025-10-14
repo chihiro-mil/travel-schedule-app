@@ -73,7 +73,12 @@
                         </div>
 
                         <div class="time-block">
-                            <div class="time-label">
+                            <div class="time-label 
+                                {% if plan.action_category == 'move' %}
+                                    move-time-label
+                                {% elif plan.action_category == 'stay' %}
+                                    stay-time-label
+                                {% endif %}">
                                 {% if plan.action_category == "move" %}
                                     <span class="label">発</span>
                                     <span class="time">{{ plan.start_datetime|localtime|date:"H:i" }}</span>
@@ -93,16 +98,23 @@
                                     {% endif %}
                                 {% elif plan.action_category == "stay" %}
                                     {% if plan.display_type ==  "checkin" %}
-                                        {% if plan.name %}
+                                        <div class="stay-line">
                                             <span class="label">宿泊先</span>
-                                            <div class="plan-title">{{ plan.name }}</div>
-                                        {% endif %}
-                                        <span class="label">チェックイン</span>
-                                        <span class="time">{{ plan.start_datetime|localtime|date:"H:i" }}</span>
+                                            <span class="stay-name">{{ plan.name }}</span>
+                                        </div>
+                                        <div class="stay-line">
+                                            <span class="label">チェックイン</span>
+                                            <span class="time">{{ plan.start_datetime|localtime|date:"H:i" }}</span>
+                                        </div>
                                     {% endif %}
                                 {% endif %}
                             </div>
-                            <div class="time-label">
+                            <div class="time-label 
+                                {% if plan.action_category == 'move' %}
+                                    move-time-label
+                                {% elif plan.action_category == 'stay' %}
+                                    stay-time-label
+                                {% endif %}">
                                 {% if plan.action_category == "move" %}
                                     <span class="label">着</span>
                                     <span class="time">{{ plan.end_datetime|localtime|date:"H:i" }}</span>
@@ -117,11 +129,14 @@
                                     {% endif %}
                                 {% elif plan.action_category == "stay" %}
                                     {% if plan.display_type ==  "checkout" %}
-                                        {% if plan.name %}
-                                            <div class="plan-title">{{ plan.name }}</div>
-                                        {% endif %}
-                                        <span class="label">チェックアウト</span>
-                                        <span class="time">{{ plan.end_datetime|localtime|date:"H:i" }}</span>
+                                        <div class="stay-line">
+                                            <span class="label">宿泊先</span>
+                                            <span class="stay-name">{{ plan.name }}</span>
+                                        </div>
+                                        <div class="stay-line">
+                                            <span class="label">チェックアウト</span>
+                                            <span class="time">{{ plan.end_datetime|localtime|date:"H:i" }}</span>
+                                        </div>
                                     {% endif %}
                                 {% endif %}
                             </div>

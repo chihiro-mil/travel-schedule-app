@@ -1981,17 +1981,15 @@ h2 {
     row-gap: 4px;
     column-gap: 8px;
     align-items: start;
-    font-size: 20px;
+    font-size: 25px;
     margin-bottom: 4px;
 }
 .plan-title {
-    margin-bottom: 10px;
-    font-size: 20px;
+    font-size: 25px;
 }
 .time-label .location {
     margin-left: 10px;
     font-size: 25px;
-    font-weight: bold;
 }
 /*.time-block .label,
 .time-block .time,
@@ -2014,6 +2012,38 @@ h2 {
 }
 .plan-card .plan-pictures {
     width: 100%;
+}
+
+.move-time-label {
+    display: flex;
+    align-items: start;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.stay-time-label {
+    display: block;
+    grid-template-columns: none;
+}
+
+.stay-line {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 4px;
+}
+
+.stay-line .label {
+    display: inline-block;
+    width: 6em;
+    white-space: nowrap;
+}
+
+.stay-line .stay-name {
+    word-break: break-word;
+}
+
+.stay-line .time {
+    white-space: nowrap;
 }
 
 @media screen and (min-width: 768px) {
@@ -2137,7 +2167,6 @@ h2 {
         white-space: pre-wrap;
         word-break: break-word;
         font-size: 18px;
-        font-weight: bold;
     }
     .plan-card .plan-links,
     .plan-card .plan-pictures {
@@ -2163,7 +2192,7 @@ h2 {
         padding: 0;
     }
     .time-label {
-        font-size: 16px;
+        font-size: 18px;
         grid-template-columns: 50px 1fr;
     }
     .picture-grid {
