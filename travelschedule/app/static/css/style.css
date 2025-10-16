@@ -1947,6 +1947,7 @@ h2 {
 .plan-memo .label {
     font-size: 20px;
     margin-top: 3px;
+    font-weight: bold;
 }
 
 .plan-links {
@@ -1983,6 +1984,9 @@ h2 {
     align-items: start;
     font-size: 25px;
     margin-bottom: 4px;
+}
+.time-label .label {
+    font-weight: bold;
 }
 .plan-title {
     font-size: 25px;
@@ -2044,6 +2048,10 @@ h2 {
 
 .stay-line .time {
     white-space: nowrap;
+}
+
+.plan-links .label {
+    font-weight: bold;
 }
 
 @media screen and (min-width: 768px) {
