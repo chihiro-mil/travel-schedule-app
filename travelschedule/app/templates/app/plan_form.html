@@ -551,14 +551,16 @@
                     if (!selectedOption || !optionsList) return;
 
                     /*バリエーション後の移動手段復元*/
-                    if (hiddenInput && hiddenInput.value) {
+                    /*if (hiddenInput && hiddenInput.value) {
                         const matchedItem = Array.from(optionsList.querySelectorAll('.option-item'))
                             .find(item => item.dataset.id === hiddenInput.value);
                         if (matchedItem) {
                             selectedLabel.textContent = matchedItem.dataset.label;
-                            selectedIcon.className = matchedItem.dataset.icon;
+                            if (selectedIcon && matchedItem) {
+                                selectedIcon.className = matchedItem.dataset.icon;
+                            }
                         }
-                    }
+                    }*/
                     
                     /*選択処理(古いイベントを消す、新しい要素に置き換え)*/
                     optionsList.querySelectorAll('.option-item').forEach(item => {
@@ -568,7 +570,9 @@
                         newItem.addEventListener('click', () => {
                             hiddenInput.value = newItem.dataset.id;
                             selectedLabel.textContent = newItem.dataset.label;
-                            selectedIcon.className = newItem.dataset.icon;
+                            if (selectedIcon) {
+                                selectedIcon.className = newItem.dataset.icon;
+                            }
                             optionsList.classList.remove('active');
                         });
                     });
@@ -779,33 +783,37 @@
                 const firstBlock = allBlocks[0];
 
                 const del = block.querySelector('input[name$="-DELETE"]');
+                const isInput = block.querySelector('input[name$="-id"]');
+                const isExisting = isInput && isInput.value && isInput.value.trim() !== '';
+                const fileInput = block.querySelector('input[type="file"]');
+                const previewWrapper = block.querySelector('.image-preview-wrapper');
+                const previewImage = block.querySelector('.preview-image');
+                const removeBtn = block.querySelector('.remove-picture');
+                const fileWrapper = block.querySelector('.file-input-wrapper');
 
-                if (block === firstBlock) {
-                    if (del) {
+                if (del) {
+                    if (isExisting){
+                        del.checked = true;
+                        del.value = 'on';
+                    } else {
                         del.checked = false;
                         del.value = '';
                     }
+                }
 
-                    const previewWrapper = block.querySelector('.image-preview-wrapper');
-                    const previewImage = block.querySelector('.preview-image');
-                    const fileWrapper = block.querySelector('.file-input-wrapper');
-                    const removeBtn = block.querySelector('.remove-picture');
-                    const fileInput = block.querySelector('input[type="file"]');
+                if (block === firstBlock) {
+                    block.style.display = 'flex';
+                    block.dataset.hasImage = '0';
 
                     if (previewWrapper) previewWrapper.style.display = 'none';
                     if (previewImage) previewImage.src = '';
                     if (removeBtn) removeBtn.style.display = 'none';
-                    if (fileWrapper) fileWrapper.style.setProperty('display', 'flex', 'important');
+                    if (fileWrapper) fileWrapper.style.display = 'flex';
                     if (fileInput) fileInput.value = '';
-
-                    block.style.display = 'flex';
-                    block.dataset.hasImage = "0";
 
                     updatePictureAddState();
                     return;
                 }
-
-                if (del) { del.checked = true; del.value = 'on'; }
                 block.style.display = 'none';
                 updatePictureAddState();
             });
