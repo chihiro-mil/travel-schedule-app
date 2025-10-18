@@ -699,7 +699,11 @@
                 let visibleCount = 0;
                 blocks.forEach(block => {
                     const del = block.querySelector('input[name$="-DELETE"]');
-                    if (!del || !del.checked) visibleCount++;
+                    const isVisible = block.style.display !== 'none';
+
+                    if (isVisible) {
+                        visibleCount++;
+                    }
                 });
 
                 pictureAddBtn.disabled = visibleCount >= PICTURE_MAX;
