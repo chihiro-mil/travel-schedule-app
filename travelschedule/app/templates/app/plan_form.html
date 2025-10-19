@@ -550,17 +550,6 @@
 
                     if (!selectedOption || !optionsList) return;
 
-                    /*バリエーション後の移動手段復元*/
-                    /*if (hiddenInput && hiddenInput.value) {
-                        const matchedItem = Array.from(optionsList.querySelectorAll('.option-item'))
-                            .find(item => item.dataset.id === hiddenInput.value);
-                        if (matchedItem) {
-                            selectedLabel.textContent = matchedItem.dataset.label;
-                            if (selectedIcon && matchedItem) {
-                                selectedIcon.className = matchedItem.dataset.icon;
-                            }
-                        }
-                    }*/
                     
                     /*選択処理(古いイベントを消す、新しい要素に置き換え)*/
                     optionsList.querySelectorAll('.option-item').forEach(item => {
@@ -835,6 +824,14 @@
                 });
             });
             updatePictureAddState();
+
+            /*タイムピッカーフォーム全体に効かせる*/
+            const timeInputs = document.querySelectorAll('input[type="time"]');
+            timeInputs.forEach(input => {
+                input.addEventListener('click', () => {
+                    input.showPicker?.();
+                });
+            });
         });
     </script>
 </body>

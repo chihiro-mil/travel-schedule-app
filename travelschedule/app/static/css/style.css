@@ -1441,10 +1441,11 @@ input[type="radio"]:checked + label.label {
     background-color: #1e90ff;
     cursor: pointer;
     font-size: 18px;
-    padding: 10px 20px;
+    padding: 9px 20px;
     color: #fff;
     border: none;
     border-radius: 6px;
+    font-weight: bold;
 }
 
 .image-preview-wrapper {
@@ -1569,6 +1570,18 @@ input[type="radio"]:checked + label.label {
     margin-bottom: 20px;
     border-radius: 6px;
     font-size: 14px;
+    background-color: #1e90ff;
+    color: #fff;
+    border: none;
+}
+
+input[type="file"]::file-selector-button {
+    padding: 6px 11px;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #1e90ff;
+    color: #fff;
+    border: none;
 }
 
 #add-link {
@@ -1576,6 +1589,9 @@ input[type="radio"]:checked + label.label {
     margin-bottom: 20px;
     border-radius: 6px;
     font-size: 14px;
+    background-color: #1e90ff;
+    color: #fff;
+    border: none;
 }
 
 .link-form-block .remove-link {
@@ -1587,6 +1603,22 @@ input[type="radio"]:checked + label.label {
     white-space: nowrap;
     text-align: center;
 }
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 80%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+input[type="time"] {
+    height: 35px;
+    padding: 8px 20px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
 
 /*ＰＣサイズ用*/
 @media screen and (min-width: 768px) {
@@ -1619,10 +1651,11 @@ input[type="radio"]:checked + label.label {
         max-width: 480px;
     }
     .btn-primary {
-        padding: 10px 24px;
-        font-size: 16px;
+        padding: 20px 34px;
+        font-size: 20px;
         border-radius: 6px;
         border: none;
+        font-weight: bold;
     }
     .error-message {
     color: #ff0000;
@@ -1641,9 +1674,7 @@ input[type="radio"]:checked + label.label {
     }
     .plan-form-container input[type="time"],
     .plan-form-container select {
-        width: 110px;
-        font-size: 15px;
-        padding: 4px 6px;
+        font-size: 18px;
     }
     .plan-form-container input[type="url"] {
         width: 200px;
@@ -1653,9 +1684,17 @@ input[type="radio"]:checked + label.label {
     }
     #add-link,
     #add-picture {
-        padding: 6px 14px;
-        font-size: 15px;
+        padding: 10px 14px;
+        font-size: 16px;
         border-radius: 6px;
+    }
+    input[type="file"]::file-selector-button {
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 16px;
+        background-color: #1e90ff;
+        color: #fff;
+        border: none;
     }
     .remove-link {
     padding: 6px 12px;
@@ -1697,6 +1736,19 @@ input[type="radio"]:checked + label.label {
     /*#link-form-container {
         margin-left: 10px;
     }*/
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 80%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    #add-link, #add-picture {
+        padding: 8px 13px;
+        font-size: 14px;
+    }
 
     .link-form-block {
         display: grid;
@@ -1764,6 +1816,7 @@ input[type="radio"]:checked + label.label {
 
     .form-group input[type="text"] {
         flex: 0.9;
+        font-size: 15px;
     }
 
     .link-inputs {
