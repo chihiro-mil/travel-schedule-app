@@ -1614,7 +1614,6 @@ input[type="file"]::file-selector-button {
 
 input[type="time"] {
     height: 35px;
-    padding: 8px 20px;
     font-size: 15px;
     box-sizing: border-box;
 }
