@@ -65,8 +65,7 @@
                                 <input type="hidden"
                                     class="transportation-hidden-input"
                                     name="transportation"
-                                    value="{% if form.data.transportation %}{{ form.data.transportation }}
-                                        {% elif form.instance.transportation %}{{ form.instance.transportation.id }}{% else %}{% endif %}">
+                                    value="{{ plan.transportation_id }}">
                             </div>
                         </div>
                     </div>
@@ -550,6 +549,18 @@
 
                     if (!selectedOption || !optionsList) return;
 
+                    if (hiddenInput && hiddenInput.value && hiddenInput.value.trim() !== "") {
+                        const selectedItem = optionsList.querySelector(`.option-item[data-id="${hiddenInput.value}"]`);
+                        if (selectedItem) {
+                            const iconClass = selectedItem.dataset.icon;
+                            const label = selectedItem.dataset.label;
+
+                            selectedLabel.textContent = label;
+                            selectedIcon.className = `selected-icon ${iconClass}`;
+                            selectedOption.classList.add('active');
+                        }
+                    }
+
                     
                     /*選択処理(古いイベントを消す、新しい要素に置き換え)*/
                     optionsList.querySelectorAll('.option-item').forEach(item => {
@@ -597,10 +608,9 @@
             });
 
             /*バリエーション後の移動手段復元*/
-            const hiddenInput = document.querySelector('.transportation-hidden-input');
-            if (hiddenInput && hiddenInput.value) {
+            window.addEventListener('DOMContentLoaded', () => {
                 initTransportationSelect();
-            }
+            });
 
             /*リンク*/
             const linkContainer = document.getElementById('link-form-container');
@@ -824,6 +834,8 @@
                 });
             });
             updatePictureAddState();
+
+            initTransportationSelect();
 
             /*タイムピッカーフォーム全体に効かせる*/
             const timeInputs = document.querySelectorAll('input[type="time"]');

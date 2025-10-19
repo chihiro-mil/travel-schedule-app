@@ -352,6 +352,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 'schedule_id': schedule_id,
                 'transportation_methods': tm,
                 'selected_category': selected_category,
+                'plan': plan,
             })
     else:
         selected_category = plan.action_category if plan else ''
@@ -365,6 +366,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 local_end = localtime(plan.end_datetime)
                 initial['end_date'] = local_end.date()
                 initial['end_time'] = local_end.time()
+                
+            print("編集画面", plan.transportation_id)
             form = PlanForm(instance=plan, trip_dates=trip_choices, initial=initial)
             
             link_formset = LinkFormSet(
@@ -410,6 +413,7 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             'schedule_id': schedule_id,
             'transportation_methods': tm,
             'selected_category': selected_category,
+            'plan': plan,
         })
     
 def generate_trip_date_choices(schedule):
