@@ -1595,6 +1595,13 @@ input[type="file"]::file-selector-button {
     border: none;
 }
 
+#add-link:disabled {
+    background-color: #003c8f;
+}
+
+#add-picture:disabled {
+    background-color: #003c8f;
+}
 .link-form-block .remove-link {
     background-color: #e53935;
     color: #fff;
