@@ -1408,6 +1408,7 @@ input[type="radio"]:checked + label.label {
     align-items: center;
     margin-bottom: 25px;
     font-weight: bold;
+    margin-left: -25px;
 }
 
 .form-group label {
@@ -1487,7 +1488,7 @@ input[type="radio"]:checked + label.label {
     display: block !important;
     text-align: center !important;
     margin-bottom: 20px;
-    margin-left: 50px;
+    margin-left: 24px;
     gap: 12px;
 }
 
@@ -1612,15 +1613,14 @@ input[type="file"]::file-selector-button {
     box-sizing: border-box;
 }
 
-input[type="time"] {
-    height: 35px;
-    font-size: 15px;
-    box-sizing: border-box;
-}
-
 
 /*ＰＣサイズ用*/
 @media screen and (min-width: 768px) {
+    input[type="time"] {
+        height: 35px;
+        font-size: 15px;
+        box-sizing: border-box;
+    }
     .page-title {
         font-size: 40px;
         margin-bottom: 12px;
