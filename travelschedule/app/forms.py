@@ -124,7 +124,7 @@ class CustomPasswordChangeForm(PasswordChangeForm):
     def clean_old_password(self):
         old_password = self.cleaned_data.get('old_password')
         if not self.user.check_password(old_password):
-            raise ValidationError("元のパスワードが間違っています。")
+            raise ValidationError("現在のパスワードが間違っています。")
         return old_password
     
     def clean_new_password1(self):
