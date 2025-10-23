@@ -1408,7 +1408,6 @@ input[type="radio"]:checked + label.label {
     align-items: center;
     margin-bottom: 25px;
     font-weight: bold;
-    margin-left: -25px;
 }
 
 .form-group label {
@@ -1982,7 +1981,7 @@ h2 {
 .transportation-row {
     display: flex;
     align-items: flex-start;
-    gap: 20px;
+    gap: 25px;
     border-radius: 10px;
     margin: 10px 0;
 }
@@ -2177,7 +2176,7 @@ h2 {
         width: 100%;
     }
     .plan-card .transportation-row { 
-        gap: 8px; 
+        gap: 15px; 
     }
     .plan-card .transportation-icon {
         width: 24px;

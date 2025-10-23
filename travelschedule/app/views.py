@@ -331,6 +331,8 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 picture.plan = plan_instance
                 picture.save()
                 
+                schedule.updated_at = timezone.now()
+                schedule.save(update_fields=['updated_at'])
                 
             return redirect(f"{reverse('app:schedule_detail', args=[schedule_id])}?selected_day={selected_day}")
             
@@ -523,5 +525,7 @@ def plan_delete_view(request, plan_id):
             selected_day = 1
             
         plan.delete()
+        schedule.updated_at = timezone.now()
+        schedule.save(update_fields=['updated_at'])
         
         return redirect(f"{reverse('app:schedule_detail', args=[schedule.id])}?selected_day={selected_day}")
