@@ -266,39 +266,35 @@
                     const selectedDay = this.getAttribute('data-day');
 
                     tabs.forEach(t => t.classList.remove('active'));
-
                     blocks.forEach(b => b.classList.remove('active'));
-
                     this.classList.add('active');
                     const targetBlock = document.querySelector(`.day-block[data-day="${selectedDay}"]`);
-                    if (targetBlock) {
-                        targetBlock.classList.add('active');
-                    }
+                    if (targetBlock) targetBlock.classList.add('active');
+
+                    localStorage.setItem('selectedDay', selectedDay);
                 });
             });
 
-            /*保存後、該当日を自動で表示する処理*/
-            const params = new URLSearchParams(window.location.search);
-            const selectedDay = params.get("selected_day");
+            const savedDay = localStorage.getItem('selectedDay') || '1';
+            tabs.forEach(t => t.classList.remove('active'));
+            blocks.forEach(b => b.classList.remove('active'));
 
-            if (selectedDay) {
-                tabs.forEach(t => t.classList.remove('active'));
-                blocks.forEach(b => b.classList.remove('active'));
+            const activeTab = document.querySelector(`.day-tab[data-day="${savedDay}"]`);
+            const activeBlock = document.querySelector(`.day-block[data-day="${savedDay}"]`);
+                
+            if (activeTab && activeBlock) {
+                activeTab.classList.add('active');
+                activeBlock.classList.add('active');
+            }
 
-                const activeTab = document.querySelector(`.day-tab[data-day="${selectedDay}"]`);
-                const activeBlock = document.querySelector(`.day-block[data-day="${selectedDay}"]`);
-                    
-                if (activeTab && activeBlock) {
-                    activeTab.classList.add('active');
-                    activeBlock.classList.add('active');
-                }
-            } else {
-                const firstTab = document.querySelector('.day-tab');
-                const firstBlock = document.querySelector('.day-block');
-                if (firstTab && firstBlock) {
-                    firstTab.classList.add('active');
-                    firstBlock.classList.add('active');
-                }
+            const addButton = document.getElementById('footer-add');
+            if (addButton) {
+                addButton.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const currentDay = localStorage.getItem('selectedDay') || '1';
+                    const baseUrl = this.getAttribute('href').split('?')[0];
+                    window.location.href = `${baseUrl}?day=${currentDay}`;
+                });
             }
 
             /*ケバブメニュー開閉*/
