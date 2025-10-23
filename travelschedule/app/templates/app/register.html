@@ -64,7 +64,10 @@
                 </div>
 
                 <div class="register-form-group">
-                    <label for="{{ form.password_confirm.id_for_label }}" class="form-register-label">{{ form.password_confirm.label }}</label>
+                    <label for="{{ form.password_confirm.id_for_label }}" class="form-register-label">
+                        {{ form.password_confirm.label }}
+                        <span class="required-label">必須</span>
+                    </label>
                     <div class="form-input">{{ form.password_confirm }}</div>
                     {% if form.password_confirm.errors %}
                         <div class="error">{{ form.password_confirm.errors.0 }}</div>

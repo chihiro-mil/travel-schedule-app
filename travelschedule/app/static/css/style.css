@@ -1595,11 +1595,11 @@ input[type="file"]::file-selector-button {
 }
 
 #add-link:disabled {
-    background-color: #003c8f;
+    display: none;
 }
 
 #add-picture:disabled {
-    background-color: #003c8f;
+    display: none;
 }
 .link-form-block .remove-link {
     background-color: #e53935;

@@ -697,9 +697,8 @@
 
                 let visibleCount = 0;
                 blocks.forEach(block => {
-                    const del = block.querySelector('input[name$="-DELETE"]');
-                    const isVisible = block.style.display !== 'none';
-
+                    /*const del = block.querySelector('input[name$="-DELETE"]');*/
+                    const isVisible = window.getComputedStyle(block).display !== 'none';
                     if (isVisible) {
                         visibleCount++;
                     }
@@ -836,6 +835,20 @@
             updatePictureAddState();
 
             initTransportationSelect();
+
+            const pictureBlocks = pictureList.querySelectorAll('.picture-form-block');
+            const hasImage = Array.from(pictureBlocks).some(block => {
+                const input = block.querySelector('input[type="file"]');
+                return input && input.value;
+            });
+            
+            if (!hasImage) {
+                pictureBlocks.forEach((block, index) => {
+                    if (index > 0) block.style.display = 'none';
+                });
+                pictureTotalInput.value = 1;
+                updatePictureAddState();
+            }
 
             /*タイムピッカーフォーム全体に効かせる*/
             const timeInputs = document.querySelectorAll('input[type="time"]');
