@@ -1946,7 +1946,7 @@ h2 {
 }
 
 .plan-card.move.plan-overlap {
-    transform: translateX(25px) !important;
+    /*transform: translateX(25px) !important;*/
     border: 2px solid #000 !important;
     background-color: #add8e6;
 }
@@ -1955,7 +1955,7 @@ h2 {
     background-color: #f0e68c;
 }
 .plan-card.sightseeing.plan-overlap {
-    transform: translateX(25px) !important;
+    /*transform: translateX(25px) !important;*/
     border: 2px solid #000 !important;
     background-color: #f0e68c;
 }
@@ -1964,7 +1964,7 @@ h2 {
     background-color: #f08080;
 }
 .plan-card.meal.plan-overlap {
-    transform: translateX(25px) !important;
+    /*transform: translateX(25px) !important;*/
     border: 2px solid #000 !important;
     background-color: #f08080;
 }
@@ -1973,7 +1973,7 @@ h2 {
     background-color: #90ee90;
 }
 .plan-card.stay.plan-overlap {
-    transform: translateX(25px) !important;
+    /*transform: translateX(25px) !important;*/
     border: 2px solid #000 !important;
     background-color: #90ee90;
 }
