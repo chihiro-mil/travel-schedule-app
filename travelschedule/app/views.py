@@ -280,15 +280,6 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             if delete_flag:
                 f.empty_permitted = True
             
-        print("---Picture Formset cleaned_data---")
-        for i, f in enumerate(picture_formset.forms):
-            if hasattr(f, "cleaned_data"):
-                print(f"Picture Form{i}:  cleaned_data = {f.cleaned_data}")
-            else:
-                print(f"Picture Form{i}:  cleaned_data 未取得")
-        print("picture_formset.is_valid() =", picture_formset.is_valid())
-        print("picture_formset.errors =", picture_formset.errors)
-
         selected_category = request.POST.get('action_category') or ''
         
         if form.is_valid() and link_formset.is_valid() and picture_formset.is_valid():
@@ -297,21 +288,16 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             plan_instance.schedule = schedule
             plan_instance.save()
             
-            print(f"[DEBUG] plan_instance.id={plan_instance.id}")
-            
             for picture_form in picture_formset:
                 instance = picture_form.instance
                 delete_flag = picture_form.cleaned_data.get('DELETE', False)
                 image = picture_form.cleaned_data.get('image')
                 
-                print(f"[DEBUG] DELETE={delete_flag}, PK={instance.pk}, IMAGE={instance.image}")
                 
                 if not delete_flag and not image and not instance.pk:
-                    print(f"[DEBUG] 空フォーム対象: {instance}")
                     continue
                 
                 if delete_flag and instance.pk:
-                    print(f"削除対象： {instance.pk}, {instance.image}")
                     instance.delete()
                     continue
                 
@@ -319,8 +305,6 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                     picture = picture_form.save(commit=False)
                     picture.plan = plan_instance
                     picture.save()
-                    
-                    print(f"保存画像： {picture.image}")
         
             if plan_instance.start_datetime:
                 trip_start = schedule.trip_start_date
