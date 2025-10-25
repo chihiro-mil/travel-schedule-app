@@ -276,7 +276,18 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
         picture_formset = PictureFormSet(request.POST or None, request.FILES or None, instance=plan, prefix='pictures')
         
         for f in picture_formset:
-            f.empty_permitted = True
+            delete_flag = f.cleaned_data.get('DELETE', False) if f.is_valid() else False
+            if delete_flag:
+                f.empty_permitted = True
+            
+        print("---Picture Formset cleaned_data---")
+        for i, f in enumerate(picture_formset.forms):
+            if hasattr(f, "cleaned_data"):
+                print(f"Picture Form{i}:  cleaned_data = {f.cleaned_data}")
+            else:
+                print(f"Picture Form{i}:  cleaned_data 未取得")
+        print("picture_formset.is_valid() =", picture_formset.is_valid())
+        print("picture_formset.errors =", picture_formset.errors)
 
         selected_category = request.POST.get('action_category') or ''
         
@@ -286,6 +297,31 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             plan_instance.schedule = schedule
             plan_instance.save()
             
+            print(f"[DEBUG] plan_instance.id={plan_instance.id}")
+            
+            for picture_form in picture_formset:
+                instance = picture_form.instance
+                delete_flag = picture_form.cleaned_data.get('DELETE', False)
+                image = picture_form.cleaned_data.get('image')
+                
+                print(f"[DEBUG] DELETE={delete_flag}, PK={instance.pk}, IMAGE={instance.image}")
+                    
+                if delete_flag and instance.pk:
+                    print(f"削除対象： {instance.pk}, {instance.image}")
+                    instance.delete()
+                    continue
+                    
+                if delete_flag and not instance.pk:
+                    print(f"未保存フォーム削除： {image}")
+                    continue
+                
+                if not delete_flag:
+                    picture = picture_form.save(commit=False)
+                    picture.plan = plan_instance
+                    picture.save()
+                    
+                    print(f"保存画像： {picture.image}")
+        
             if plan_instance.start_datetime:
                 trip_start = schedule.trip_start_date
                 saved_date = localtime(plan_instance.start_datetime).date()
@@ -310,31 +346,11 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                     link.plan = plan_instance
                     link.action_category = plan_instance.action_category
                     link.save()
-            
-                    
-            for form in picture_formset:
-                instance = form.instance
-                delete_flag = form.cleaned_data.get('DELETE', False)
-                
-                if delete_flag and instance.pk:
-                    instance.delete()
-                    continue
-                
-                image = form.cleaned_data.get('image')
-                if not delete_flag:
-                    if instance.pk and not image:
-                        existing = Picture.objects.filter(pk=instance.pk).first()
-                        if existing:
-                            instance.image = existing.image
-                
-                picture = form.save(commit=False)
-                picture.plan = plan_instance
-                picture.save()
                 
                 schedule.updated_at = timezone.now()
                 schedule.save(update_fields=['updated_at'])
                 
-            return redirect(f"{reverse('app:schedule_detail', args=[schedule_id])}?selected_day={selected_day}")
+            return redirect(reverse('app:schedule_detail', args=[schedule_id]) + f'?selected_day={selected_day}')
             
         else:
             tm = []

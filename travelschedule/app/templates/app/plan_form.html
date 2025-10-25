@@ -394,19 +394,12 @@
                                     {{ form.image }}
                                 </div>
 
-                                <input type="checkebox"
+                                <input type="hidden"
                                     name="{{ form.DELETE.html_name }}"
                                     id="{{ form.DELETE.id_for_label }}"
-                                    style="display:none;">
+                                    value="">
 
-                                <button type="button" class="remove-picture"
-                                        {% if form.instance.pk and form.instance.image %}
-                                            style="display:inline-block;"
-                                        {% else %}
-                                            style="display:none;"
-                                        {% endif %}>
-                                    削除
-                                </button>
+                                <button type="button" class="remove-picture">削除</button>
                             </div>
                         {% endfor %}
                     </div>
@@ -424,14 +417,12 @@
                             {{ picture_formset.empty_form.image }}
                         </div>
 
-                        <input type="checkebox"
+                        <input type="hidden"
                                 name="{{ picture_formset.empty_form.DELETE.html_name }}"
                                 id="{{ picture_formset.empty_form.DELETE.id_for_label }}"
-                                style="display:none;">
+                                value="">
 
-                        <button type="button" class="remove-picture" style="display:none;">
-                            削除
-                        </button>
+                        <button type="button" class="remove-picture">削除</button>
                     </div>
                 </script>
 
@@ -694,22 +685,13 @@
             /*追加ボタンの有効/無効を制御*/
             function updatePictureAddState() {
                 const blocks = pictureList.querySelectorAll('.picture-form-block');
-
                 let visibleCount = 0;
                 blocks.forEach(block => {
-                    /*const del = block.querySelector('input[name$="-DELETE"]');*/
-                    const isVisible = window.getComputedStyle(block).display !== 'none';
-                    if (isVisible) {
-                        visibleCount++;
-                    }
+                    if (window.getComputedStyle(block).display !== 'none') visibleCount++;
                 });
-
                 pictureAddBtn.disabled = visibleCount >= PICTURE_MAX;
-
                 return visibleCount;
             }
-
-
             /*プレビュー表示処理*/
             function showPreview(fileInput) {
                 const block = fileInput.closest('.picture-form-block');
@@ -721,17 +703,53 @@
                 if (fileInput.files && fileInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
-                        if (previewImage) previewImage.src = e.target.result;
-                        if (previewWrapper) previewWrapper.style.display = 'block';
+                        previewImage.src = e.target.result;
+                        previewWrapper.style.display = 'block';
+                        fileWrapper.style.display = 'none';
                         if (removeBtn) removeBtn.style.display = 'inline-block';
-                        if (fileWrapper) fileWrapper.style.display = 'none';
                     };
                     reader.readAsDataURL(fileInput.files[0]);
                 }
             }
 
-            /*新しいフォームを追加*/
+            /*削除ボタン処理*/
+            function attachRemoveEvents(block) {
+                const rmBtn = block.querySelector('.remove-picture');
+                if (!rmBtn) return;
+                const del = block.querySelector('input[name$="-DELETE"]');
+                const idInput = block.querySelector('input[name$="-id"]');
+                const fileInput = block.querySelector('input[type="file"]');
+                const previewImage = block.querySelector('.preview-image');
+                const previewWrapper = block.querySelector('.image-preview-wrapper');
+                const fileWrapper = block.querySelector('.file-input-wrapper');
 
+                rmBtn.addEventListener('click', function () {
+                    if (idInput && idInput.value) {
+                        if (del) {
+                        del.removeAttribute('disabled');
+                        del.checked = true;
+                        del.value = 'on';
+                        }
+                        idInput.removeAttribute('disabled');
+                        block.style.display = 'none';
+                    }
+
+                    else {
+                        previewImage.src = '';
+                        previewWrapper.style.display = 'none';
+                        fileWrapper.style.display = 'block';
+                        fileInput.value = '';
+                    }
+                    setTimeout(updatePictureAddState, 50);
+                    });
+            }
+
+            document.querySelectorAll('.remove-picture').forEach(btn => {
+                const block = btn.closest('.picture-form-block');
+                attachRemoveEvents(block);
+            });
+
+            /*新しいフォームを追加*/
             function onAddPicture() {
                 const count = updatePictureAddState();
                 if (count >= PICTURE_MAX) return;
@@ -746,85 +764,21 @@
                 const fileInput = block.querySelector('input[type="file"]');
                 if (fileInput)  { 
                     fileInput.addEventListener('change', function () { 
-                        const f = this.files && this.files[0];
-                        if (!f) return;
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            block.querySelector('.preview-image').src = e.target.result;
-                            block.querySelector('.image-preview-wrapper').style.display = 'block';
-                            block.querySelector('.file-input-wrapper').style.display = 'none';
-                            const rm = block.querySelector('.remove-picture');
-                            if (rm) rm.style.display = 'inline-block';
-                        };
-                        reader.readAsDataURL(f); 
+                        showPreview(fileInput);
                     });
                 }
 
-                const rmBtn = block.querySelector('.remove-picture');
-                if (rmBtn) {
-                    rmBtn.addEventListener('click', function () {
-                        const del = block.querySelector('input[name$="-DELETE"]');
-                        if (del) { del.checked = true; del.value = 'on'; }
-                        block.style.display = 'none';
-                        updatePictureAddState();
-                    });
-                }
+                attachRemoveEvents(block);
+
                 pictureTotalInput.value = index + 1;
                 updatePictureAddState();
             }
 
-            /*削除処理*/
-            pictureList.addEventListener('click', function (e) {
-                const btn = e.target.closest('button.remove-picture');
-                if (!btn) return;
-
-                const block = btn.closest('.picture-form-block');
-                if (!block) return;
-
-                const allBlocks = Array.from(pictureList.querySelectorAll('.picture-form-block'));
-                const firstBlock = allBlocks[0];
-
-                const del = block.querySelector('input[name$="-DELETE"]');
-                const isInput = block.querySelector('input[name$="-id"]');
-                const isExisting = isInput && isInput.value && isInput.value.trim() !== '';
-                const fileInput = block.querySelector('input[type="file"]');
-                const previewWrapper = block.querySelector('.image-preview-wrapper');
-                const previewImage = block.querySelector('.preview-image');
-                const removeBtn = block.querySelector('.remove-picture');
-                const fileWrapper = block.querySelector('.file-input-wrapper');
-
-                if (del) {
-                    if (isExisting){
-                        del.checked = true;
-                        del.value = 'on';
-                    } else {
-                        del.checked = false;
-                        del.value = '';
-                    }
-                }
-
-                if (block === firstBlock) {
-                    block.style.display = 'flex';
-                    block.dataset.hasImage = '0';
-
-                    if (previewWrapper) previewWrapper.style.display = 'none';
-                    if (previewImage) previewImage.src = '';
-                    if (removeBtn) removeBtn.style.display = 'none';
-                    if (fileWrapper) fileWrapper.style.display = 'flex';
-                    if (fileInput) fileInput.value = '';
-
-                    updatePictureAddState();
-                    return;
-                }
-                block.style.display = 'none';
-                updatePictureAddState();
-            });
 
             if (pictureAddBtn && !pictureAddBtn.dataset.bound) {
                 pictureAddBtn.dataset.bound = '1';
                 pictureAddBtn.addEventListener('click', onAddPicture);
             }
-            updatePictureAddState();
 
             /*初期ロード時のfile inputにプレビュー表示を付与*/
             pictureList.querySelectorAll('input[type="file"]').forEach(input => {
@@ -832,22 +786,11 @@
                     showPreview(input);
                 });
             });
+
             updatePictureAddState();
 
-            initTransportationSelect();
-
-            const pictureBlocks = pictureList.querySelectorAll('.picture-form-block');
-            const hasImage = Array.from(pictureBlocks).some(block => {
-                const input = block.querySelector('input[type="file"]');
-                return input && input.value;
-            });
-            
-            if (!hasImage) {
-                pictureBlocks.forEach((block, index) => {
-                    if (index > 0) block.style.display = 'none';
-                });
-                pictureTotalInput.value = 1;
-                updatePictureAddState();
+            if (typeof initTransportationSelect === 'function') {
+                initTransportationSelect();
             }
 
             /*タイムピッカーフォーム全体に効かせる*/
