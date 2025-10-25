@@ -288,6 +288,9 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
             plan_instance.schedule = schedule
             plan_instance.save()
             
+            schedule.updated_at = timezone.now()
+            schedule.save(update_fields=['updated_at'])
+            
             for picture_form in picture_formset:
                 instance = picture_form.instance
                 delete_flag = picture_form.cleaned_data.get('DELETE', False)
@@ -330,9 +333,6 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                     link.plan = plan_instance
                     link.action_category = plan_instance.action_category
                     link.save()
-                
-                schedule.updated_at = timezone.now()
-                schedule.save(update_fields=['updated_at'])
                 
             return redirect(reverse('app:schedule_detail', args=[schedule_id]) + f'?selected_day={selected_day}')
             
