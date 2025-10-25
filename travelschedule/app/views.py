@@ -305,14 +305,14 @@ def plan_create_or_edit_view(request, schedule_id, plan_id=None):
                 image = picture_form.cleaned_data.get('image')
                 
                 print(f"[DEBUG] DELETE={delete_flag}, PK={instance.pk}, IMAGE={instance.image}")
-                    
+                
+                if not delete_flag and not image and not instance.pk:
+                    print(f"[DEBUG] 空フォーム対象: {instance}")
+                    continue
+                
                 if delete_flag and instance.pk:
                     print(f"削除対象： {instance.pk}, {instance.image}")
                     instance.delete()
-                    continue
-                    
-                if delete_flag and not instance.pk:
-                    print(f"未保存フォーム削除： {image}")
                     continue
                 
                 if not delete_flag:

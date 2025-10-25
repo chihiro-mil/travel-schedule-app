@@ -724,6 +724,7 @@
                 const fileWrapper = block.querySelector('.file-input-wrapper');
 
                 rmBtn.addEventListener('click', function () {
+                    console.log("削除ボタンクリック", block);
                     if (idInput && idInput.value) {
                         if (del) {
                         del.removeAttribute('disabled');
@@ -735,10 +736,18 @@
                     }
 
                     else {
-                        previewImage.src = '';
-                        previewWrapper.style.display = 'none';
-                        fileWrapper.style.display = 'block';
-                        fileInput.value = '';
+                        if (!fileInput.value) {
+                            block.style.display = 'none';
+                        } else {
+                            previewImage.src = '';
+                            previewWrapper.style.display = 'none';
+                            fileWrapper.style.display = 'block';
+                            fileInput.value = '';
+                        }
+                        if (del) {
+                            del.checked = false;
+                            del.value = '';
+                        }
                     }
                     setTimeout(updatePictureAddState, 50);
                     });
@@ -792,6 +801,49 @@
             if (typeof initTransportationSelect === 'function') {
                 initTransportationSelect();
             }
+
+            /*空フォームは送信しない*/
+            /*const formEl = document.querySelector('.plan-form-container form');
+            console.log("formEl =", formEl);
+            if (!formEl) {
+                console.log('フォームが見つかりません');
+                return;
+            }
+
+            formEl.addEventListener('submit', function () {
+                console.log('--フォーム送信前チェック開始');
+                document.querySelectorAll('.picture-form-block').forEach((block, index) => {
+                    const delInput = block.querySelector('input[name$="-DELETE"]');
+                    const idInput = block.querySelector('input[name$="-id"]');
+                    const fileInput = block.querySelector('input[type="file"]');
+
+                    const hasExisting = !!(idInput && idInput.value);
+                    const toBeDeleted = !!(delInput && delInput.checked);
+                    const isEmptyNew = !hasExisting && (!fileInput || !fileInput.value);
+
+                    console.log(`フォーム[${index}]`);
+                    console.log({
+                        hasExisting: hasExisting,
+                        toBeDeleted: toBeDeleted,
+                        fileValue: fileInput ? fileInput.value : '(なし)',
+                        idValue: idInput ? idInput.value : '(なし)',
+                    });
+
+                    if (hasExisting && toBeDeleted) {
+                        console.log(`既存(${index}) :削除フラグオン そのまま送信`);
+                        return;
+                    }
+                    if (isEmptyNew) {
+                        console.log(`空フォーム(${index}) 無効化します`);
+                        block.querySelectorAll('input, select, textarea').forEach(el => {
+                            el.disabled = true;
+                        });
+                    } else {
+                        console.log(`フォーム(${index}) 有効（送信対象）`);
+                    }
+                });
+                console.log('--フォーム送信前チェック完了---');
+            });*/
 
             /*タイムピッカーフォーム全体に効かせる*/
             const timeInputs = document.querySelectorAll('input[type="time"]');
