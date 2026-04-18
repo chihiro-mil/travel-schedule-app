@@ -1,9 +1,13 @@
+# DjangoのURLルーティングで使うpath関数（urlとviewを結びつける関数）を読み込む
 from django.urls import path
+# . は同じ階層を意味する
+# このアプリのviews.pyを読み込む
 from . import views
 
-
+# URLの名前空間(他のアプリと区別するため)
 app_name = "app"
 
+# urlとviewを対応させる設定
 urlpatterns = [
     path('', views.index_view, name='index'),
     path('register/', views.register_view, name='register'),
@@ -21,3 +25,5 @@ urlpatterns = [
     path('delete_schedule/<int:schedule_id>/', views.delete_schedule, name='delete_schedule'),
     path('plan/<int:plan_id>/delete/', views.plan_delete_view, name='plan_delete_view'),
 ]
+
+# path('URL', 実行するview関数, name='URLの名前'(テンプレで使用))

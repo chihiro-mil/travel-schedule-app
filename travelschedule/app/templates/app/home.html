@@ -26,23 +26,28 @@
     </div>
 
 
+    {# viewsから渡されたno_schedulesを使用　表示を切り替える　#}
     {% if no_schedules %}
         <div class="no-schedule-message">
             下の「予定表追加ボタン」から予定表を作成してみましょう！
         </div>
     {% endif %}
 
+    {# viewsから渡されたschedules(予定表の一覧を)１つずつ取り出してscheduleという名前で使う #}
     {% for schedule in schedules %}
-        <div class="schedule-card-wrapper" style="position: relative;">
+        <div class="schedule-card-wrapper" style="position: relative;"> {# ケバブメニュー配置位置 #}
 
             <div class="schedule-card">
 
+                {# 予定詳細画面リンク　URLにschedule.idを埋め込んでいる（クリックでURLにidの数字が入ることによって１つの予定詳細が呼ばれる） #}
                 <a href="{% url 'app:schedule_detail' schedule.id %}" class="schedule-link"></a>
 
+                {# ケバブメニュー #}
                 <div class="kebab-menu no-link">
                     <i class="fas fa-ellipsis-v kebab-icon"></i>
-                    <div class="kebab-dropdown hidden">
+                    <div class="kebab-dropdown hidden"> {# hiddenクラスで最初は非表示 #}
 
+                        {# 編集ボタン　（data-でviews→html→JSを繋ぐ） #}
                         <button class="edit-schedule-btn edit-button" 
                                 data-schedule-id="{{ schedule.id }}"
                                 data-title="{{ schedule.title }}"
@@ -51,6 +56,7 @@
                             旅行タイトル<br>旅行期間の変更
                         </button>
 
+                        {# 消去ボタン #}
                         <button class="delete-schedule-btn no-link" 
                                 data-schedule-id="{{ schedule.id }}">
                             予定表を削除
@@ -100,30 +106,35 @@
         </ul>
     </footer>
 
+    {# モーダル全体の箱 {% if show_add_modal %}{% else %}hidden{% endif %}で最初から表示するか隠すかを切り替え #}
     <div id="modal" class="modal schedule-add-modal {% if show_add_modal %}{% else %}hidden{% endif %}">
         <div class="modal-content">
-            <span id="closeModalBtn" class="close">&times;</span>
+            <span id="closeModalBtn" class="close">&times;</span> {# 閉じるボタン #}
             <h2>予定表追加</h2>
-            <form method="POST" action="{% url 'app:home' %}">
-                {% csrf_token %}
+            <form method="POST" action="{% url 'app:home' %}"> {# フォーム開始　POST送信する、送信先URLがaction="{% url 'app:home' %}"のhome_viewに送る #}
+                {% csrf_token %} {# Djangoのセキュリティ　POSTする時は基本入れる #}
 
-                
+                {# このフォームの中のinputたちが、送信ボタンでまとめてPOSTされる #}
                 <label>旅行タイトル <span class="home-required-label">必須</span></label>
                 <div class="home-required-wrapper">
-                    <input type="text" name="title" maxlength="20" required>
+                    <input type="text" name="title" maxlength="20" required> {# ここのname="title"をformsのフィールド名と一致させることが重要 requiredで未入力では送信できないようにする #}
                 </div><br>
 
                 <label>旅行期間 <span class="home-required-label">必須</span></label>
                 <div class="calendar-wrapper">
                     <input type="text" id="dateRange" name="trip_period" placeholder="日付を選択" readonly class="flatpickr-input">
+                    {#　※見た目用※ dateRangeでユーザーがカレンダーで選んだ期間が表示される　readonlyで手入力させず、カレンダー操作だけにする　name="trip_period"はformsには直接使わない #}
                     <input type="hidden" id="add_start_date" name="trip_start_date" value="">
                     <input type="hidden" id="add_end_date" name="trip_end_date" value="">
+                    {# ※サーバー用※ name="trip_start_date",name="trip_end_date"はformsのフィールドと一致させる　hiddenに値を入れて送信時にPOSTされる #}
                 </div><br>
 
+                {# もしエラーが付いたらerrors.0＝最初のメッセージを表示する #}
                 {% if form.trip_start_date.errors %}
                     <p class="home-error-message">{{ form.trip_start_date.errors.0 }}</p>
                 {% endif %}
 
+                {# 上記actionのURLにフォーム内のinputを全部まとめてPOSTで送る #}
                 <button type="submit" class="save-btn">保存</button>
             </form>
         </div>
@@ -136,9 +147,9 @@
                 <span class="close" id="editModalClose">&times;</span>
             </div>
             
-            <form id="editModalForm" method="POST" action="{% url 'app:edit_schedule_title' %}">
+            <form id="editModalForm" method="POST" action="{% url 'app:edit_schedule_title' %}"> {# 保存ボタンを押したらedit_schedule_titleのviewへ送る（画面遷移しているように見えないのはredirect後がhomeになっているため） #}
                 {% csrf_token %}
-                <input type="hidden" name="schedule_id" id="editScheduleId">
+                <input type="hidden" name="schedule_id" id="editScheduleId"> {# hiddenで画面表示はないが、送信時にschedule_idがサーバーに送られる #}
 
                 <div class="schedule-form-group">
                     <label for="editTitle">旅行タイトル</label>
@@ -149,7 +160,7 @@
                     <label for="editTripRange">旅行期間</label>
                     <input type="text" id="editTripRange" placeholder="旅行期間を選択" readonly class="flatpickr-input">
                     
-                    <input type="hidden" id="edit_start_date" name="start_date" value="">
+                    <input type="hidden" id="edit_start_date" name="start_date" value=""> {# ユーザーがが日付を選択結果をvalue="2025/01/01"の形でサーバーに渡す #}
                     <input type="hidden" id="edit_end_date" name="end_date" value="">
                 </div>
                 <p class="trip-warning">
@@ -167,7 +178,7 @@
         <div id="deleteModal" class="modal schedule-delete-modal hidden">
             <div class="modal-content">
                 <p>予定表を削除してよろしいですか？</p>
-                <form method="POST" action="{% url 'app:delete_schedule' schedule.id %}">
+                <form method="POST" action="{% url 'app:delete_schedule' schedule.id %}"> {# この予定表（schedule.id）を削除するURLにPOSTする　actionで<int:schedule_id>にschedule_idを埋め込んでくれる #}
                     {% csrf_token %}
                     <input type="hidden" name="schedule_id" id="deleteScheduleId">
                     <div style="text-align: center; margin-top: 10px;">
@@ -178,7 +189,7 @@
             </div>
         </div>
     {% endfor %}
-    <div id="modal-overlay" class="modal-overlay hidden"></div>
+    <div id="modal-overlay" class="modal-overlay hidden"></div> {# 背景を暗くする #}
 
 
 

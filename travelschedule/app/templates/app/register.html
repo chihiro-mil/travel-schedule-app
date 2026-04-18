@@ -9,37 +9,41 @@
     <meta name="description" content="account registration text">
 </head>
 <body class="register-body">
+    {# {% url %}でURLを逆引き　urls.pyのname='login'を参照させる #}
     <a href="{% url 'app:login' %}"class="back-button">＜戻る</a>
     <div class="register-container">
         <h1 class="register-title">アカウント登録</h1>
             <form method="post" class="register-form" novalidate>
-                {% csrf_token %}
+            {# method="post"でフォームを送る時はviewsにPOSTという方法で送る #}
+                {% csrf_token %} {# Djangoか強制する安全対策 #}
 
-                {% if form.password_confirm.errors %}
-                    <ul class="error">
-                        {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
+                {# forms.pyのclean()と直接繋がる部分 #}
+                {% if form.password_confirm.errors %} {# 確認用パスワードにエラーがあるか? ある場合は<ul></ul>を表示 #}
+                    <ul class="error"> {# ul=箇条書きのリスト箱 #}
+                        {% for error in form.non_field_errors %} {# form.non_field_errors:フォーム全体(複数のフォームを比較しているため)のエラーのリストを手動で入力(self.add_errorのNoneの部分) #}
+                            <li>{{ error }}</li> {# li=箇条書きの1つ1つの項目 #}
                         {% endfor %}
                     </ul>  
                 {% endif %}
 
             
                 <div class="register-form-group">
-                    <label for="{{ form.username.id_for_label }}" class="form-register-label">
-                        {{ form.username.label }}
-                        <span class="required-label">必須</span>
+                    {# viewsのreturn render(request, 'app/register.html', {'form': form})で{{ form }}として使えるようになる #}
+                    <label for="{{ form.name.id_for_label }}" class="form-register-label"> {# labelfor="{{ form.name.id_for_label }}"でDjangoがformsを元に自動生成した(name_id)inputのidとHTMLのlabelのidをリンクさせる #}
+                        {{ form.name.label }} {# forms.py name = forms.CharField(label='ユーザー名')をHTMLで表示 #}
+                        <span class="required-label">必須</span> {# spanタグは短い文字を囲むため　#}
                     </label>
-                    <div class="form-input">{{ form.username }}
+                    <div class="form-input">{{ form.name }} {# {{ form.name }}でforms.pyのフィールド定義からDjangoが自動で入力欄を生成 #}
                         <small class="help-text">※１文字以上２０文字以下</samll>
                     </div>
-                    {% if form.username.errors %}
-                        <div class="error">{{ form.username.errors.0 }}</div>
+                    {% if form.name.errors %}{# 複数入る可能性があるエラーメッセージのリスト形式をDjangoが自動生成　※単体のフォームエラーのためfor文不要 #}
+                        <div class="error">{{ form.name.errors.0 }}</div> {# .0でエラーメッセージの1つ目だけ表示　#}
                     {% endif %}
                 </div>
 
                 <div class="register-form-group">
-                    <label for="{{ form.email.id_for_label }}" class="form-register-label">
-                        {{ form.email.label }}
+                    <label for="{{ form.email.id_for_label }}" class="form-register-label"> {# for="{{ form.email.id_for_label }}"でDjangoが自動生成したinputのidとリンクさせる #}
+                        {{ form.email.label }} {# forms.py email = forms.EmailField(label='メールアドレス')をHTMLで表示 #}
                         <span class="required-label">必須</span>
                     </label>
                     <div class="form-input">{{ form.email }}
@@ -52,7 +56,7 @@
 
                 <div class="register-form-group">
                     <label for="{{ form.password.id_for_label }}" class="form-register-label">
-                        {{ form.password.label }}
+                        {{ form.password.label }} {# forms.py password = forms.CharField(label='パスワード')をHTMLで表示 #}
                         <span class="required-label">必須</span>
                     </label>
                     <div class="form-input">{{ form.password }}
@@ -65,7 +69,7 @@
 
                 <div class="register-form-group">
                     <label for="{{ form.password_confirm.id_for_label }}" class="form-register-label">
-                        {{ form.password_confirm.label }}
+                        {{ form.password_confirm.label }} {# forms.py password_confirm = forms.CharField(label='パスワード(確認用)')をHTMLで表示 #}
                         <span class="required-label">必須</span>
                     </label>
                     <div class="form-input">{{ form.password_confirm }}</div>
@@ -75,6 +79,7 @@
                 </div>
 
                 <button type="submit" class="register-button">アカウント登録</button>
+                {# type="submit"でフォームをサーバーに送信　POSTとしてviewsに送られる #}
             </form>
     </div>
 

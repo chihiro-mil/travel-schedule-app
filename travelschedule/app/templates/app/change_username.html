@@ -15,15 +15,15 @@
         <h1 class="change-title">ユーザー名変更</h1>
 
         <div class=user-title>現在のユーザー名</div>
-        <p class="username-text">{{ user.username }}</p>
+        <p class="username-text">{{ user.name|default:user.username }}</p>
         
         <form method='POST'>
             {% csrf_token %}
             <div class="change-row">
-                <label for="{{ form.username.id_for_label }}">新しいユーザー名</label><br>
-                {{ form.username }}
-                {% if form.username.errors %}
-                    <div class="error">{{ form.username.errors }}</div>
+                <label for="{{ form.name.id_for_label }}">新しいユーザー名</label><br>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="error">{{ form.name.errors }}</div>
                 {% endif %}
             </div>
 

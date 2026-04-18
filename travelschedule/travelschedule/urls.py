@@ -14,17 +14,21 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+#管理サイトインポート
 from django.contrib import admin
+#path:urlパターン定義、include:他アプリのurl.pyを取り込む
 from django.urls import path, include
+#開発中だけstaticとmediaをdjangoが直接配信できるように
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('app.urls')),
-    path('app/',include('app.urls')),
+    path('admin/', admin.site.urls), #/admin/にアクセスしたら管理サイトへ
+    path('',include('app.urls')), #サイトルート（/）以下のurlはapp/url.pyに丸ごと委譲
+    path('app/',include('app.urls')), #/app/で始まるurlもapp/url.pyに丸ごと委譲
 ]
 
+#開発サーバーでだけSTATIC_URL,MEDIA_URLをSTATIC_ROOT,MEDIA_ROOTから配信
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

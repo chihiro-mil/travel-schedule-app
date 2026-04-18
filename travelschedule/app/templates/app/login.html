@@ -12,18 +12,19 @@
     <div class="login-container">
         <h1 class="login-title">Travel schedule</h1>
         <h2 class="login-subtitle">ログイン</h2>
+            {# method="post"でフォームを送る時はviewsにPOSTという方法で送る action="{% url 'app:login' %}"で送信先はlogin_viweのURL #}
             <form method="post" action="{% url 'app:login' %}" class="login-form">
-                {% csrf_token %}
+                {% csrf_token %} {# Djangoか強制する安全対策 #}
 
-                {% if form.non_field_errors %}
+                {% if form.non_field_errors %} {# フォーム全体のエラー #}
                     <div class="error">
-                        {% for error in form.non_field_errors %}
+                        {% for error in form.non_field_errors %} {# for文で１つずつエラー表示 #}
                             <p class="login-error-message">{{ error|linebreaksbr }}</p>
                         {% endfor %}
                     </div>
                 {% endif %}
 
-                <div class="login-form-group">
+                <div class="login-form-group"> {# メールアドレス入力ブロック #}
                     <label for="{{ form.email.id_for_label }}">メールアドレス</label>
                     <div class="form-input">{{ form.email }}</div>
                     {% if form.email.errors %}
@@ -35,7 +36,7 @@
                     {% endif %}
                 </div>
 
-                <div class="login-form-group">
+                <div class="login-form-group"> {# パスワード入力ブロック #}
                     <label for="{{ form.password.id_for_label }}">パスワード</label>
                     <div class="form-input">{{ form.password }}</div>
                     {% if form.password.errors %}
