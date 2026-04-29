@@ -37,6 +37,9 @@ from datetime import datetime, time
 
 from collections import defaultdict
 
+# from django.views import ListView
+# from django.http import HttpResponse
+
 #ビューの役割：フォームがチェック内容をもとに処理の流れを決める
 
 #portfolio
@@ -584,3 +587,7 @@ def plan_delete_view(request, plan_id):
         schedule.save(update_fields=['updated_at'])
         
         return redirect(f"{reverse('app:schedule_detail', args=[schedule.id])}?selected_day={selected_day}")
+    
+# 持ち物一覧画面（CVBバージョン）
+# @login_required
+# class PackingItemView(ListView):

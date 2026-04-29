@@ -24,6 +24,9 @@ urlpatterns = [
     path('edit_schedule_title/', views.edit_schedule_title, name='edit_schedule_title'),
     path('delete_schedule/<int:schedule_id>/', views.delete_schedule, name='delete_schedule'),
     path('plan/<int:plan_id>/delete/', views.plan_delete_view, name='plan_delete_view'),
+    # path('schedule/<int:schedule_id>/packing_item_list/', views.packing_item_list_view, name='packing_item_list'),
+    # path('schedule/<int:schedule_id>/packing_item/add/', views.packing_item_create_or_edit_view, name='packing_item_add'),
+    # path('schedule/<int:schedule_id>/packing_item/<int:item_id>/edit/', views.packing_item_create_or_edit_view, name='packing_item_edit'),
 ]
 
 # path('URL', 実行するview関数, name='URLの名前'(テンプレで使用))
