@@ -30,15 +30,16 @@ from .forms import (
     LinkForm,
 )
 
-from .models import User, Schedule, Plan, Link, Picture, TransportationMethod
+from .models import User, Schedule, Plan, Link, Picture, TransportationMethod, PackingItem
 
 from datetime import timedelta
 from datetime import datetime, time
 
 from collections import defaultdict
 
-# from django.views import ListView
-# from django.http import HttpResponse
+from django.views.generic import ListView
+from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 #ビューの役割：フォームがチェック内容をもとに処理の流れを決める
 
@@ -589,5 +590,25 @@ def plan_delete_view(request, plan_id):
         return redirect(f"{reverse('app:schedule_detail', args=[schedule.id])}?selected_day={selected_day}")
     
 # 持ち物一覧画面（CVBバージョン）
-# @login_required
-# class PackingItemView(ListView):
+# CVBの場合、LoginRequiredMixinを使ってログイン状態でのみ使用できるように設定する
+# ListView：一覧画面を自動で作成するクラス
+class PackingItemView(LoginRequiredMixin, ListView):
+    model = PackingItem
+    template_name = 'app/packing_item_list'
+    ordering = ['created_at']
+
+    # get_queryset(表示するデータを決める)　ListViewのままだとすべての持ち物が表示されてしまう
+    def get_queryset(self):
+        # self.kwargs.get('schedule_id')でURLから予定表IDを取得
+        schedule_id = self.kwargs.get('schedule_id')
+        print('schedule_id:', schedule_id)
+        # PackingItem.objects.filter(schedule_id=schedule_id)で「この旅行の持ち物だけ」データを絞る
+        qs = PackingItem.objects.filter(schedule_id=schedule_id)
+        print('queryset:', qs)
+
+        for item in qs:
+            print('item:', item.name)
+            print('memo:', item.memo)
+        
+        # 結果をListViewに渡す
+        return qs
