@@ -594,8 +594,11 @@ def plan_delete_view(request, plan_id):
 # ListView：一覧画面を自動で作成するクラス
 class PackingItemView(LoginRequiredMixin, ListView):
     model = PackingItem
-    template_name = 'app/packing_item_list'
+    template_name = 'app/packing_item_list.html'
     ordering = ['created_at']
+    
+    # HTMLのfor文で必要な変数名を自分で作成
+    context_object_name = 'packing_items'
 
     # get_queryset(表示するデータを決める)　ListViewのままだとすべての持ち物が表示されてしまう
     def get_queryset(self):
@@ -612,3 +615,14 @@ class PackingItemView(LoginRequiredMixin, ListView):
         
         # 結果をListViewに渡す
         return qs
+    
+    # テンプレートに追加データを渡すメゾット（今回は予定表タイトルを表示するために必要）
+    def get_context_data(self, **kwargs):
+        # 上記で取得したitem情報を消さずに予定表の情報を追加で取得する処理　super()→既存データを保持
+        context = super().get_context_data(**kwargs)
+        schedule_id = self.kwargs.get('schedule_id')
+        # 予定表データを１件取ってくる
+        schedule = Schedule.objects.get(id=schedule_id)
+        # HTMLで使う変数名
+        context['schedule'] = schedule
+        return context
