@@ -595,6 +595,7 @@ def plan_delete_view(request, plan_id):
 class PackingItemView(LoginRequiredMixin, ListView):
     model = PackingItem
     template_name = 'app/packing_item_list.html'
+    paginate_by = 50
     ordering = ['created_at']
     
     # HTMLのfor文で必要な変数名を自分で作成
@@ -616,7 +617,7 @@ class PackingItemView(LoginRequiredMixin, ListView):
         # 結果をListViewに渡す
         return qs
     
-    # テンプレートに追加データを渡すメゾット（今回は予定表タイトルを表示するために必要）
+    # テンプレートに追加データを渡すメゾット（予定表タイトルを表示するための処理）
     def get_context_data(self, **kwargs):
         # 上記で取得したitem情報を消さずに予定表の情報を追加で取得する処理　super()→既存データを保持
         context = super().get_context_data(**kwargs)
@@ -625,4 +626,5 @@ class PackingItemView(LoginRequiredMixin, ListView):
         schedule = Schedule.objects.get(id=schedule_id)
         # HTMLで使う変数名
         context['schedule'] = schedule
+        print(context)
         return context

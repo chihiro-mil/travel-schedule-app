@@ -22,13 +22,38 @@
         <span class="packing-item-list-title">{{ schedule.title|break_every|safe }}持ち物リスト</span>
     </h1>
 
-    {% for packing_item in packing_items %}
-        <div class="packing-items">
-            {{ packing_item.is_checked }}
-            {{ packing_item.name }}
-            {{ packing_item.memo }}
-        </div>
-    {% endfor %}
+    <ul>
+        <li>
+            {% for packing_item in packing_items %}
+            <div class="packing-items">
+                {{ packing_item.is_checked }}
+                {{ packing_item.name }}
+                {{ packing_item.memo }}
+            </div>
+        {% endfor %}
+        </li>
+    </ul>
+
+    {# ページネーション処理 #}
+    <div class="pagination">
+        <span class="step-links">
+            {# 現在表示されているページより前にページが存在する場合 #}
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; 先頭</a>
+                <a href="?page={{ previous_page_number }}">前へ</a>
+            {% endif %}
+
+            {# 現在表示されているページ番号と全ページ数を表示 #}
+            <span class="current">
+                page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+            {# 現在表示されているページより後にページが存在する場合 #}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">次へ</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">最後 &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 
 
 
