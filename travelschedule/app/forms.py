@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 import re
 from django.contrib.auth import authenticate, get_user_model
 from .models import Schedule
-from .models import Plan, Link, Picture, TransportationMethod
+from .models import Plan, Link, Picture, TransportationMethod, PackingItem
 from datetime import datetime
 from django.forms import modelformset_factory
 from django.utils import timezone
@@ -626,3 +626,26 @@ class BasePictureFormSet(BaseInlineFormSet):
         super().__init__(*args, **kwargs)
         for form in self.forms:
             form.empty_permitted = True
+
+# 持ち物リストフォーム
+class PackingItemForm(forms.ModelForm):
+    class Meta:
+        model = PackingItem
+        fields = ['name', 'memo']
+        widgets = {
+            'name': forms.TextInput(attrs={'max_length=50'}),
+            'memo': forms.Textarea(attrs={'max_length=150'}),
+        }
+        labels = {
+            'name': '持ち物名',
+            'memo': 'メモ',
+        }
+        error_messages = {
+            'name': {
+                'required': '持ち物名は必須です。',
+                'max_length': '持ち物名は１文字以上５０文字以下で入力してください。',
+            },
+            'memo': {
+                'max_length': 'メモは１５０文字以下で入力してください。'
+            },
+        }

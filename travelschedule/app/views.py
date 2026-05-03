@@ -28,6 +28,7 @@ from .forms import (
     BaseLinkFormSet,
     PictureForm,
     LinkForm,
+    PackingItemForm,
 )
 
 from .models import User, Schedule, Plan, Link, Picture, TransportationMethod, PackingItem
@@ -38,6 +39,7 @@ from datetime import datetime, time
 from collections import defaultdict
 
 from django.views.generic import ListView
+from django.views.generic.edit import CreateView
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -628,3 +630,15 @@ class PackingItemView(LoginRequiredMixin, ListView):
         context['schedule'] = schedule
         print(context)
         return context
+    
+class PackingItemCreateView(LoginRequiredMixin, CreateView):
+    model = PackingItem
+    form_class = PackingItemForm
+    template_name = 'app/packing_item_create_or_edit.html'
+
+    def form_valid(self, form):
+        schedule_id = self.kwargs.get('schedule_id')
+        schedule = Schedule.objects.get(id=schedule_id)
+        # formにschedule情報をセット
+        form.instance.schedule = schedule
+        return super().form_valid(form)
