@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>packing item list page</title>
+    <title>packing item form page</title>
     <link rel="stylesheet" href="{% static "css/style.css" %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static "app/flatpickr/flatpickr.min.css" %}">
@@ -16,44 +16,22 @@
     <script src="{% static 'app/flatpickr-yearSelect/flatpickr-year-select-plugin.js' %}"></script>
 </head>
 <body>
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.name.label }}
+        {{ form.name }}
+        {{ form.name.errors }}
+
+        {{ form.memo.label }}
+        {{ form.memo }}
+        {{ form.memo.errors }}
+
+        <button type="submit">
+            保存
+        </button>
+    </form>
     
-    <a href="{% url 'app:home' %}"class="back-button">戻る</a>
-    <h1>
-        <span class="packing-item-list-title">{{ schedule.title|break_every|safe }}持ち物リスト</span>
-    </h1>
-
-    <ul>
-        <li>
-            {% for packing_item in packing_items %}
-            <div class="packing-items">
-                {{ packing_item.is_checked }}
-                {{ packing_item.name }}
-                {{ packing_item.memo }}
-            </div>
-        {% endfor %}
-        </li>
-    </ul>
-
-    {# ページネーション処理 #}
-    <div class="pagination">
-        <span class="step-links">
-            {# 現在表示されているページより前にページが存在する場合 #}
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; 先頭</a>
-                <a href="?page={{ previous_page_number }}">前へ</a>
-            {% endif %}
-
-            {# 現在表示されているページ番号と全ページ数を表示 #}
-            <span class="current">
-                page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-            </span>
-            {# 現在表示されているページより後にページが存在する場合 #}
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">次へ</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">最後 &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
 
 
 

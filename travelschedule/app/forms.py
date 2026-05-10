@@ -633,8 +633,8 @@ class PackingItemForm(forms.ModelForm):
         model = PackingItem
         fields = ['name', 'memo']
         widgets = {
-            'name': forms.TextInput(attrs={'max_length=50'}),
-            'memo': forms.Textarea(attrs={'max_length=150'}),
+            'name': forms.TextInput(attrs={'max_length': 50}),
+            'memo': forms.Textarea(attrs={'max_length': 150}),
         }
         labels = {
             'name': '持ち物名',

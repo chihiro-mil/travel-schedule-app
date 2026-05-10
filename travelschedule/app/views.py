@@ -634,7 +634,18 @@ class PackingItemView(LoginRequiredMixin, ListView):
 class PackingItemCreateView(LoginRequiredMixin, CreateView):
     model = PackingItem
     form_class = PackingItemForm
-    template_name = 'app/packing_item_create_or_edit.html'
+    template_name = 'app/packing_item_form.html'
+
+    def get_context_data(self, **kwargs):
+        # 上記で取得したitem情報を消さずに予定表の情報を追加で取得する処理　super()→既存データを保持
+        context = super().get_context_data(**kwargs)
+        schedule_id = self.kwargs.get('schedule_id')
+        # 予定表データを１件取ってくる
+        schedule = Schedule.objects.get(id=schedule_id)
+        # HTMLで使う変数名
+        context['schedule'] = schedule
+        print(context)
+        return context
 
     def form_valid(self, form):
         schedule_id = self.kwargs.get('schedule_id')
@@ -642,3 +653,11 @@ class PackingItemCreateView(LoginRequiredMixin, CreateView):
         # formにschedule情報をセット
         form.instance.schedule = schedule
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        schedule_id = self.kwargs.get('schedule_id')
+
+        return reverse(
+            'app:packing_item_list',
+            kwargs={'schedule_id': schedule_id}
+        )
