@@ -39,7 +39,7 @@ from datetime import datetime, time
 from collections import defaultdict
 
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -678,6 +678,17 @@ class PackingItemUpdateView(LoginRequiredMixin, UpdateView):
         print(context)
         return context
     
+    def get_success_url(self):
+        schedule_id = self.kwargs.get('schedule_id')
+
+        return reverse(
+            'app:packing_item_list',
+            kwargs={'schedule_id': schedule_id}
+        )
+    
+class PackingItemDeleteView(LoginRequiredMixin, DeleteView):
+    model = PackingItem
+
     def get_success_url(self):
         schedule_id = self.kwargs.get('schedule_id')
 

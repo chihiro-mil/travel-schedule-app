@@ -5,7 +5,7 @@ from django.urls import path
 from . import views
 
 # 持ち物リストのCBVをインポート
-from .views import PackingItemView, PackingItemCreateView, PackingItemUpdateView
+from .views import PackingItemView, PackingItemCreateView, PackingItemUpdateView, PackingItemDeleteView
 
 # URLの名前空間(他のアプリと区別するため)
 app_name = "app"
@@ -30,6 +30,7 @@ urlpatterns = [
     path('schedule/<int:schedule_id>/packing_item_list/', PackingItemView.as_view(), name='packing_item_list'),
     path('schedule/<int:schedule_id>/packing_item/add/', PackingItemCreateView.as_view(), name='packing_item_create_or_edit'),
     path('schedule/<int:schedule_id>/packing_item/<int:pk>/edit/', PackingItemUpdateView.as_view(), name='packing_item_create_or_edit'),
+    path('schedule/<int:schedule_id>/packing_item/<int:pk>/delete/', PackingItemDeleteView.as_view(), name='packing_item_delete'),
     # path('schedule/<int:schedule_id>/packing_item_list/', views.packing_item_list_view, name='packing_item_list'),
 ]
 
