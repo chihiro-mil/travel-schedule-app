@@ -2444,3 +2444,14 @@ position: absolute;
 .modal-hidden {
     display: none !important;
 }
+
+/*packing item list page*/
+
+.packing-item-header-area {
+    position: relative;
+}
+
+.packing-item-list-title {
+    text-align: center;
+    padding-top: 30px;
+}

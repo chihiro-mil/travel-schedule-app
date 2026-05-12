@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>packing item list page</title>
-    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}?v=2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static "app/flatpickr/flatpickr.min.css" %}">
     <script src="{% static 'app/flatpickr/flatpickr.min.js' %}"></script>
@@ -17,10 +17,13 @@
 </head>
 <body>
     
-    <a href="{% url 'app:home' %}"class="back-button">戻る</a>
-    <h1>
-        <span class="packing-item-list-title">{{ schedule.title|break_every|safe }}持ち物リスト</span>
-    </h1>
+    <div class="packing-item-header-area">
+        <a href="{% url 'app:home' %}"class="back-button">戻る</a>
+
+        <h1 class="packing-item-list-title">
+            <span>{{ schedule.title|break_every|safe }}持ち物リスト</span>
+        </h1>
+    </div>
 
     <ul>
         <li>
