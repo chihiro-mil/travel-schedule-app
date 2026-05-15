@@ -156,6 +156,18 @@ def home_view(request):
         schedules = Schedule.objects.filter(user=request.user).order_by('-trip_start_date') #-trip_start_dateで一番後の予定が一番上に表示
         sort_label = '更新順'
         next_sort = 'updated'
+
+    # 持ち物リスト登録状態 (elseの部分は仮設定)
+    for schedule in schedules:
+        packing_count = schedule.packing_items.count()
+
+        if packing_count == 0:
+            schedule.packing_status = "(未登録)"
+        
+        else:
+            schedule.packing_status = "(準備途中)"
+
+
         
     if request.method == 'POST': #POSTの時
         form = ScheduleForm(request.POST) #request.POSTの中に旅行タイトル、旅行期間の入力内容が入っている

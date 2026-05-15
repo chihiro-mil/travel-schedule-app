@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home page</title>
-    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}?v=2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static "app/flatpickr/flatpickr.min.css" %}">
     <script src="{% static 'app/flatpickr/flatpickr.min.js' %}"></script>
@@ -67,7 +67,16 @@
                 <div class="schedule-header">
                     <strong>{{ schedule.title|break_every|safe }}</strong>
                 </div>
+
                 <p>{{ schedule.trip_start_date }} ～ {{ schedule.trip_end_date }}</p>
+
+            <a href="{% url 'app:packing_item_list' schedule.id %}" class="packing_item_list_link">
+                持ち物リスト
+            </a>
+            <span class="packing_status">
+                {{ schedule.packing_status }}
+            </span>
+
             </div>
         </div>
     {% endfor %}
