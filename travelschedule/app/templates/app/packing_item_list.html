@@ -25,16 +25,41 @@
         </h1>
     </div>
 
-    <ul>
-        <li>
-            {% for packing_item in packing_items %}
-            <div class="packing-items">
-                {{ packing_item.is_checked }}
-                {{ packing_item.name }}
-                {{ packing_item.memo }}
-            </div>
+    {% if packing_items %}
+
+    {% else %}
+        <div class="no-packing-item-message">
+            下の「持ち物追加ボタン」から持ち物リストを作成してみましょう！
+        </div>
+    {% endif %}
+
+    <ul class="packing-list">
+        {% for packing_item in packing_items %}
+            <li>
+                <div class="packing-item-card">
+                    <div class="item-content">
+                        {{ packing_item.is_checked }}
+                        <div class="item-text">
+                            {{ packing_item.name }}
+                            {{ packing_item.memo }}
+                        </div>
+                    </div>
+                    <div class="item-kebab-area">
+                        <button class="item-kebab-btn">
+                            <i class="fas fa-ellipsis-v kebab-icon"></i>
+                        </button>
+                        <div class="item-kebab-menu"> 
+                            <button class="edit-item-btn">
+                            編集
+                            </button>
+                            <button class="delete-item-btn">
+                            削除
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </li>
         {% endfor %}
-        </li>
     </ul>
 
     {# ページネーション処理 #}
@@ -92,4 +117,37 @@
             </li>
         </ul>
     </footer>
+
+    <script>
+
+        /*HTMLの読み込み後、JavaScriptを実行する*/
+        document.addEventListener('DOMContentLoaded', function () {
+
+            /*ケバブメニュー開閉*/
+            const kebabButtons = document.querySelectorAll(".item-kebab-btn");
+            kebabButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const card = button.closest(".packing-item-card");
+                    const menu = card.querySelector(".item-kebab-menu");
+                    menu.classList.toggle("show");
+                });
+            });
+            
+            /*フッタースクロール機能*/
+            let lastScrollTop = 0;
+            const footer = document.querySelector('.footer-nav');
+
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (scrollTop > lastScrollTop) {
+                    footer.style.transform = 'translateY(100%)';
+                } else {
+                    footer.style.transform = 'translateY(0)';
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 :scrollTop;
+            });
+        });
+
+    </script>
 </body>
