@@ -687,7 +687,6 @@ class PackingItemUpdateView(LoginRequiredMixin, UpdateView):
         schedule = Schedule.objects.get(id=schedule_id)
         # HTMLで使う変数名
         context['schedule'] = schedule
-        print(context)
         return context
     
     def get_success_url(self):

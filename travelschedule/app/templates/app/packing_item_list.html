@@ -49,11 +49,11 @@
                             <i class="fas fa-ellipsis-v kebab-icon"></i>
                         </button>
                         <div class="item-kebab-menu"> 
-                            <button class="edit-item-btn">
-                            編集
-                            </button>
+                            <a href="{% url 'app:packing_item_create_or_edit' schedule.id packing_item.id %}"class="edit-item-btn">
+                                編集
+                            </a>
                             <button class="delete-item-btn">
-                            削除
+                                削除
                             </button>
                         </div>
                     </div>
