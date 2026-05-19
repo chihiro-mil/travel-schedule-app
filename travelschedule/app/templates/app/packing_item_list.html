@@ -52,9 +52,27 @@
                             <a href="{% url 'app:packing_item_create_or_edit' schedule.id packing_item.id %}"class="edit-item-btn">
                                 編集
                             </a>
-                            <button class="delete-item-btn">
+                            <button class="item-delete-btn">
                                 削除
                             </button>
+                            <div class="item-delete-modal">
+                                <div class="item-modal-content">
+                                    <p>
+                                        本当にアイテムを削除しますか？
+                                    </p>
+                                    <form method="post"
+                                        action="{% url 'app:packing_item_delete' schedule.id packing_item.id %}">
+                                        {% csrf_token %}
+
+                                        <button type="submit">
+                                            はい
+                                        </button>
+                                    </form>
+                                    <button type="button" class="modal-close-btn">
+                                        いいえ
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,6 +150,28 @@
                     menu.classList.toggle("show");
                 });
             });
+
+            /*削除モーダル開閉*/
+            const itemDeleteButtons = document.querySelectorAll(".item-delete-btn");
+            itemDeleteButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const card = button.closest(".packing-item-card");
+                    const modal = card.querySelector(".item-delete-modal");
+                    modal.classList.toggle("show");
+                });
+            });
+
+            /*削除モーダル内の「いいえ」ボタンでモーダル閉じる処理*/
+            const modalCloseButtons = document.querySelectorAll(".modal-close-btn");
+            modalCloseButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const card = button.closest(".packing-item-card");
+                    const modal = card.querySelector(".item-delete-modal");
+                    modal.classList.remove("show");
+                });
+            });
+
+
             
             /*フッタースクロール機能*/
             let lastScrollTop = 0;

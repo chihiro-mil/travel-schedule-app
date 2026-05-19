@@ -2486,6 +2486,13 @@ position: absolute;
     display: block;
 }
 
+.item-delete-modal {
+    display: none;
+}
+.item-delete-modal.show {
+    display: block;
+}
+
 @media (max-width: 768px) {
     .no-packing-item-message{
         font-size: 18px;
