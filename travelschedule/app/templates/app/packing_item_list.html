@@ -18,7 +18,7 @@
 <body>
     
     <div class="packing-item-header-area">
-        <a href="{% url 'app:home' %}"class="back-button">戻る</a>
+        <a href="{% url 'app:home' %}"class="back-button">＜戻る</a>
 
         <h1 class="packing-item-list-title">
             <span>{{ schedule.title|break_every|safe }}持ち物リスト</span>
@@ -35,43 +35,47 @@
 
     <ul class="packing-list">
         {% for packing_item in packing_items %}
-            <li>
-                <div class="packing-item-card">
-                    <div class="item-content">
-                        {{ packing_item.is_checked }}
-                        <div class="item-text">
-                            {{ packing_item.name }}
-                            {{ packing_item.memo }}
-                        </div>
+            <li class="packing-item-card">
+                <div class="item-main-content">
+                    <div class="item-check">
+                        <input type="checkbox"
+                            {% if packing_item.is_checked %}checked{% endif %}
+                        >
                     </div>
-                    <div class="item-kebab-area">
-                        <button class="item-kebab-btn">
-                            <i class="fas fa-ellipsis-v kebab-icon"></i>
+                    <div class="item-name">
+                        {{ packing_item.name }}
+                    </div>
+                    <div class="item-memo">
+                        {{ packing_item.memo }}
+                    </div>
+                </div>
+                <div class="item-kebab-area">
+                    <button class="item-kebab-btn">
+                        <i class="fas fa-ellipsis-v kebab-icon"></i>
+                    </button>
+                    <div class="item-kebab-menu"> 
+                        <a href="{% url 'app:packing_item_create_or_edit' schedule.id packing_item.id %}"class="edit-item-btn">
+                            編集
+                        </a>
+                        <button class="item-delete-btn">
+                            削除
                         </button>
-                        <div class="item-kebab-menu"> 
-                            <a href="{% url 'app:packing_item_create_or_edit' schedule.id packing_item.id %}"class="edit-item-btn">
-                                編集
-                            </a>
-                            <button class="item-delete-btn">
-                                削除
-                            </button>
-                            <div class="item-delete-modal">
-                                <div class="item-modal-content">
-                                    <p>
-                                        本当にアイテムを削除しますか？
-                                    </p>
-                                    <form method="post"
-                                        action="{% url 'app:packing_item_delete' schedule.id packing_item.id %}">
-                                        {% csrf_token %}
+                        <div class="item-delete-modal">
+                            <div class="item-modal-content">
+                                <p>
+                                    本当にアイテムを削除しますか？
+                                </p>
+                                <form method="post"
+                                    action="{% url 'app:packing_item_delete' schedule.id packing_item.id %}">
+                                    {% csrf_token %}
 
-                                        <button type="submit">
-                                            はい
-                                        </button>
-                                    </form>
-                                    <button type="button" class="modal-close-btn">
-                                        いいえ
+                                    <button type="submit">
+                                        はい
                                     </button>
-                                </div>
+                                </form>
+                                <button type="button" class="modal-close-btn">
+                                    いいえ
+                                </button>
                             </div>
                         </div>
                     </div>

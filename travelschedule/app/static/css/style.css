@@ -2465,6 +2465,7 @@ position: absolute;
 .packing-item-list-title {
     text-align: center;
     padding-top: 30px;
+    font-size: 40px;
 }
 
 .no-packing-item-message {
@@ -2493,10 +2494,93 @@ position: absolute;
     display: block;
 }
 
+.packing-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.packing-item-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: white;
+    border: 2px solid #000;
+    border-radius: 8px;
+    padding: 18px;
+    margin: 0 auto 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: relative;
+    width: 90%;
+    max-width: 450px;
+}
+.item-main-content {
+    display: flex;
+    flex: 1;
+    gap: 16px;
+    align-items: flex-start;
+}
+.item-check {
+    flex-shrink: 0;
+}
+.item-check input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+.item-name {
+    width: 140px;
+    font-size: 18px;
+    font-weight: bold;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+.item-memo {
+    flex: 1;
+    font-size: 16px;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+.item-kebab-area {
+    position: relative;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+.item-kebab-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+}
+
 @media (max-width: 768px) {
     .no-packing-item-message{
         font-size: 18px;
         max-width: 65%;
         margin: 200px auto;
+    }
+    .packing-item-card{
+        width: 100%;
+        max-width: 300px;
+        padding: 8px;
+        font-size: 18px;
+        margin: 0 auto 14px;
+    }
+    .packing-item-list-title {
+        font-size: 18px;
+    }
+    .item-main-content {
+        gap: 10px;
+    }
+    .item-check input[type="checkbox"] {
+        width: 15px;
+        height: 15px;
+    }
+    .item-name {
+        width: 100px;
+        font-size: 15px;
+    }
+    .item-memo {
+        font-size: 13px;
     }
 }
