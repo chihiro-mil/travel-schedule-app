@@ -40,6 +40,7 @@ from collections import defaultdict
 
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -642,6 +643,8 @@ class PackingItemView(LoginRequiredMixin, ListView):
         context['schedule'] = schedule
         print(context)
         return context
+    
+#class PackingItemCheckboxView(LoginRequiredMixin, View):
     
 class PackingItemCreateView(LoginRequiredMixin, CreateView):
     model = PackingItem
