@@ -38,7 +38,10 @@
             <li class="packing-item-card">
                 <div class="item-main-content">
                     <div class="item-check">
-                        <input type="checkbox"
+                        <input 
+                            type="checkbox"
+                            class="packing-checkbox"
+                            data-url="{% url 'app:packing_item_check' schedule.id packing_item.id %}"
                             {% if packing_item.is_checked %}checked{% endif %}
                         >
                     </div>
@@ -144,6 +147,53 @@
 
         /*HTMLの読み込み後、JavaScriptを実行する*/
         document.addEventListener('DOMContentLoaded', function () {
+
+            /*チェックボックス*/
+            document.querySelectorAll('.packing-checkbox').forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    
+                    /*fetchでURL(checkbox.dataset.url)へ通信する*/
+                    fetch(checkbox.dataset.url, {
+                        /*method: 'POST'でdef postのviewが呼ばれる*/
+                        method: 'POST',
+                        /*headersは追加情報 X-CSRFTokenで正規のユーザーであることを伝える*/
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken'),
+                        },
+                    })
+                    /*.thenでfetchの通信が終わったら次の実行を指示　response.json()でDjangoから返ってきたJSONをJaveScriptで使える形に変換する*/
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            checkbox.checked = !checkbox.checked;
+                            alert('保存に失敗しました');
+                        }
+                    })
+                    .catch(error => {
+                        checkbox.checked = !checkbox.checked;
+                        alert('通信に失敗しました');
+                    });
+                });
+            });
+
+            /*JavaScript専用送信用　HTMLの送信フォーム{% csrf_token %}のJavaScript版*/
+            function getCookie(name) {
+                let cookieValue = null;
+
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
 
             /*ケバブメニュー開閉*/
             const kebabButtons = document.querySelectorAll(".item-kebab-btn");

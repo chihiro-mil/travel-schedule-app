@@ -43,6 +43,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 
 #ビューの役割：フォームがチェック内容をもとに処理の流れを決める
 
@@ -644,7 +645,28 @@ class PackingItemView(LoginRequiredMixin, ListView):
         print(context)
         return context
     
-#class PackingItemCheckboxView(LoginRequiredMixin, View):
+#持ち物機能はCBVで統一しているため、チェックボックス機能もCBVで実装
+class PackingItemCheckboxView(LoginRequiredMixin, View):
+
+    #チェックボックスが押されたらpost()内の処理を実行する
+    def post(self, request, schedule_id, pk):
+        #アイテムの箱にテーブル名、schedule_id、pk = pk の順番で探し出したアイテムを入れる
+        item = get_object_or_404(
+            PackingItem,
+            schedule_id = schedule_id,
+            pk = pk,
+            schedule__user = request.user,
+        )
+
+        #DBに保存されている状態から逆にする作業（現：True →　Falseに変える）
+        item.is_checked = not item.is_checked
+        item.save()
+
+        #チェックボックスは画面切り替えなしで実行したいため、JsonResponseを使ってJavaScriptへデータを返す
+        return JsonResponse({
+            "success": True, #保存状態
+            "is_checked": item.is_checked, #現在のチェック状態
+        })
     
 class PackingItemCreateView(LoginRequiredMixin, CreateView):
     model = PackingItem
