@@ -2552,6 +2552,9 @@ position: absolute;
     font-size: 18px;
     color: #555;
 }
+.pagination {
+    text-align: center;
+}
 
 @media (max-width: 768px) {
     .no-packing-item-message{
@@ -2583,4 +2586,60 @@ position: absolute;
     .item-memo {
         font-size: 13px;
     }
+}
+
+/*持ち物リスト追加編集画面*/
+.packing-item-form-header-area {
+    position: relative;
+}
+.packing-item-form-title{
+    text-align: center;
+    padding-top: 30px;
+    font-size: 40px;
+}
+.packing-item-form {
+    max-width: 450px;
+    margin: 0 auto;
+}
+.packing-item-form-group {
+    margin-bottom: 20px;
+}
+.packing-item-form-group label {
+    display: block;
+    margin-bottom: 8px;
+}
+.packing-item-form-group input,
+.packing-item-form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+.packing-item-form-button-area {
+    text-align: center;
+}
+
+.packing-item-form-button {
+    background-color: #1e90ff;
+    color: #fff;
+    cursor: pointer;
+    padding: 20px 34px;
+    font-size: 20px;
+    border-radius: 6px;
+    border: none;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .packing-item-form {
+        width: 90%;
+        margin: 0 auto;
+    }
+    .packing-item-form-title {
+        font-size: 18px;
+    }
+    .packing-item-form-button {
+        font-size: 18px;
+        padding: 9px 20px;
+        border-radius: 6px;
+    }
+
 }

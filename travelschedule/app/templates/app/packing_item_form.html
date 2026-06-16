@@ -16,20 +16,34 @@
     <script src="{% static 'app/flatpickr-yearSelect/flatpickr-year-select-plugin.js' %}"></script>
 </head>
 <body>
-    <form method="post">
+
+    <div class="packing-item-form-header-area">
+        <a href="{% url 'app:packing_item_list' schedule.id %}"class="back-button">＜戻る</a>
+
+        <h1 class="packing-item-form-title">
+            {{ page_title }}
+        </h1>
+    </div>
+
+    <form method="post" class="packing-item-form">
         {% csrf_token %}
-
-        {{ form.name.label }}
-        {{ form.name }}
-        {{ form.name.errors }}
-
-        {{ form.memo.label }}
-        {{ form.memo }}
-        {{ form.memo.errors }}
-
-        <button type="submit">
+        <div class="packing-item-form-group">
+            {{ form.name.label }}
+            {{ form.name }}
+            {{ form.name.errors }}
+        </div>
+        
+        <div class="packing-item-form-group">
+            {{ form.memo.label }}
+            {{ form.memo }}
+            {{ form.memo.errors }}
+        </div>
+        
+        <div class="packing-item-form-button-area">
+            <button type="submit" class="packing-item-form-button">
             保存
-        </button>
+            </button>
+        </div>
     </form>
     
 

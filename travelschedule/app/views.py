@@ -681,6 +681,7 @@ class PackingItemCreateView(LoginRequiredMixin, CreateView):
         schedule = Schedule.objects.get(id=schedule_id)
         # HTMLで使う変数名
         context['schedule'] = schedule
+        context['page_title'] = '持ち物追加'
         print(context)
         return context
 
@@ -712,6 +713,7 @@ class PackingItemUpdateView(LoginRequiredMixin, UpdateView):
         schedule = Schedule.objects.get(id=schedule_id)
         # HTMLで使う変数名
         context['schedule'] = schedule
+        context['page_title'] = '持ち物編集'
         return context
     
     def get_success_url(self):
