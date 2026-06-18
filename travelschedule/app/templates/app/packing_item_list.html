@@ -68,17 +68,20 @@
                                 <p>
                                     本当にアイテムを削除しますか？
                                 </p>
-                                <form method="post"
-                                    action="{% url 'app:packing_item_delete' schedule.id packing_item.id %}">
-                                    {% csrf_token %}
 
-                                    <button type="submit">
-                                        はい
+                                <div class="item-modal-buttons">
+                                    <form method="post"
+                                        action="{% url 'app:packing_item_delete' schedule.id packing_item.id %}">
+                                        {% csrf_token %}
+
+                                        <button type="submit" class="modal-yes-btn">
+                                            はい
+                                        </button>
+                                    </form>
+                                    <button type="button" class="modal-close-btn">
+                                        いいえ
                                     </button>
-                                </form>
-                                <button type="button" class="modal-close-btn">
-                                    いいえ
-                                </button>
+                                </div>
                             </div>
                         </div>
                     </div>

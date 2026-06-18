@@ -2482,16 +2482,91 @@ position: absolute;
 
 .item-kebab-menu {
     display: none;
+    position: absolute;
+    top: 28px;
+    width: 120px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 10;
 }
 .item-kebab-menu.show {
     display: block;
 }
 
+.item-kebab-menu > a ,
+.item-kebab-menu > button {
+    display: block;
+    width: 100%;
+    padding: 8px 10px;
+    text-align: center;
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.item-kebab-menu .item-delete-btn {
+    color: #b00020;
+}
+
 .item-delete-modal {
     display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
 }
 .item-delete-modal.show {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.item-modal-content {
+    background: #fff;
+    width: 85%;
+    max-width: 360px;
+    padding: 24px 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    text-align: center;
+} 
+.item-modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 24px;
+}
+.item-modal-buttons form {
+    margin: 0;
+}
+.item-modal-content button {
+    margin: 8px;
+    padding: 8px 20px;
+    cursor: pointer;
+}
+.modal-yes-btn {
+    background: #ff4d30;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    width: 120px;
+    padding: 14px 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+.modal-close-btn {
+    background: #f3f3ee;
+    color: #555;
+    border: none;
+    border-radius: 10px;
+    width: 120px;
+    padding: 14px 0;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .packing-list {
@@ -2585,6 +2660,27 @@ position: absolute;
     }
     .item-memo {
         font-size: 13px;
+    }
+    .item-kebab-menu {
+        top: 100%;
+        right: 0;
+        width: 100px;
+    }
+    .item-kebab-menu > a ,
+    .item-kebab-menu > button {
+        font-size: 14px;
+        padding: 8px 10px;
+    }
+    .item-modal-content {
+        width: 70%;
+        max-width: 320px;
+        padding: 30px 15px;
+    }
+    .modal-yes-btn,
+    .modal-close-btn {
+        width: 110px;
+        padding: 14px 0;
+        font-size: 18px;
     }
 }
 
