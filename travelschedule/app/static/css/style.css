@@ -2608,6 +2608,7 @@ position: absolute;
     font-weight: bold;
     word-break: break-word;
     overflow-wrap: break-word;
+    white-space: normal;
 }
 .item-memo {
     flex: 1;

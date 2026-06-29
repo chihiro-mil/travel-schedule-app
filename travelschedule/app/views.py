@@ -162,10 +162,14 @@ def home_view(request):
     # 持ち物リスト登録状態 (elseの部分は仮設定)
     for schedule in schedules:
         packing_count = schedule.packing_items.count()
+        checked_count = schedule.packing_items.filter(is_checked=True).count()
 
         if packing_count == 0:
             schedule.packing_status = "(未登録)"
         
+        elif packing_count == checked_count:
+            schedule.packing_status = "(準備完了)"       
+    
         else:
             schedule.packing_status = "(準備途中)"
 
