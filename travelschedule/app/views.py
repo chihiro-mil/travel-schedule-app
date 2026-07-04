@@ -159,7 +159,7 @@ def home_view(request):
         sort_label = '更新順'
         next_sort = 'updated'
 
-    # 持ち物リスト登録状態 (elseの部分は仮設定)
+    # 持ち物リスト登録状態 
     for schedule in schedules:
         packing_count = schedule.packing_items.count()
         checked_count = schedule.packing_items.filter(is_checked=True).count()

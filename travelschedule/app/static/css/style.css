@@ -1033,7 +1033,7 @@ a.user-button {
         width: 100%;
         max-width: 300px;
         padding: 8px;
-        font-size: 18px;
+        font-size: 15px;
         margin: 0 auto 14px;
     }
     .schedule-card p {
@@ -2480,6 +2480,13 @@ position: absolute;
     max-width: 80%;
 }
 
+.packing-list-container {
+    min-height: calc(100vh - 180px);
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 120px;
+}
+
 .item-kebab-menu {
     display: none;
     position: absolute;
@@ -2630,6 +2637,7 @@ position: absolute;
 }
 .pagination {
     text-align: center;
+    margin-top: auto;
 }
 
 @media (max-width: 768px) {
