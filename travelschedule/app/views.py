@@ -666,6 +666,10 @@ class PackingItemCheckboxView(LoginRequiredMixin, View):
         item.is_checked = not item.is_checked
         item.save()
 
+        #予定表一覧画面に更新されたことの印付ける
+        item.schedule.updated_at = timezone.now()
+        item.schedule.save(update_fields=["updated_at"])
+
         #チェックボックスは画面切り替えなしで実行したいため、JsonResponseを使ってJavaScriptへデータを返す
         return JsonResponse({
             "success": True, #保存状態
@@ -689,12 +693,20 @@ class PackingItemCreateView(LoginRequiredMixin, CreateView):
         print(context)
         return context
 
+    #form_valid()は自分だけのオリジナル処理を追加したいときオーバーライドするメソッド
     def form_valid(self, form):
         schedule_id = self.kwargs.get('schedule_id')
         schedule = Schedule.objects.get(id=schedule_id)
         # formにschedule情報をセット
         form.instance.schedule = schedule
-        return super().form_valid(form)
+
+        #保存とリダイレクトの間に予定表並び替えの更新順に必要な処理を追加　return responseの前に好きな処理が追加できる仕組み
+        response = super().form_valid(form)
+
+        schedule.updated_at = timezone.now()
+        schedule.save(update_fields=["updated_at"])
+
+        return response
     
     def get_success_url(self):
         schedule_id = self.kwargs.get('schedule_id')
@@ -720,6 +732,16 @@ class PackingItemUpdateView(LoginRequiredMixin, UpdateView):
         context['page_title'] = '持ち物編集'
         return context
     
+    #予定表並び替えの更新順に必要な処理を追加　form_valid()は自分だけのオリジナル処理を追加したいときオーバーライドするメソッド
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        schedule = self.object.schedule
+        schedule.updated_at = timezone.now()
+        schedule.save(update_fields=["updated_at"])
+
+        return response
+    
     def get_success_url(self):
         schedule_id = self.kwargs.get('schedule_id')
 
@@ -731,6 +753,19 @@ class PackingItemUpdateView(LoginRequiredMixin, UpdateView):
 class PackingItemDeleteView(LoginRequiredMixin, DeleteView):
     model = PackingItem
 
+    #アイテムデータが消える前にschedule を覚えて予定表更新順に反映されるように処理
+    #メソッドをオーバーライドするとき、親クラスと同じ引数を書くのが基本ルールのため、*args, **kwargsを引数に追加
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        schedule = self.object.schedule
+
+        response = super().delete(request, *args, **kwargs)
+
+        schedule.updated_at = timezone.now()
+        schedule.save(update_fields=["updated_at"])
+
+        return response
+    
     def get_success_url(self):
         schedule_id = self.kwargs.get('schedule_id')
 
