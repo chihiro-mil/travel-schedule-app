@@ -46,11 +46,13 @@
                                 {% if packing_item.is_checked %}checked{% endif %}
                             >
                         </div>
-                        <div class="item-name">
-                            {{ packing_item.name }}
-                        </div>
-                        <div class="item-memo">
-                            {{ packing_item.memo }}
+                        <div class="item-text">
+                            <div class="item-name">
+                                {{ packing_item.name }}
+                            </div>
+                            <div class="item-memo">
+                                {{ packing_item.memo }}
+                            </div>
                         </div>
                     </div>
                     <div class="item-kebab-area">
