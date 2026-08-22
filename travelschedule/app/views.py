@@ -626,15 +626,8 @@ class PackingItemView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         # self.kwargs.get('schedule_id')でURLから予定表IDを取得
         schedule_id = self.kwargs.get('schedule_id')
-        print('schedule_id:', schedule_id)
         # PackingItem.objects.filter(schedule_id=schedule_id)で「この旅行の持ち物だけ」データを絞る
         qs = PackingItem.objects.filter(schedule_id=schedule_id)
-        print('queryset:', qs)
-
-        for item in qs:
-            print('item:', item.name)
-            print('memo:', item.memo)
-        
         # 結果をListViewに渡す
         return qs
     
@@ -647,7 +640,6 @@ class PackingItemView(LoginRequiredMixin, ListView):
         schedule = Schedule.objects.get(id=schedule_id)
         # HTMLで使う変数名
         context['schedule'] = schedule
-        print(context)
         return context
     
 #持ち物機能はCBVで統一しているため、チェックボックス機能もCBVで実装
@@ -691,7 +683,6 @@ class PackingItemCreateView(LoginRequiredMixin, CreateView):
         # HTMLで使う変数名
         context['schedule'] = schedule
         context['page_title'] = '持ち物追加'
-        print(context)
         return context
 
     #form_valid()は自分だけのオリジナル処理を追加したいときオーバーライドするメソッド
