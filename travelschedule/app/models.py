@@ -139,3 +139,16 @@ class TransportationMethod(models.Model):
     
     def __str__(self):
         return f'{self.get_transportation_display()}'
+    
+
+# 持ち物リストテーブル
+class PackingItem(models.Model):
+    schedule = models.ForeignKey('Schedule', on_delete=models.CASCADE, related_name='packing_items') # scheduleのFKを定義
+    name = models.CharField(max_length=50, unique=False)
+    memo = models.TextField(blank=True)
+    is_checked = models.BooleanField(default=False) # 初期値は未チェック設定
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __set__(self):
+        return self.name

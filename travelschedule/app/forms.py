@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 import re
 from django.contrib.auth import authenticate, get_user_model
 from .models import Schedule
-from .models import Plan, Link, Picture, TransportationMethod
+from .models import Plan, Link, Picture, TransportationMethod, PackingItem
 from datetime import datetime
 from django.forms import modelformset_factory
 from django.utils import timezone
@@ -63,6 +63,12 @@ class RegisterForm(forms.ModelForm): #forms.ModelFormはDjangoが用意してい
         if User.objects.filter(name=name).exists(): #Userテーブルに入力されたnameがすでに存在しているか確認
             raise forms.ValidationError("このユーザー名はすでに使われています。") #エラーメッセージ表示
         return name #問題なければnameを返して、この値を次の処理に渡す
+
+    def clean_email(self):
+        email = self.cleaned_data['email'] #一時的にクリーンと判断されたデータを入れる辞書。'email'キーを取り出してemailの変数に代入
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("このメールアドレスはすでに使われています。")
+        return email #問題なければをemail返して、この値を次の処理に渡す
     
     def clean_password(self): #passwordフィールドのチェック
         password = self.cleaned_data['password'] #一時的にクリーンと判断されたデータを入れる辞書。'password'キーを取り出してpasswordの変数に代入
@@ -626,3 +632,26 @@ class BasePictureFormSet(BaseInlineFormSet):
         super().__init__(*args, **kwargs)
         for form in self.forms:
             form.empty_permitted = True
+
+# 持ち物リストフォーム
+class PackingItemForm(forms.ModelForm):
+    class Meta:
+        model = PackingItem
+        fields = ['name', 'memo']
+        widgets = {
+            'name': forms.TextInput(attrs={'max_length': 50}),
+            'memo': forms.Textarea(attrs={'max_length': 150}),
+        }
+        labels = {
+            'name': '持ち物名',
+            'memo': 'メモ',
+        }
+        error_messages = {
+            'name': {
+                'required': '持ち物名は必須です。',
+                'max_length': '持ち物名は１文字以上５０文字以下で入力してください。',
+            },
+            'memo': {
+                'max_length': 'メモは１５０文字以下で入力してください。'
+            },
+        }

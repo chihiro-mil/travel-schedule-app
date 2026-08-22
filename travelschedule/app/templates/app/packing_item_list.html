@@ -1,0 +1,254 @@
+{% load static %}
+{% load tz %}
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>packing item list page</title>
+    <link rel="stylesheet" href="{% static "css/style.css" %}?v=2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static "app/flatpickr/flatpickr.min.css" %}">
+    <script src="{% static 'app/flatpickr/flatpickr.min.js' %}"></script>
+    <script src="{% static 'app/flatpickr/ja.js' %}"></script>
+    <script src="{% static 'app/flatpickr-yearSelect/flatpickr-year-select-plugin.js' %}"></script>
+</head>
+<body>
+    
+    <div class="packing-item-header-area">
+        <a href="{% url 'app:home' %}"class="back-button">＜戻る</a>
+
+        <h1 class="packing-item-list-title">
+            <span>{{ schedule.title|break_every|safe }}持ち物リスト</span>
+        </h1>
+    </div>
+
+    {% if packing_items %}
+
+    {% else %}
+        <div class="no-packing-item-message">
+            下の「持ち物追加ボタン」から持ち物リストを作成してみましょう！
+        </div>
+    {% endif %}
+
+    <div class="packing-list-container">
+        <ul class="packing-list">
+            {% for packing_item in packing_items %}
+                <li class="packing-item-card">
+                    <div class="item-main-content">
+                        <div class="item-check">
+                            <input 
+                                type="checkbox"
+                                class="packing-checkbox"
+                                data-url="{% url 'app:packing_item_check' schedule.id packing_item.id %}"
+                                {% if packing_item.is_checked %}checked{% endif %}
+                            >
+                        </div>
+                        <div class="item-text">
+                            <div class="item-name">
+                                {{ packing_item.name }}
+                            </div>
+                            <div class="item-memo">
+                                {{ packing_item.memo }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-kebab-area">
+                        <button class="item-kebab-btn">
+                            <i class="fas fa-ellipsis-v kebab-icon"></i>
+                        </button>
+                        <div class="item-kebab-menu"> 
+                            <a href="{% url 'app:packing_item_create_or_edit' schedule.id packing_item.id %}"class="edit-item-btn">
+                                編集
+                            </a>
+                            <button class="item-delete-btn">
+                                削除
+                            </button>
+                            <div class="item-delete-modal">
+                                <div class="item-modal-content">
+                                    <p>
+                                        アイテムを削除しますか？
+                                    </p>
+
+                                    <div class="item-modal-buttons">
+                                        <form method="post"
+                                            action="{% url 'app:packing_item_delete' schedule.id packing_item.id %}">
+                                            {% csrf_token %}
+
+                                            <button type="submit" class="modal-yes-btn">
+                                                はい
+                                            </button>
+                                        </form>
+                                        <button type="button" class="modal-close-btn">
+                                            いいえ
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {# ページネーション処理 #}
+        <div class="pagination">
+            <span class="step-links">
+                {# 現在表示されているページより前にページが存在する場合 #}
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; 先頭</a>
+                    <a href="?page={{ previous_page_number }}">前へ</a>
+                {% endif %}
+
+                {# 現在表示されているページ番号と全ページ数を表示 #}
+                <span class="current">
+                    page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                {# 現在表示されているページより後にページが存在する場合 #}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">次へ</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">最後 &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+
+
+    <footer class="footer-nav">
+        <ul>
+            <li>
+                <a href="{% url 'app:home' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-home"></i><br>ホーム
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:packing_item_create_or_edit' schedule.id %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-plus-square"></i><br>持ち物追加
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:mypage' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-user-cog"></i><br>マイページ設定
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'app:logout' %}">
+                    <span class="footer-icon-label">
+                        <i class="fas fa-sign-out-alt"></i><br>ログアウト
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </footer>
+
+    <script>
+
+        /*HTMLの読み込み後、JavaScriptを実行する*/
+        document.addEventListener('DOMContentLoaded', function () {
+
+            /*チェックボックス*/
+            document.querySelectorAll('.packing-checkbox').forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    
+                    /*fetchでURL(checkbox.dataset.url)へ通信する*/
+                    fetch(checkbox.dataset.url, {
+                        /*method: 'POST'でdef postのviewが呼ばれる*/
+                        method: 'POST',
+                        /*headersは追加情報 X-CSRFTokenで正規のユーザーであることを伝える*/
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken'),
+                        },
+                    })
+                    /*.thenでfetchの通信が終わったら次の実行を指示　response.json()でDjangoから返ってきたJSONをJaveScriptで使える形に変換する*/
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            checkbox.checked = !checkbox.checked;
+                            alert('保存に失敗しました');
+                        }
+                    })
+                    .catch(error => {
+                        checkbox.checked = !checkbox.checked;
+                        alert('通信に失敗しました');
+                    });
+                });
+            });
+
+            /*JavaScript専用送信用　HTMLの送信フォーム{% csrf_token %}のJavaScript版*/
+            function getCookie(name) {
+                let cookieValue = null;
+
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            /*ケバブメニュー開閉*/
+            const kebabButtons = document.querySelectorAll(".item-kebab-btn");
+            kebabButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const card = button.closest(".packing-item-card");
+                    const menu = card.querySelector(".item-kebab-menu");
+                    menu.classList.toggle("show");
+                });
+            });
+
+            /*削除モーダル開閉*/
+            const itemDeleteButtons = document.querySelectorAll(".item-delete-btn");
+            itemDeleteButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const card = button.closest(".packing-item-card");
+                    const modal = card.querySelector(".item-delete-modal");
+                    modal.classList.toggle("show");
+                });
+            });
+
+            /*削除モーダル内の「いいえ」ボタンでモーダル閉じる処理*/
+            const modalCloseButtons = document.querySelectorAll(".modal-close-btn");
+            modalCloseButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const card = button.closest(".packing-item-card");
+                    const modal = card.querySelector(".item-delete-modal");
+                    modal.classList.remove("show");
+                });
+            });
+
+
+            
+            /*フッタースクロール機能*/
+            let lastScrollTop = 0;
+            const footer = document.querySelector('.footer-nav');
+
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (scrollTop > lastScrollTop) {
+                    footer.style.transform = 'translateY(100%)';
+                } else {
+                    footer.style.transform = 'translateY(0)';
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 :scrollTop;
+            });
+        });
+
+    </script>
+</body>

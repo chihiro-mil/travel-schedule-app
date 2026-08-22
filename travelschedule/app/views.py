@@ -28,14 +28,22 @@ from .forms import (
     BaseLinkFormSet,
     PictureForm,
     LinkForm,
+    PackingItemForm,
 )
 
-from .models import User, Schedule, Plan, Link, Picture, TransportationMethod
+from .models import User, Schedule, Plan, Link, Picture, TransportationMethod, PackingItem
 
 from datetime import timedelta
 from datetime import datetime, time
 
 from collections import defaultdict
+
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views import View
+from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 
 #ビューの役割：フォームがチェック内容をもとに処理の流れを決める
 
@@ -50,6 +58,7 @@ def register_view(request):
         form = RegisterForm(request.POST) #forms.pyに定義されたフォームクラス（RegisterForm）、request.POSTで送信されたデータを渡してオブジェクト作る
         if form.is_valid(): #バリエーションでフォーム入力内容チェック
             user = form.save(commit=False) #commit=Falseはデータベースに保存せずにオブジェクトだけ作る
+            user.username = user.name #AbstractUser由来のusername(unique)が未設定のままだと2人目以降で重複エラーになるため、nameと同じ値を入れて対応
             user.set_password(form.cleaned_data['password']) #set_password()はパスワードをハッシュ化（暗号化）して保存するためのメゾット 必須処理
             user.save() #パスワードがハッシュ化（暗号化）終わったあとでデータベースに保存
             login(request, user) #ユーザー登録した後にそのままログイン状態にする
@@ -150,6 +159,22 @@ def home_view(request):
         schedules = Schedule.objects.filter(user=request.user).order_by('-trip_start_date') #-trip_start_dateで一番後の予定が一番上に表示
         sort_label = '更新順'
         next_sort = 'updated'
+
+    # 持ち物リスト登録状態 
+    for schedule in schedules:
+        packing_count = schedule.packing_items.count()
+        checked_count = schedule.packing_items.filter(is_checked=True).count()
+
+        if packing_count == 0:
+            schedule.packing_status = "(未登録)"
+        
+        elif packing_count == checked_count:
+            schedule.packing_status = "(準備完了)"       
+    
+        else:
+            schedule.packing_status = "(準備途中)"
+
+
         
     if request.method == 'POST': #POSTの時
         form = ScheduleForm(request.POST) #request.POSTの中に旅行タイトル、旅行期間の入力内容が入っている
@@ -584,3 +609,159 @@ def plan_delete_view(request, plan_id):
         schedule.save(update_fields=['updated_at'])
         
         return redirect(f"{reverse('app:schedule_detail', args=[schedule.id])}?selected_day={selected_day}")
+    
+# 持ち物一覧画面（CVBバージョン）
+# CVBの場合、LoginRequiredMixinを使ってログイン状態でのみ使用できるように設定する
+# ListView：一覧画面を自動で作成するクラス
+class PackingItemView(LoginRequiredMixin, ListView):
+    model = PackingItem
+    template_name = 'app/packing_item_list.html'
+    paginate_by = 50
+    ordering = ['created_at']
+    
+    # HTMLのfor文で必要な変数名を自分で作成
+    context_object_name = 'packing_items'
+
+    # get_queryset(表示するデータを決める)　ListViewのままだとすべての持ち物が表示されてしまう
+    def get_queryset(self):
+        # self.kwargs.get('schedule_id')でURLから予定表IDを取得
+        schedule_id = self.kwargs.get('schedule_id')
+        # PackingItem.objects.filter(schedule_id=schedule_id)で「この旅行の持ち物だけ」データを絞る
+        qs = PackingItem.objects.filter(schedule_id=schedule_id)
+        # 結果をListViewに渡す
+        return qs
+    
+    # テンプレートに追加データを渡すメゾット（予定表タイトルを表示するための処理）
+    def get_context_data(self, **kwargs):
+        # 上記で取得したitem情報を消さずに予定表の情報を追加で取得する処理　super()→既存データを保持
+        context = super().get_context_data(**kwargs)
+        schedule_id = self.kwargs.get('schedule_id')
+        # 予定表データを１件取ってくる
+        schedule = Schedule.objects.get(id=schedule_id)
+        # HTMLで使う変数名
+        context['schedule'] = schedule
+        return context
+    
+#持ち物機能はCBVで統一しているため、チェックボックス機能もCBVで実装
+class PackingItemCheckboxView(LoginRequiredMixin, View):
+
+    #チェックボックスが押されたらpost()内の処理を実行する
+    def post(self, request, schedule_id, pk):
+        #アイテムの箱にテーブル名、schedule_id、pk = pk の順番で探し出したアイテムを入れる
+        item = get_object_or_404(
+            PackingItem,
+            schedule_id = schedule_id,
+            pk = pk,
+            schedule__user = request.user,
+        )
+
+        #DBに保存されている状態から逆にする作業（現：True →　Falseに変える）
+        item.is_checked = not item.is_checked
+        item.save()
+
+        #予定表一覧画面に更新されたことの印付ける
+        item.schedule.updated_at = timezone.now()
+        item.schedule.save(update_fields=["updated_at"])
+
+        #チェックボックスは画面切り替えなしで実行したいため、JsonResponseを使ってJavaScriptへデータを返す
+        return JsonResponse({
+            "success": True, #保存状態
+            "is_checked": item.is_checked, #現在のチェック状態
+        })
+    
+class PackingItemCreateView(LoginRequiredMixin, CreateView):
+    model = PackingItem
+    form_class = PackingItemForm
+    template_name = 'app/packing_item_form.html'
+
+    def get_context_data(self, **kwargs):
+        # 上記で取得したitem情報を消さずに予定表の情報を追加で取得する処理　super()→既存データを保持
+        context = super().get_context_data(**kwargs)
+        schedule_id = self.kwargs.get('schedule_id')
+        # 予定表データを１件取ってくる
+        schedule = Schedule.objects.get(id=schedule_id)
+        # HTMLで使う変数名
+        context['schedule'] = schedule
+        context['page_title'] = '持ち物追加'
+        return context
+
+    #form_valid()は自分だけのオリジナル処理を追加したいときオーバーライドするメソッド
+    def form_valid(self, form):
+        schedule_id = self.kwargs.get('schedule_id')
+        schedule = Schedule.objects.get(id=schedule_id)
+        # formにschedule情報をセット
+        form.instance.schedule = schedule
+
+        #保存とリダイレクトの間に予定表並び替えの更新順に必要な処理を追加　return responseの前に好きな処理が追加できる仕組み
+        response = super().form_valid(form)
+
+        schedule.updated_at = timezone.now()
+        schedule.save(update_fields=["updated_at"])
+
+        return response
+    
+    def get_success_url(self):
+        schedule_id = self.kwargs.get('schedule_id')
+
+        return reverse(
+            'app:packing_item_list',
+            kwargs={'schedule_id': schedule_id}
+        )
+    
+class PackingItemUpdateView(LoginRequiredMixin, UpdateView):
+    model = PackingItem
+    form_class = PackingItemForm
+    template_name = 'app/packing_item_form.html'
+
+    def get_context_data(self, **kwargs):
+        # 上記で取得したitem情報を消さずに予定表の情報を追加で取得する処理　super()→既存データを保持
+        context = super().get_context_data(**kwargs)
+        schedule_id = self.kwargs.get('schedule_id')
+        # 予定表データを１件取ってくる
+        schedule = Schedule.objects.get(id=schedule_id)
+        # HTMLで使う変数名
+        context['schedule'] = schedule
+        context['page_title'] = '持ち物編集'
+        return context
+    
+    #予定表並び替えの更新順に必要な処理を追加　form_valid()は自分だけのオリジナル処理を追加したいときオーバーライドするメソッド
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        schedule = self.object.schedule
+        schedule.updated_at = timezone.now()
+        schedule.save(update_fields=["updated_at"])
+
+        return response
+    
+    def get_success_url(self):
+        schedule_id = self.kwargs.get('schedule_id')
+
+        return reverse(
+            'app:packing_item_list',
+            kwargs={'schedule_id': schedule_id}
+        )
+    
+class PackingItemDeleteView(LoginRequiredMixin, DeleteView):
+    model = PackingItem
+
+    #アイテムデータが消える前にschedule を覚えて予定表更新順に反映されるように処理
+    #メソッドをオーバーライドするとき、親クラスと同じ引数を書くのが基本ルールのため、*args, **kwargsを引数に追加
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        schedule = self.object.schedule
+
+        response = super().delete(request, *args, **kwargs)
+
+        schedule.updated_at = timezone.now()
+        schedule.save(update_fields=["updated_at"])
+
+        return response
+    
+    def get_success_url(self):
+        schedule_id = self.kwargs.get('schedule_id')
+
+        return reverse(
+            'app:packing_item_list',
+            kwargs={'schedule_id': schedule_id}
+        )
