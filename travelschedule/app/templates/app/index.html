@@ -10,36 +10,71 @@
 </head>
 <body class="index-body">
     <h1 class="index-h1">ポートフォリオ</h1>
-    <h2 class="index-h2">Travelschedule</h2>
-    <div class="large-text">
-        <p>Travelscheduleとは旅行予定表をスマホで作成でき、
-        <br>旅行先で予定表・ＵＲＬ・写真を同一画面で表示できるアプリです。</p>
-    </div>
-    <div class="small-text">
-        <p>このアプリを利用することで...
-        <br>スケジュールや事前に調べた旅先の情報を一画面で確認できます。
-        <br>必要な情報が整理されているため、旅行をより充実して楽しめます。
-        </p>
-    </div>
+    
+    <section class="portfolio-project">
 
-    <div class="center-img">
-        <div class="screenshot-wrapper">
-            <img src="{% static 'app/portfolio-pdf/スクリーンショット1.png' %}" class="screenshot">
-            <img src="{% static 'app/portfolio-pdf/スクリーンショット2.png' %}" class="screenshot">
+        <h2 class="index-h2">Travelschedule</h2>
+        <div class="large-text">
+            <p>Travelscheduleとは旅行予定表をスマホで作成でき、
+            <br>旅行先で予定表・ＵＲＬ・写真を同一画面で表示できるアプリです。</p>
         </div>
-    </div>
+        <div class="small-text">
+            <p>このアプリを利用することで...
+            <br>スケジュールや事前に調べた旅先の情報を一画面で確認できます。
+            <br>必要な情報が整理されているため、旅行をより充実して楽しめます。
+            </p>
+        </div>
 
-    <div class="center-box">
-        <p class="application-link">
-            <a href="{% url 'app:login' %}">アプリへ</a>
-        </p>
-    </div>
+        <div class="center-img">
+            <div class="screenshot-wrapper">
+                <img src="{% static 'app/portfolio-pdf/スクリーンショット1.png' %}" class="screenshot" alt="Travelscheduleの画面">
+                <img src="{% static 'app/portfolio-pdf/スクリーンショット2.png' %}" class="screenshot" alt="Travelscheduleの画面">
+            </div>
+        </div>
 
-    <div class="nav-link">
-        <a href="{% static 'app/portfolio-pdf/企画書1.pdf'%}" target="_blank">企画書</a>
-        <a href="{% static 'app/portfolio-pdf/画面設計図1.pdf'%}" target="_blank">画面設計図</a>
-        <a href="{% static 'app/portfolio-pdf/画面遷移図1.drawio.pdf'%}" target="_blank">画面遷移図</a>
-        <a href="{% static 'app/portfolio-pdf/ER図1.drawio.pdf'%}" target="_blank">ＥＲ図</a>
-    </div>
+        <div class="center-box">
+            <p class="application-link">
+                <a href="{% url 'app:login' %}">アプリへ</a>
+            </p>
+        </div>
+
+        <div class="nav-link">
+            <a href="{% static 'app/portfolio-pdf/企画書1.pdf'%}" target="_blank">企画書</a>
+            <a href="{% static 'app/portfolio-pdf/画面設計図1.pdf'%}" target="_blank">画面設計図</a>
+            <a href="{% static 'app/portfolio-pdf/画面遷移図1.drawio.pdf'%}" target="_blank">画面遷移図</a>
+            <a href="{% static 'app/portfolio-pdf/ER図1.drawio.pdf'%}" target="_blank">ＥＲ図</a>
+        </div>
+    </section>
+
+    <section class="portfolio-project">
+        <h2 class="index-h2">Learning OS</h2>
+
+        <div class="large-text">
+            <p>AIエージェントを活用して開発した
+            <br>学習管理Webアプリです。</p>
+        </div>
+
+        <div class="learning-os-screenshots">
+                <img src="{% static 'app/portfolio-pdf/learning-os スクリーンショット1.png' %}" alt="Learning OSの画面">
+                <img src="{% static 'app/portfolio-pdf/learning-os スクリーンショット2.png' %}" alt="Learning OSの画面">
+                <img src="{% static 'app/portfolio-pdf/learning-os スクリーンショット3.png' %}" alt="Learning OSの画面">
+        </div>
+
+        <div class="center-box">
+            <p class="application-link">
+                <a href="https://learning-os-pan0.onrender.com" target="_blank" rel="noopener noreferrer">アプリへ</a>
+            </p>
+            <p class="notice">
+                ※サーバーの仕様上、アクセス時は毎回起動に時間がかかります。<br>
+                ※ログイン用のサンプルアカウントは選考過程にてお伝えします。
+            </p>
+        </div>
+
+        <div class="nav-link">
+            <a href="{% static 'app/portfolio-pdf/AIエージェントを活用したLearning OS開発.pdf'%}" target="_blank">AIエージェントを活用した開発について</a>
+        </div>
+
+    </section>
+
 </body>
 </html>

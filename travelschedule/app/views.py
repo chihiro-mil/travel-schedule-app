@@ -58,6 +58,7 @@ def register_view(request):
         form = RegisterForm(request.POST) #forms.pyに定義されたフォームクラス（RegisterForm）、request.POSTで送信されたデータを渡してオブジェクト作る
         if form.is_valid(): #バリエーションでフォーム入力内容チェック
             user = form.save(commit=False) #commit=Falseはデータベースに保存せずにオブジェクトだけ作る
+            user.username = user.name #AbstractUser由来のusername(unique)が未設定のままだと2人目以降で重複エラーになるため、nameと同じ値を入れて対応
             user.set_password(form.cleaned_data['password']) #set_password()はパスワードをハッシュ化（暗号化）して保存するためのメゾット 必須処理
             user.save() #パスワードがハッシュ化（暗号化）終わったあとでデータベースに保存
             login(request, user) #ユーザー登録した後にそのままログイン状態にする

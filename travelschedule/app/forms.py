@@ -63,6 +63,12 @@ class RegisterForm(forms.ModelForm): #forms.ModelFormはDjangoが用意してい
         if User.objects.filter(name=name).exists(): #Userテーブルに入力されたnameがすでに存在しているか確認
             raise forms.ValidationError("このユーザー名はすでに使われています。") #エラーメッセージ表示
         return name #問題なければnameを返して、この値を次の処理に渡す
+
+    def clean_email(self):
+        email = self.cleaned_data['email'] #一時的にクリーンと判断されたデータを入れる辞書。'email'キーを取り出してemailの変数に代入
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("このメールアドレスはすでに使われています。")
+        return email #問題なければをemail返して、この値を次の処理に渡す
     
     def clean_password(self): #passwordフィールドのチェック
         password = self.cleaned_data['password'] #一時的にクリーンと判断されたデータを入れる辞書。'password'キーを取り出してpasswordの変数に代入
